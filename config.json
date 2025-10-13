@@ -116,7 +116,7 @@
       "target": "pattern-kopatuch.patt",
       "contentType": "model",
       "contentFile": "bird_orange.glb", 
-      "modelScale": 0.5,
+      "modelScale": 2.0,
       "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
     },
     {
