@@ -35,7 +35,7 @@
       "contentType": "model",
       "contentFile": "cat.gltf",
       "modelScale": 0.3,
-      "rotation": { "x": 1.5708 },
+      "rotation": { "x": 1.5708, "y": -0.4292 },
       "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
     },
     {
