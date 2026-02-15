@@ -24,7 +24,7 @@
     },
     {
       "id": 1,
-      "type": "barcode", 
+      "type": "barcode",
       "target": 1,
       "contentType": "text",
       "text": {
@@ -109,7 +109,7 @@
     {
       "id": 6,
       "type": "pattern",
-      "target": "pattern-Bender.patt", 
+      "target": "pattern-Bender.patt",
       "contentType": "model",
       "contentFile": "Bender.glb",
       "modelScale": 0.3,
@@ -146,7 +146,7 @@
       "type": "pattern",
       "target": "pattern-kopatuch.patt",
       "contentType": "model",
-      "contentFile": "bird_orange.glb", 
+      "contentFile": "bird_orange.glb",
       "modelScale": 100,
       "animation": { "type": "rotation", "axis": "z", "speed": 0.005 }
     },
@@ -178,23 +178,24 @@
       "playOnControllerIntersect": true
     },
     {
-      "id": 10,
-      "type": "barcode",
-      "target": 6,
-      "contentType": "text",
-      "text": {
-        "content": "Question",
-        "size": 0.5,
-        "height": 0.1
-      },
-      "audioFile": "question.mp3",
-      "playOnControllerIntersect": true
-    },
-    {
       "id": 11,
       "type": "barcode",
-      "target": 7,      
+      "target": 7,
       "contentType": "controller"
+    },
+    {
+      "id": 12,
+      "type": "aruco",
+      "dictionary": "ARUCO_4X4_1000",
+      "markerId": 1,
+      "contentType": "primitive",
+      "primitive": {
+        "type": "BoxGeometry",
+        "size": [1, 1, 1],
+        "textureFile": "texture_blue.jpg",
+        "color": "#ff0000",
+        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+      }
     }
   ]
 }

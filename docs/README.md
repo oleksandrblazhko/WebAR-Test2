@@ -44,6 +44,9 @@
 - `contentType` - тип контенту
 - Додаткові параметри залежно від типу контенту
 
+## Створення маркерів різних типів
+ArUco-маркер - https://damianofalcioni.github.io/js-aruco2/samples/marker-creator/marker-creator.html
+
 ## Тип контенту `text`
 Тип контенту `text` дозволяє відображати текстові елементи у просторі AR.
 

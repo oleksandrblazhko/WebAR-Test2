@@ -18,6 +18,16 @@
     <script src="threex/threex-artoolkitcontext.js"></script>
     <script src="threex/threex-arbasecontrols.js"></script>
     <script src="threex/threex-armarkercontrols.js"></script>
+    <!-- Додаємо js-aruco2 бібліотеки -->
+    <script src="js-aruco2/aruco.js"></script>
+    <script src="js-aruco2/cv.js"></script>
+    <script src="js-aruco2/posit1.js"></script>
+    <script src="js-aruco2/posit2.js"></script>
+    <script src="js-aruco2/svd.js"></script>
+    <!-- Додаємо словники -->
+    <script src="js-aruco2/dictionaries/aruco_4x4_1000_browser.js"></script>
+    <!-- Додаємо наш клас для ArUco-маркерів -->
+    <script src="js/aruco-marker-controls.js"></script>
 </head>
 
 <body style='margin : 0px; overflow: hidden; font-family: Monospace; user-select: none; pointer-events: none;'>
@@ -599,20 +609,41 @@
                 for (let i = 0; i < maxMarkers; i++) {
                     mainContainer.add(markerRoots[i]);
 
+                    // Перевіряємо тип маркера з конфігурації
+                    const markerType = config.markers[i] ? config.markers[i].type : 'pattern';
+
                     // Якщо поточний маркер – це баркод, створюємо AR контролер під баркод
                     // якщо поточний маркер це патерн, аналогічно створюємо AR контролер під патерн
-                    if (patternBarcode[i] === -1) {
+                    // якщо це aruco маркер, створюємо відповідний контролер
+                    if (markerType === 'pattern') {
                         let markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, markerRoots[i], {
                             type: 'pattern', patternUrl: patternNames[i], size: 1 + (i + 1) / patternIdOffset
                         })
                         patternsID.push(patternNames[i]);
                         patternToMarkerIndex.set(patternNames[i], i);
-                    } else {
+                    } else if (markerType === 'barcode') {
                         let markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, markerRoots[i], {
                             type: "barcode", barcodeValue: patternBarcode[i],
                         })
                         barcodesID.push(patternBarcode[i]);
                         barcodeToMarkerIndex.set(patternBarcode[i], i);
+                    } else if (markerType === 'aruco') {
+                        // Для ArUco маркерів створюємо відповідний контролер
+                        let markerControls1 = new THREEx.ArUcoMarkerControls(arToolkitContext, markerRoots[i], {
+                            dictionaryName: config.markers[i].dictionary || 'ARUCO',
+                            markerId: config.markers[i].markerId,
+                            size: config.markers[i].size || 1
+                        });
+                        
+                        // Додаємо ArUco маркери до відповідного масиву
+                        if (!window.arucoMarkers) {
+                            window.arucoMarkers = [];
+                        }
+                        window.arucoMarkers.push({
+                            id: config.markers[i].markerId,
+                            index: i,
+                            controls: markerControls1
+                        });
                     }
 
                     // Create alternative content if it exists in configuration
@@ -957,7 +988,7 @@
                     if (audioFiles[i]) {
                         // Check if audio should only play on controller intersection
                         let playOnControllerIntersect = config.markers[i] && config.markers[i].playOnControllerIntersect === true;
-                        
+
                         contentPromises.push(new Promise((resolve, reject) => {
                             audioLoader.load(`${audioFiles[i]}`, function (buffer) {
                                 // Створюємо аудіо джерело
@@ -973,11 +1004,20 @@
                                     sound: sound,
                                     playOnControllerIntersect: playOnControllerIntersect
                                 };
-                                if (patternBarcode[i] === -1) {
+                                
+                                // Визначаємо тип маркера для правильної обробки аудіо
+                                const markerType = config.markers[i] ? config.markers[i].type : 'pattern';
+                                
+                                if (markerType === 'pattern') {
                                     patternsSound.set(i, soundData);
-                                } else {
+                                } else if (markerType === 'barcode') {
                                     barcodesSound.set(patternBarcode[i], soundData);
+                                } else if (markerType === 'aruco') {
+                                    // Для ArUco-маркерів створюємо окремий об'єкт аудіо
+                                    if (!window.arucoSounds) window.arucoSounds = new Map();
+                                    window.arucoSounds.set(i, soundData);
                                 }
+                                
                                 resolve(sound)
                             });
                         }).then((sound) => {
@@ -1080,28 +1120,144 @@
             // Оновлюємо AR контент на кожен кадр
             function update() {
                 if (arToolkitSource.ready !== false) {
+                    // Оновлюємо контекст ARToolkit
                     arToolkitContext.update(arToolkitSource.domElement);
+                    
+                    // Оновлюємо ArUco маркери, якщо вони існують
+                    if (window.arucoMarkers && window.arucoMarkers.length > 0) {
+                        // Отримуємо зображення з джерела
+                        const ctx = arToolkitContext.arController.canvas.getContext('2d');
+                        const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+                        
+                        // Оновлюємо кожен ArUco маркер
+                        for (let i = 0; i < window.arucoMarkers.length; i++) {
+                            const arucoMarker = window.arucoMarkers[i];
+                            arucoMarker.controls.update(imageData);
+                        }
+                    }
+                    
                     if (contentInitialized) {
+                        // Додамо діагностичне повідомлення для перевірки стану всіх маркерів
+                        for (let idx = 0; idx < markerRoots.length; idx++) {
+                            if (config.markers[idx] && (config.markers[idx].id === 5 || config.markers[idx].id === 12)) {
+                                if (markerRoots[idx] && markerRoots[idx].visible) {
+                                    console.log('Маркер ID ' + config.markers[idx].id + ': ВИДИМИЙ, markerIndex =', idx);
+                                    
+                                    // Додамо діагностику властивостей об'єкта
+                                    const obj = markerRoots[idx];
+                                    console.log('  - Позиція: (' + obj.position.x + ', ' + obj.position.y + ', ' + obj.position.z + ')');
+                                    console.log('  - Обертання: (' + obj.rotation.x + ', ' + obj.rotation.y + ', ' + obj.rotation.z + ')');
+                                    console.log('  - Масштаб: (' + obj.scale.x + ', ' + obj.scale.y + ', ' + obj.scale.z + ')');
+                                    console.log('  - Кількість дочірніх елементів: ' + obj.children.length);
+                                    
+                                    if (obj.children.length > 0) {
+                                        const child = obj.children[0];
+                                        console.log('  - Дочірній об\'єкт типу: ' + child.type);
+                                        
+                                        if (child.geometry) {
+                                            console.log('  - Геометрія: ' + child.geometry.type);
+                                        }
+                                        
+                                        if (child.material) {
+                                            console.log('  - Матеріал: ' + child.material.type);
+                                            
+                                            if (child.material.color) {
+                                                console.log('  - Колір матеріалу: ' + child.material.color.getHexString());
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Обробка аудіо для ArUco-маркерів
+                        if (window.arucoMarkers && window.arucoMarkers.length > 0) {
+                            for (let i = 0; i < window.arucoMarkers.length; i++) {
+                                const arucoMarker = window.arucoMarkers[i];
+                                const markerIndex = arucoMarker.index;
+
+                                // Додамо діагностичне повідомлення для маркера з ID 12 лише коли він видимий
+                                if (config.markers[markerIndex] && config.markers[markerIndex].id === 12 && markerRoots[markerIndex] && markerRoots[markerIndex].visible) {
+                                    console.log('ArUco маркер ID 12: ВИДИМИЙ, markerIndex =', markerIndex);
+                                    console.log('ArUco маркер ID 12: Позиція об\'єкта =', markerRoots[markerIndex].position);
+                                    console.log('ArUco маркер ID 12: Масштаб об\'єкта =', markerRoots[markerIndex].scale);
+                                    console.log('ArUco маркер ID 12: Кількість дочірніх елементів =', markerRoots[markerIndex].children.length);
+                                }
+
+                                // Отримуємо аудіо дані для цього маркера
+                                let soundData = null;
+                                if (config.markers[markerIndex] && config.markers[markerIndex].audioFile) {
+                                    // Для ArUco-маркерів ми зберігаємо аудіо в окремому об'єкті
+                                    if (!window.arucoSounds) window.arucoSounds = new Map();
+                                    
+                                    // Якщо аудіо ще не збережено, отримуємо його з конфігурації
+                                    if (!window.arucoSounds.has(markerIndex)) {
+                                        // Знаходимо аудіо для цього маркера серед завантажених
+                                        // Для спрощення вважаємо, що аудіо вже було додано до відповідного масиву
+                                        // при ініціалізації маркера
+                                    }
+                                    
+                                    soundData = window.arucoSounds.get(markerIndex);
+                                }
+                                
+                                if (soundData) {
+                                    let sound = soundData.sound || soundData;
+                                    let playOnControllerIntersect = soundData.playOnControllerIntersect || false;
+                                    
+                                    // Перевіряємо, чи маркер виявлено (це визначається через видимість об'єкта маркера)
+                                    let markerDetected = markerRoots[markerIndex] && markerRoots[markerIndex].visible;
+                                    let controllerIntersects = currentIntersectedMarker === markerIndex;
+
+                                    // Determine if should play based on flag
+                                    let shouldPlay = markerDetected;
+                                    if (playOnControllerIntersect) {
+                                        shouldPlay = markerDetected && controllerIntersects;
+                                    }
+
+                                    if (shouldPlay) {
+                                        if (sound.nodeName === 'VIDEO') {
+                                            if (sound.paused) sound.play();
+                                        } else {
+                                            if (!sound.isPlaying) sound.play();
+                                        }
+                                    } else {
+                                        if (sound.nodeName === 'VIDEO') {
+                                            if (!sound.paused) sound.pause();
+                                        }
+                                        if (sound.isPlaying) sound.stop();
+                                    }
+                                }
+                            }
+                        }
+                        
                         if (barcodesID.length) {
                             barcodesID.forEach((elem, index) => {
                                 let soundData = barcodesSound.get(elem);
                                 if (!soundData) return;
-                                
+
                                 let markerIndex = barcodeToMarkerIndex.get(elem);
                                 if (markerIndex === undefined) return;
-                                
+
+                                // Додамо діагностичне повідомлення для маркера з ID 5 лише коли він видимий
+                                if (elem === 5 && markerRoots[markerIndex] && markerRoots[markerIndex].visible) {
+                                    console.log('Barcode маркер ID 5: ВИДИМИЙ, markerIndex =', markerIndex);
+                                    console.log('Barcode маркер ID 5: Позиція об\'єкта =', markerRoots[markerIndex].position);
+                                    console.log('Barcode маркер ID 5: Масштаб об\'єкта =', markerRoots[markerIndex].scale);
+                                    console.log('Barcode маркер ID 5: Кількість дочірніх елементів =', markerRoots[markerIndex].children.length);
+                                }
+
                                 let sound = soundData.sound || soundData; // Support both old format (direct) and new format (object)
                                 let playOnControllerIntersect = soundData.playOnControllerIntersect || false;
-                                
+
                                 let markerDetected = arToolkitContext.arController.barcodeMarkers[elem].inCurrent;
                                 let controllerIntersects = currentIntersectedMarker === markerIndex;
-                                
+
                                 // Determine if should play based on flag
                                 let shouldPlay = markerDetected;
                                 if (playOnControllerIntersect) {
                                     shouldPlay = markerDetected && controllerIntersects;
                                 }
-                                
+
                                 if (shouldPlay) {
                                     if (sound.nodeName === 'VIDEO') {
                                         if (sound.paused) sound.play();
@@ -1121,26 +1277,26 @@
                                 let patternName = patternsID[index];
                                 let markerIndex = patternToMarkerIndex.get(patternName);
                                 if (markerIndex === undefined) continue;
-                                
+
                                 let patternID = (arToolkitContext.arController.patternMarkers[index].markerWidth - 1) * patternIdOffset - 1;
                                 patternID = Math.round(patternID);
-                                
+
                                 // For patterns, the sound is stored by marker index, not patternID
                                 let soundData = patternsSound.get(markerIndex);
                                 if (!soundData) continue;
-                                
+
                                 let sound = soundData.sound || soundData; // Support both old format (direct) and new format (object)
                                 let playOnControllerIntersect = soundData.playOnControllerIntersect || false;
-                                
+
                                 let markerDetected = arToolkitContext.arController.patternMarkers[index].inCurrent;
                                 let controllerIntersects = currentIntersectedMarker === markerIndex;
-                                
+
                                 // Determine if should play based on flag
                                 let shouldPlay = markerDetected;
                                 if (playOnControllerIntersect) {
                                     shouldPlay = markerDetected && controllerIntersects;
                                 }
-                                
+
                                 if (shouldPlay) {
                                     if (sound.nodeName === 'VIDEO') {
                                         if (sound.paused) sound.play();
