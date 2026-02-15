@@ -87,6 +87,7 @@
 
             // Головний контейнер, до якого увійдуть всі 3D об'єкти для програми
             var markerRoot, mainContainer;
+            var markerRoots; // expose marker roots to update loop
 
             // Окремий масив для зберігання всього аудіо та відео контенту, який буде
             // запущений натисканням на екран смартфона
@@ -99,10 +100,315 @@
             let patternsSound = new Map();
             let barcodesID = [];
             let patternsID = [];
+            // Map barcode values and pattern names to marker indices for audio lookup
+            let barcodeToMarkerIndex = new Map();
+            let patternToMarkerIndex = new Map();
 
             let controller;
+            
+            // Track current content state for each marker (true = alternative content, false = first content)
+            let markerContentState = new Map();
+            
+            // Store alternative content objects for each marker
+            let markerAlternativeContent = new Map();
+            
+            // Track which marker is currently intersected by controller tip (for audio playback)
+            let currentIntersectedMarker = null;
+            
+            // Font for text geometry
+            let font = null;
+            let fontLoader = new THREE.FontLoader();
+            
+            // Load font for text geometry (load once, reuse for all text objects)
+            const fontPromise = new Promise((resolve, reject) => {
+                fontLoader.load('helvetiker_regular.typeface.json', (loadedFont) => {
+                    font = loadedFont;
+                    resolve(loadedFont);
+                }, undefined, (error) => {
+                    console.error('Error loading font:', error);
+                    reject(error);
+                });
+            });
 
             // Використовуємо глобальну функцію updateWelcomeText(), яку ми вже визначили вище
+            
+            // Function to create alternative content object based on configuration
+            function createAlternativeContent(markerIndex, alternativeContentConfig) {
+                if (!alternativeContentConfig) return null;
+                
+                const markerRoot = markerRoots[markerIndex];
+                if (!markerRoot) return null;
+                
+                switch (alternativeContentConfig.contentType) {
+                    case 'model':
+                        return createAlternativeModelContent(markerRoot, alternativeContentConfig);
+                    case 'primitive':
+                        return createAlternativePrimitiveContent(markerRoot, alternativeContentConfig);
+                    case 'image':
+                        return createAlternativeImageContent(markerRoot, alternativeContentConfig);
+                    case 'video':
+                        return createAlternativeVideoContent(markerRoot, alternativeContentConfig);
+                    case 'text':
+                        return createAlternativeTextContent(markerRoot, alternativeContentConfig);
+                    default:
+                        return null;
+                }
+            }
+            
+            // Function to create model content for alternative content
+            function createAlternativeModelContent(markerRoot, config) {
+                return new Promise((resolve) => {
+                    const loader = new THREE.GLTF2Loader();
+                    loader.load(config.contentFile, (response) => {
+                        const scene = response.scene;
+                        const object = scene.children[0];
+                        
+                        if (config.modelScale) {
+                            const scale = config.modelScale;
+                            object.scale.set(scale, scale, scale);
+                        }
+                        
+                        if (config.position) {
+                            const pos = config.position;
+                            object.position.set(pos.x || 0, pos.y || 0, pos.z || 0);
+                        }
+                        
+                        if (config.rotation) {
+                            const rot = config.rotation;
+                            object.rotation.set(rot.x || 0, rot.y || 0, rot.z || 0);
+                        }
+                        
+                        if (config.animation) {
+                            object.userData.animation = config.animation;
+                        }
+                        
+                        object.userData.isAlternativeContent = true;
+                        resolve(object);
+                    });
+                });
+            }
+            
+            // Function to create primitive content for alternative content
+            function createAlternativePrimitiveContent(markerRoot, config) {
+                const primitive = config.primitive;
+                let geometry, material, mesh;
+                
+                switch(primitive.type) {
+                    case 'BoxGeometry':
+                        geometry = new THREE.BoxGeometry(...primitive.size);
+                        break;
+                    case 'SphereGeometry':
+                        geometry = new THREE.SphereGeometry(primitive.radius, primitive.widthSegments || 32, primitive.heightSegments || 32);
+                        break;
+                    case 'CylinderGeometry':
+                        geometry = new THREE.CylinderGeometry(
+                            primitive.radiusTop || 0.5, 
+                            primitive.radiusBottom || 0.5, 
+                            primitive.height || 1, 
+                            primitive.radialSegments || 32
+                        );
+                        break;
+                    case 'ConeGeometry':
+                        geometry = new THREE.ConeGeometry(
+                            primitive.radius || 0.5, 
+                            primitive.height || 1, 
+                            primitive.radialSegments || 32
+                        );
+                        break;
+                    case 'TorusGeometry':
+                        geometry = new THREE.TorusGeometry(
+                            primitive.radius || 1, 
+                            primitive.tubeRadius || 0.4, 
+                            primitive.radialSegments || 16, 
+                            primitive.tubularSegments || 32
+                        );
+                        break;
+                    default:
+                        geometry = new THREE.BoxGeometry(1, 1, 1);
+                }
+                
+                if (primitive.textureFile) {
+                    let texture = new THREE.TextureLoader().load(primitive.textureFile);
+                    material = new THREE.MeshBasicMaterial({ 
+                        map: texture,
+                        color: new THREE.Color(primitive.color || '#ffffff')
+                    });
+                } else {
+                    material = new THREE.MeshBasicMaterial({ 
+                        color: new THREE.Color(primitive.color || '#ffffff') 
+                    });
+                }
+                
+                mesh = new THREE.Mesh(geometry, material);
+                
+                if (primitive.position) {
+                    mesh.position.set(...primitive.position);
+                }
+                if (primitive.rotation) {
+                    mesh.rotation.set(...primitive.rotation);
+                }
+                
+                if (primitive.animation) {
+                    mesh.userData.animation = primitive.animation;
+                }
+                
+                mesh.userData.isAlternativeContent = true;
+                return Promise.resolve(mesh);
+            }
+            
+            // Function to create image content for alternative content
+            function createAlternativeImageContent(markerRoot, config) {
+                return new Promise((resolve) => {
+                    let loader = new THREE.TextureLoader();
+                    loader.load(config.contentFile, (texture) => {
+                        let geometry, ratio = texture.image.naturalWidth / texture.image.naturalHeight;
+                        if (texture.image.naturalHeight < texture.image.naturalWidth) {
+                            geometry = new THREE.PlaneBufferGeometry(ratio, 1);
+                        } else {
+                            geometry = new THREE.PlaneBufferGeometry(1, 1 / ratio);
+                        }
+                        let material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+                        let mesh = new THREE.Mesh(geometry, material);
+                        mesh.rotation.x = -Math.PI / 2;
+                        mesh.userData.isAlternativeContent = true;
+                        resolve(mesh);
+                    });
+                });
+            }
+            
+            // Function to create video content for alternative content
+            function createAlternativeVideoContent(markerRoot, config) {
+                let geometry = new THREE.PlaneBufferGeometry(1.6, 0.9);
+                let video = document.createElement('video');
+                video.src = config.contentFile;
+                video.playsInline = true;
+                
+                let texture = new THREE.VideoTexture(video);
+                texture.minFilter = THREE.LinearFilter;
+                texture.magFilter = THREE.LinearFilter;
+                texture.format = THREE.RGBFormat;
+                let material = new THREE.MeshBasicMaterial({ map: texture });
+                let mesh = new THREE.Mesh(geometry, material);
+                mesh.rotation.x = -Math.PI / 2;
+                mesh.userData.isAlternativeContent = true;
+                
+                return Promise.resolve({ mesh, video });
+            }
+            
+            // Function to create text content for alternative content
+            function createAlternativeTextContent(markerRoot, config) {
+                return fontPromise.then((font) => {
+                    if (!config.text) return null;
+
+                    const textConfig = config.text || {};
+                    const textParams = {
+                        font: font,
+                        size: textConfig.size || 0.5,
+                        height: textConfig.height || 0.1,
+                        curveSegments: textConfig.curveSegments || 12,
+                        bevelEnabled: textConfig.bevelEnabled || false,
+                        bevelThickness: textConfig.bevelThickness || 0.03,
+                        bevelSize: textConfig.bevelSize || 0.02
+                    };
+
+                    const geometry = new THREE.TextGeometry(textConfig.content || 'Text', textParams);
+                    geometry.computeBoundingBox();
+
+                    const material = new THREE.MeshBasicMaterial({
+                        color: new THREE.Color(textConfig.color || '#ffffff')
+                    });
+
+                    const mesh = new THREE.Mesh(geometry, material);
+
+                    // Center the text
+                    const xMid = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
+                    mesh.position.x = xMid;
+
+                    if (textConfig.position) {
+                        const pos = textConfig.position;
+                        mesh.position.x += (pos.x || 0);
+                        mesh.position.y = pos.y || 0;
+                        mesh.position.z = pos.z || 0;
+                    }
+
+                    if (textConfig.rotation) {
+                        const rot = textConfig.rotation;
+                        mesh.rotation.set(rot.x || 0, rot.y || 0, rot.z || 0);
+                    }
+
+                    if (textConfig.animation) {
+                        mesh.userData.animation = textConfig.animation;
+                    }
+
+                    mesh.userData.isAlternativeContent = true;
+                    return mesh;
+                });
+            }
+            
+            // Function to switch content for a specific marker
+            function switchMarkerContent(markerIndex, useAlternativeContent) {
+                const markerRoot = markerRoots[markerIndex];
+                if (!markerRoot) return;
+                
+                const currentState = markerContentState.get(markerIndex) || false;
+                if (currentState === useAlternativeContent) return; // Already in the desired state
+                
+                if (useAlternativeContent && markerAlternativeContent.has(markerIndex)) {
+                    // Switch to alternative content
+                    // Hide all current content (main content)
+                    markerRoot.children.forEach(child => {
+                        if (!(child.userData && child.userData.isController) && !child.userData.isAlternativeContent) {
+                            child.visible = false;
+                        }
+                    });
+                    
+                    // Show alternative content
+                    const alternativeContent = markerAlternativeContent.get(markerIndex);
+                    if (Array.isArray(alternativeContent)) {
+                        alternativeContent.forEach(content => {
+                            if (content.mesh) {
+                                content.mesh.visible = true;
+                                content.mesh.userData.isAlternativeContent = true;
+                                if (!markerRoot.children.includes(content.mesh)) {
+                                    markerRoot.add(content.mesh);
+                                }
+                            } else {
+                                content.visible = true;
+                                content.userData.isAlternativeContent = true;
+                                if (!markerRoot.children.includes(content)) {
+                                    markerRoot.add(content);
+                                }
+                            }
+                        });
+                    } else if (alternativeContent.mesh) {
+                        alternativeContent.mesh.visible = true;
+                        alternativeContent.mesh.userData.isAlternativeContent = true;
+                        if (!markerRoot.children.includes(alternativeContent.mesh)) {
+                            markerRoot.add(alternativeContent.mesh);
+                        }
+                    } else {
+                        alternativeContent.visible = true;
+                        alternativeContent.userData.isAlternativeContent = true;
+                        if (!markerRoot.children.includes(alternativeContent)) {
+                            markerRoot.add(alternativeContent);
+                        }
+                    }
+                } else {
+                    // Switch to main content
+                    // Hide all alternative content
+                    markerRoot.children.forEach(child => {
+                        if (!(child.userData && child.userData.isController)) {
+                            if (child.userData.isAlternativeContent) {
+                                child.visible = false;
+                            } else {
+                                child.visible = true;
+                            }
+                        }
+                    });
+                }
+                
+                markerContentState.set(markerIndex, useAlternativeContent);
+            }
 
             // Завантажуємо конфігурацію з config.json перед ініціалізацією
             fetch('config.json')
@@ -268,6 +574,11 @@
                                 imageFiles.push('');
                                 videoFiles.push(config.markers[i].contentFile || '');
                                 break;
+                            case 'text':
+                                modelFiles.push('');
+                                imageFiles.push('');
+                                videoFiles.push('');
+                                break;
                             default:
                                 modelFiles.push('');
                                 imageFiles.push('');
@@ -279,7 +590,7 @@
                 }
   
                 // Створюємо масив для всіх маркерів
-                const markerRoots = [];
+                markerRoots = [];
                 for (let i = 0; i < maxMarkers; i++) {
                     markerRoots[i] = new THREE.Group();
                 }
@@ -295,11 +606,26 @@
                             type: 'pattern', patternUrl: patternNames[i], size: 1 + (i + 1) / patternIdOffset
                         })
                         patternsID.push(patternNames[i]);
+                        patternToMarkerIndex.set(patternNames[i], i);
                     } else {
                         let markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, markerRoots[i], {
                             type: "barcode", barcodeValue: patternBarcode[i],
                         })
                         barcodesID.push(patternBarcode[i]);
+                        barcodeToMarkerIndex.set(patternBarcode[i], i);
+                    }
+
+                    // Create alternative content if it exists in configuration
+                    if (config.markers[i] && config.markers[i].alternativeContent) {
+                        const alternativeContentPromise = createAlternativeContent(i, config.markers[i].alternativeContent);
+                        if (alternativeContentPromise) {
+                            contentPromises.push(alternativeContentPromise.then((alternativeContent) => {
+                                if (alternativeContent) {
+                                    markerAlternativeContent.set(i, alternativeContent);
+                                    console.log(`Alternative content for marker ${i} created`);
+                                }
+                            }));
+                        }
                     }
 
                     // Використовуємо switch для роботи з кожним окремим випадком контенту
@@ -407,11 +733,20 @@
                                     video.play();
                                 })
                             }
+                            // Check if video should only play on controller intersection
+                            let playOnControllerIntersect = config.markers[i] && config.markers[i].playOnControllerIntersect === true;
+                            
+                            // Store video object with flag
+                            let videoData = {
+                                sound: video,
+                                playOnControllerIntersect: playOnControllerIntersect
+                            };
+                            
                             // Додаємо відео до масиву аудіо контенту
                             if (patternBarcode[i] === -1) {
-                                patternsSound.set(i, video);
+                                patternsSound.set(i, videoData);
                             } else {
-                                barcodesSound.set(patternBarcode[i], video);
+                                barcodesSound.set(patternBarcode[i], videoData);
                             }
                             // Перенаправляємо текстуру з відео на матеріал для площини.
                             let texture2 = new THREE.VideoTexture(video);
@@ -510,15 +845,102 @@
                                 }
                             }
                             break;
+                        case 'text':
+                            if (config.markers[i] && config.markers[i].text) {
+                                contentPromises.push(fontPromise.then((font) => {
+                                    const textConfig = config.markers[i].text || {};
+                                    const textParams = {
+                                        font: font,
+                                        size: textConfig.size || 0.5,
+                                        height: textConfig.height || 0.1,
+                                        curveSegments: textConfig.curveSegments || 12,
+                                        bevelEnabled: textConfig.bevelEnabled || false,
+                                        bevelThickness: textConfig.bevelThickness || 0.03,
+                                        bevelSize: textConfig.bevelSize || 0.02
+                                    };
+
+                                    const geometry = new THREE.TextGeometry(textConfig.content || 'Text', textParams);
+                                    geometry.computeBoundingBox();
+
+                                    const material = new THREE.MeshBasicMaterial({
+                                        color: new THREE.Color(textConfig.color || '#ffffff')
+                                    });
+
+                                    const mesh = new THREE.Mesh(geometry, material);
+
+                                    // Center the text
+                                    const xMid = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
+                                    mesh.position.x = xMid;
+
+                                    // Apply position from marker config if specified
+                                    if (config.markers[i].position) {
+                                        const pos = config.markers[i].position;
+                                        mesh.position.set(
+                                            mesh.position.x + (pos.x || 0),
+                                            mesh.position.y + (pos.y || 0),
+                                            mesh.position.z + (pos.z || 0)
+                                        );
+                                    }
+
+                                    // Apply rotation from marker config if specified
+                                    if (config.markers[i].rotation) {
+                                        const rot = config.markers[i].rotation;
+                                        mesh.rotation.set(rot.x || 0, rot.y || 0, rot.z || 0);
+                                    }
+
+                                    // Store animation if specified (prefer textConfig, fallback to marker level)
+                                    if (textConfig.animation) {
+                                        mesh.userData.animation = textConfig.animation;
+                                    } else if (config.markers[i].animation) {
+                                        mesh.userData.animation = config.markers[i].animation;
+                                    }
+
+                                    markerRoots[i].add(mesh);
+                                    console.log(`Text content for marker ${i} created`);
+                                }).catch((error) => {
+                                    console.error(`Error creating text for marker ${i}:`, error);
+                                }));
+                            }
+                            break;
                         case 'controller':
-                            controller = new THREE.Mesh(
-                                new THREE.CubeGeometry(10, 0.15, 0.15),
+                            // Create a controller composed of a green body and a red tip (last 10%)
+                            const controllerGroup = new THREE.Group();
+
+                            // Long axis along local Z to match tip detection along -Z
+                            const totalLength = 3; // 3x shorter than previous total of 10
+                            const tipFraction = 0.1;
+                            const tipLength = totalLength * tipFraction;  // 10%
+                            const bodyLength = totalLength - tipLength;   // 90%
+                            const crossSection = 0.15;
+
+                            const controllerBody = new THREE.Mesh(
+                                new THREE.BoxGeometry(crossSection, crossSection, bodyLength),
                                 new THREE.MeshBasicMaterial({ color: 'green' })
                             );
-                            controller.rotation.y = Math.PI / 2;
-                            controller.position.y = 0.125;
-                            controller.position.z = -4.5;
-                            markerRoots[i].add(controller);
+                            controllerBody.userData.isController = true;
+
+                            const controllerTip = new THREE.Mesh(
+                                new THREE.BoxGeometry(crossSection, crossSection, tipLength),
+                                new THREE.MeshBasicMaterial({ color: 'red' })
+                            );
+                            controllerTip.userData.isController = true;
+
+                            // Arrange so that the tip sits at the negative Z end of the combined shape
+                            const half = totalLength / 2;
+                            controllerTip.position.z = -half + tipLength / 2; // center of tip segment
+                            controllerBody.position.z = tipLength / 2;        // center of body segment
+
+                            controllerGroup.add(controllerBody);
+                            controllerGroup.add(controllerTip);
+
+                            // Position the whole controller as before (no Y-rotation needed now)
+                            controllerGroup.position.y = 0.125;
+                            controllerGroup.position.z = -(bodyLength / 2);
+
+                            markerRoots[i].add(controllerGroup);
+
+                            // Use the tip mesh for collision checks
+                            controller = controllerTip;
                             break;
                         default:
                             // Якщо жодного контенту не додано, додаємо білу площину.
@@ -533,6 +955,9 @@
 
                     // Якщо є аудіо файли, налаштовуємо їх і додаємо в масив аудіо контенту.
                     if (audioFiles[i]) {
+                        // Check if audio should only play on controller intersection
+                        let playOnControllerIntersect = config.markers[i] && config.markers[i].playOnControllerIntersect === true;
+                        
                         contentPromises.push(new Promise((resolve, reject) => {
                             audioLoader.load(`${audioFiles[i]}`, function (buffer) {
                                 // Створюємо аудіо джерело
@@ -541,18 +966,21 @@
                                 sound.setBuffer(buffer);
                                 // Встановлюємо відео на автоповтор залежно від значення у масиві
                                 if (repeatOptions[i]) {
-                                    sound.setLoop(true);
+                                    sound.setLoop(!playOnControllerIntersect);
                                 }
+                                // Store sound object with flag
+                                let soundData = {
+                                    sound: sound,
+                                    playOnControllerIntersect: playOnControllerIntersect
+                                };
                                 if (patternBarcode[i] === -1) {
-                                    patternsSound.set(i, sound);
+                                    patternsSound.set(i, soundData);
                                 } else {
-                                    barcodesSound.set(patternBarcode[i], sound);
+                                    barcodesSound.set(patternBarcode[i], soundData);
                                 }
                                 resolve(sound)
                             });
                         }).then((sound) => {
-                            sound.play()
-                            sound.stop()
                             console.log(`File ${sound.name} loaded`)
                         }))
                     }
@@ -573,40 +1001,80 @@
             function checkController() {
                 // Виконуємо перевірку тільки якщо контролер активний (видно камері)
                 if (controller && controller.parent && controller.parent.visible) {
+                    let intersectedMarkerIndex = null;
+                    
                     mainContainer.traverse((object) => {
-                        if (object.isMesh && object !== controller) {
+                        if (object.isMesh && !(object.userData && object.userData.isController)) {
                             if (detectCollisionCubes(object, controller)) {
-                                object.material.color.set('red')
-                            } else {
-                                object.material.color.set('white')
+                                //bject.material.color.set('red');
+                                
+                                // Find which marker this object belongs to
+                                for (let i = 0; i < markerRoots.length; i++) {
+                                    if (markerRoots[i] && markerRoots[i].children.includes(object)) {
+                                        intersectedMarkerIndex = i;
+                                        break;
+                                    }
+                                }
                             }
                         }
                     });
+                    
+                    // Update current intersected marker for audio playback
+                    currentIntersectedMarker = intersectedMarkerIndex;
+                    
+                    // Switch to alternative content for intersected marker if it has alternative content
+                    if (intersectedMarkerIndex !== null && markerAlternativeContent.has(intersectedMarkerIndex)) {
+                        switchMarkerContent(intersectedMarkerIndex, true);
+                    }
+                    
+                    // Reset all other markers to first content when controller is active but not intersecting them
+                    for (let i = 0; i < markerRoots.length; i++) {
+                        if (i !== intersectedMarkerIndex && markerContentState.get(i)) {
+                            switchMarkerContent(i, false);
+                        }
+                    }
                 }
                 // Якщо контролер не активний, скидаємо всі об'єкти до білого кольору
                 else {
-                    mainContainer.traverse((object) => {
-                        if (object.isMesh && object !== controller) {
-                            object.material.color.set('white')
+                    // Clear intersected marker when controller is not active
+                    currentIntersectedMarker = null;
+                                        
+                    // Reset all markers to first content when controller is not active
+                    for (let i = 0; i < markerRoots.length; i++) {
+                        if (markerContentState.get(i)) {
+                            switchMarkerContent(i, false);
                         }
-                    });
+                    }
                 }
             }
 
             // Функція пошуку перетинів між двома об'єктами сцени
-            function detectCollisionCubes(object1, object2) {
+            function detectCollisionCubes(object1, object2, tipFraction = 0.1) {
+                // Ensure bounding boxes are available in local space
                 object1.geometry.computeBoundingBox();
                 object2.geometry.computeBoundingBox();
                 object1.updateMatrixWorld();
                 object2.updateMatrixWorld();
 
-                const box1 = object1.geometry.boundingBox.clone();
-                box1.applyMatrix4(object1.matrixWorld);
+                // World-space AABB for object1 (full box)
+                const box1World = object1.geometry.boundingBox.clone();
+                box1World.applyMatrix4(object1.matrixWorld);
 
-                const box2 = object2.geometry.boundingBox.clone();
-                box2.applyMatrix4(object2.matrixWorld);
+                // Start from object2's LOCAL bounding box to define a local-space "tip" region
+                const box2Local = object2.geometry.boundingBox.clone();
 
-                return box1.intersectsBox(box2);
+                // Compute the last `tipFraction` along local -Z (common "forward" in three.js)
+                const extentZ = box2Local.max.z - box2Local.min.z;
+                const tipLen = Math.max(0, extentZ * tipFraction);
+
+                // Define tip box on the negative Z end: [minZ, minZ + tipLen]
+                const tipBoxLocal = box2Local.clone();
+                tipBoxLocal.max.z = box2Local.min.z + tipLen;
+
+                // Transform tip box to world space (will become world AABB)
+                tipBoxLocal.applyMatrix4(object2.matrixWorld);
+
+                return box1World.intersectsBox(tipBoxLocal);
             };
 
             // Оновлюємо AR контент на кожен кадр
@@ -616,33 +1084,74 @@
                     if (contentInitialized) {
                         if (barcodesID.length) {
                             barcodesID.forEach((elem, index) => {
-                                if (arToolkitContext.arController.barcodeMarkers[elem].inCurrent) {
-                                    let sound = barcodesSound.get(elem);
-                                    if (sound && !sound.isPlaying) sound.play();
-                                } else {
-                                    let sound = barcodesSound.get(elem);
-                                    if (sound && sound.nodeName === 'VIDEO') {
-                                        if (!sound.paused) sound.pause()
+                                let soundData = barcodesSound.get(elem);
+                                if (!soundData) return;
+                                
+                                let markerIndex = barcodeToMarkerIndex.get(elem);
+                                if (markerIndex === undefined) return;
+                                
+                                let sound = soundData.sound || soundData; // Support both old format (direct) and new format (object)
+                                let playOnControllerIntersect = soundData.playOnControllerIntersect || false;
+                                
+                                let markerDetected = arToolkitContext.arController.barcodeMarkers[elem].inCurrent;
+                                let controllerIntersects = currentIntersectedMarker === markerIndex;
+                                
+                                // Determine if should play based on flag
+                                let shouldPlay = markerDetected;
+                                if (playOnControllerIntersect) {
+                                    shouldPlay = markerDetected && controllerIntersects;
+                                }
+                                
+                                if (shouldPlay) {
+                                    if (sound.nodeName === 'VIDEO') {
+                                        if (sound.paused) sound.play();
+                                    } else {
+                                        if (!sound.isPlaying) sound.play();
                                     }
-                                    if (sound && sound.isPlaying) sound.stop();
+                                } else {
+                                    if (sound.nodeName === 'VIDEO') {
+                                        if (!sound.paused) sound.pause();
+                                    }
+                                    if (sound.isPlaying) sound.stop();
                                 }
                             })
                         }
                         if (patternsID.length) {
                             for (let index = 0; index < patternsID.length; index++) {
-                                if (arToolkitContext.arController.patternMarkers[index].inCurrent) {
-                                    let patternID = (arToolkitContext.arController.patternMarkers[index].markerWidth - 1) * patternIdOffset - 1;
-                                    patternID = Math.round(patternID)
-                                    let sound = patternsSound.get(patternID);
-                                    if (sound && !sound.isPlaying) sound.play();
-                                } else {
-                                    let patternID = (arToolkitContext.arController.patternMarkers[index].markerWidth - 1) * patternIdOffset - 1;
-                                    patternID = Math.round(patternID)
-                                    let sound = patternsSound.get(patternID);
-                                    if (sound && sound.nodeName === 'VIDEO') {
-                                        if (!sound.paused) sound.pause()
+                                let patternName = patternsID[index];
+                                let markerIndex = patternToMarkerIndex.get(patternName);
+                                if (markerIndex === undefined) continue;
+                                
+                                let patternID = (arToolkitContext.arController.patternMarkers[index].markerWidth - 1) * patternIdOffset - 1;
+                                patternID = Math.round(patternID);
+                                
+                                // For patterns, the sound is stored by marker index, not patternID
+                                let soundData = patternsSound.get(markerIndex);
+                                if (!soundData) continue;
+                                
+                                let sound = soundData.sound || soundData; // Support both old format (direct) and new format (object)
+                                let playOnControllerIntersect = soundData.playOnControllerIntersect || false;
+                                
+                                let markerDetected = arToolkitContext.arController.patternMarkers[index].inCurrent;
+                                let controllerIntersects = currentIntersectedMarker === markerIndex;
+                                
+                                // Determine if should play based on flag
+                                let shouldPlay = markerDetected;
+                                if (playOnControllerIntersect) {
+                                    shouldPlay = markerDetected && controllerIntersects;
+                                }
+                                
+                                if (shouldPlay) {
+                                    if (sound.nodeName === 'VIDEO') {
+                                        if (sound.paused) sound.play();
+                                    } else {
+                                        if (!sound.isPlaying) sound.play();
                                     }
-                                    if (sound && sound.isPlaying) sound.stop();
+                                } else {
+                                    if (sound.nodeName === 'VIDEO') {
+                                        if (!sound.paused) sound.pause();
+                                    }
+                                    if (sound.isPlaying) sound.stop();
                                 }
                             }
                         }

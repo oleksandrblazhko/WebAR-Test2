@@ -1,6 +1,6 @@
 {
   "settings": {
-    "resolution": "low",
+    "resolution": "high",
     "welcomeText": "Press here<br>to start the WebAR-BoardGame"
   },
   "markers": [
@@ -9,24 +9,44 @@
       "type": "pattern",
       "target": "pattern-ScanMe.patt",
       "contentType": "video",
-      "contentFile": "waterfall.mp4"
+      "contentFile": "waterfall.mp4",
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "SphereGeometry",
+          "radius": 0.8,
+          "widthSegments": 16,
+          "heightSegments": 16,
+          "color": "#ff6600",
+          "animation": { "type": "rotation", "axis": "y", "speed": 0.02 }
+        }
+      }
     },
     {
       "id": 1,
       "type": "barcode", 
       "target": 1,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "ConeGeometry",
-        "radius": 0.5,
-        "height": 1,
-        "radialSegments": 16,
-        "color": "#ffff00",
-        "textureFile": "texture_green.jpg",
-        "position": [0, 0, 0],
-        "rotation": [0, 0, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
+      "contentType": "text",
+      "text": {
+        "content": "5-2",
+        "size": 1.5,
+        "height": 0.1,
+        "color": "#ffff00"
+      },
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "ConeGeometry",
+          "radius": 0.5,
+          "height": 1,
+          "radialSegments": 16,
+          "color": "#ffff00",
+          "textureFile": "texture_green.jpg",
+          "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+        }
+      },
+      "audioFile": "question.mp3",
+      "playOnControllerIntersect": true
     },
     {
       "id": 2,
@@ -35,8 +55,16 @@
       "contentType": "model",
       "contentFile": "cat.gltf",
       "modelScale": 0.3,
-      "rotation": { "x": 1.5708, "y": -0.4292 },
-      "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+      "rotation": { "x": 1.5708, "y": 2.5 },
+      "animation": { "type": "rotation", "axis": "z", "speed": 0.01 },
+      "alternativeContent": {
+        "contentType": "model",
+        "contentFile": "Bender.glb",
+        "modelScale": 0.3,
+        "position": { "z": -0.5 },
+        "rotation": { "y": -1.5707963267948966, "x": -1.0 },
+        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+      }
     },
     {
       "id": 3,
@@ -51,8 +79,6 @@
         "tubularSegments": 32,
         "color": "#ff00ff",
         "textureFile": "texture_red.jpg",
-        "position": [0, 0, 0],
-        "rotation": [0, 0, 0],
         "animation": { "type": "rotation", "axis": "x", "speed": 0.02 }
       }
     },
@@ -77,8 +103,6 @@
         "size": [1, 1, 1],
         "textureFile": "texture_blue.jpg",
         "color": "#ff0000",
-        "position": [0, 0, 0],
-        "rotation": [0, 0, 0],
         "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
       }
     },
@@ -97,18 +121,25 @@
       "id": 7,
       "type": "barcode",
       "target": 4,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "SphereGeometry",
-        "radius": 0.5,
-        "widthSegments": 16,
-        "heightSegments": 16,
-        "color": "#00ff00",
-        "textureFile": "texture_red.jpg",
-        "position": [0, 0, 0],
-        "rotation": [0, 0, 0],
-        "animation": { "type": "rotation", "axis": "x", "speed": 0.02 }
-      }
+      "contentType": "text",
+      "text": {
+        "content": "3",
+        "size": 1.5,
+        "height": 0.1,
+        "color": "#00ff00"
+      },
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [1.2, 1.2, 1.2],
+          "color": "#ff0066",
+          "textureFile": "texture_blue.jpg",
+          "animation": { "type": "rotation", "axis": "z", "speed": 0.025 }
+        }
+      },
+      "audioFile": "correct_answer.mp3",
+      "playOnControllerIntersect": true
     },
     {
       "id": 8,
@@ -117,28 +148,50 @@
       "contentType": "model",
       "contentFile": "bird_orange.glb", 
       "modelScale": 100,
-      "animation": { "type": "rotation", "axis": "x", "speed": 0.01 }
+      "animation": { "type": "rotation", "axis": "z", "speed": 0.005 }
     },
     {
       "id": 9,
       "type": "barcode",
       "target": 5,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "CylinderGeometry",
-        "radiusTop": 0.3,
-        "radiusBottom": 0.3,
-        "height": 1,
-        "radialSegments": 16,
-        "color": "#0000ff",
-        "textureFile": "texture_green.jpg",
-        "position": [0, 0, 0],
-        "rotation": [0, 0, 0],
-        "animation": { "type": "rotation", "axis": "z", "speed": 0.015 }
-      }
+      "contentType": "text",
+      "text": {
+        "content": "1",
+        "size": 1.5,
+        "height": 0.1,
+        "color": "#0000ff"
+      },
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "CylinderGeometry",
+          "radiusTop": 0.3,
+          "radiusBottom": 0.3,
+          "height": 1,
+          "radialSegments": 16,
+          "color": "#0000ff",
+          "textureFile": "texture_green.jpg",
+          "animation": { "type": "rotation", "axis": "z", "speed": 0.015 }
+        }
+      },
+      "audioFile": "wrong_answer.mp3",
+      "playOnControllerIntersect": true
     },
     {
       "id": 10,
+      "type": "barcode",
+      "target": 6,
+      "contentType": "text",
+      "text": {
+        "content": "Question",
+        "size": 0.5,
+        "height": 0.1
+      },
+      "audioFile": "question.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 11,
       "type": "barcode",
       "target": 7,      
       "contentType": "controller"

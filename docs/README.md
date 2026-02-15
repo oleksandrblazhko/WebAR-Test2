@@ -1,3 +1,5 @@
+# Документація для WebAR-BoardGame
+
 ## Налаштування роздільної здатності
 Додано можливість налаштовувати роздільну здатність веб-камери через конфігураційний файл `config.json`.
 
@@ -10,8 +12,7 @@
 {
   "settings": {
     "resolution": "high"
-  },
-
+  }
 }
 ```
 
@@ -23,8 +24,7 @@
 {
   "settings": {
     "welcomeText": "Press here<br>to enter the WebAR-Board Game"
-  },
-  ]
+  }
 }
 ```
 
@@ -34,6 +34,7 @@
 - `image` - зображення
 - `video` - відео
 - `controller` - інтерактивний контролер (зелений куб)
+- `text` - текстовий контент
 
 ## Структура конфігурації маркерів
 Кожен маркер має наступну структуру:
@@ -43,17 +44,94 @@
 - `contentType` - тип контенту
 - Додаткові параметри залежно від типу контенту
 
-# Приклади конфігурацій для типу "primitive"
+## Тип контенту `text`
+Тип контенту `text` дозволяє відображати текстові елементи у просторі AR.
+
+### Параметри тексту:
+- `content` - текстовий вміст
+- `size` - розмір тексту
+- `height` - висота тексту
+- `color` - колір тексту (у форматі hex, наприклад "#ff0000")
+
+### Приклад:
+```json
+{
+  "id": 1,
+  "type": "barcode", 
+  "target": 1,
+  "contentType": "text",
+  "text": {
+    "content": "2",
+    "size": 1.5,
+    "height": 0.1,
+    "color": "#ffff00"
+  }
+}
+```
+
+## Альтернативний контент (`alternativeContent`)
+Можна вказати альтернативний контент, який відображається при певних умовах - коли контролер (інтерактивний об'єкт) торкається об'єкта, пов'язаного з маркером.
+
+### Приклад:
+```json
+{
+  "id": 0,
+  "type": "pattern",
+  "target": "pattern-ScanMe.patt",
+  "contentType": "video",
+  "contentFile": "waterfall.mp4",
+  "alternativeContent": {
+    "contentType": "primitive",
+    "primitive": {
+      "type": "SphereGeometry",
+      "radius": 0.8,
+      "widthSegments": 16,
+      "heightSegments": 16,
+      "color": "#ff6600",
+      "animation": { "type": "rotation", "axis": "y", "speed": 0.02 }
+    }
+  }
+}
+```
+
+## Аудіо при взаємодії (`audioFile` та `playOnControllerIntersect`)
+Можна вказати аудіофайл, який відтворюється при взаємодії з контролером.
+
+### Параметри:
+- `audioFile` - шлях до аудіофайлу
+- `playOnControllerIntersect` - відтворювати при перетині з контролером (true/false)
+
+Якщо `playOnControllerIntersect` дорівнює `true`, аудіо відтворюється тільки тоді, коли контролер торкається об'єкта, пов'язаного з маркером. Якщо `false`, аудіо відтворюється при виявленні маркера.
+
+### Приклад:
+```json
+{
+  "id": 1,
+  "type": "barcode", 
+  "target": 1,
+  "contentType": "text",
+  "text": {
+    "content": "2",
+    "size": 1.5,
+    "height": 0.1,
+    "color": "#ffff00"
+  },
+  "audioFile": "wrong_answer.mp3",
+  "playOnControllerIntersect": true
+}
+```
+
+## Приклади конфігурацій для типу "primitive"
 Тип контенту `primitive` дозволяє створювати прості 3D-фігури без необхідності завантажувати зовнішні 3D-моделі.
 
-## Підтримувані типи геометрій
+### Підтримувані типи геометрій
 - `BoxGeometry` - куб або прямокутний паралелепіпед
 - `SphereGeometry` - сфера
 - `CylinderGeometry` - циліндр
 - `ConeGeometry` - конус
 - `TorusGeometry` - тор (бублик)
 
-## Параметри примітиву
+### Параметри примітиву
 - `type` - тип геометрії (BoxGeometry, SphereGeometry, CylinderGeometry, ConeGeometry, TorusGeometry)
 - `size` - розміри для BoxGeometry [ширина, висота, глибина]
 - `radius` - радіус для SphereGeometry, ConeGeometry, TorusGeometry
@@ -75,8 +153,9 @@
 - `axis` - вісь обертання ("x", "y" або "z")
 - `speed` - швидкість обертання (числове значення)
 
+## Приклади конфігурацій
 
-## Куб з текстурою та анімацією обертання (замінив відео на маркері з ID 5)
+### Куб з текстурою та анімацією обертання
 ```json
 {
   "id": 5,
@@ -87,134 +166,74 @@
     "type": "BoxGeometry",
     "size": [1, 1, 1],
     "color": "#ff0000",
-    "textureFile": "data/texture.jpg",
-    "position": [0, 0, 0],
-    "rotation": [0, 0, 0],
+    "textureFile": "texture_blue.jpg",
     "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
   }
 }
 ```
 
-## Сфера з текстурою та анімацією обертання (замінив відео на маркері з ID 7)
+### Сфера з текстурою та анімацією обертання
 ```json
 {
   "id": 7,
   "type": "barcode",
   "target": 4,
-  "contentType": "primitive",
-  "primitive": {
-    "type": "SphereGeometry",
-    "radius": 0.5,
-    "widthSegments": 16,
-    "heightSegments": 16,
-    "color": "#00ff00",
-    "textureFile": "data/checkerboard.png",
-    "position": [0, 0, 0],
-    "rotation": [0, 0, 0],
-    "animation": { "type": "rotation", "axis": "x", "speed": 0.02 }
-  }
+  "contentType": "text",
+  "text": {
+    "content": "3",
+    "size": 1.5,
+    "height": 0.1,
+    "color": "#00ff00"
+  },
+  "alternativeContent": {
+    "contentType": "primitive",
+    "primitive": {
+      "type": "BoxGeometry",
+      "size": [1.2, 1.2, 1.2],
+      "color": "#ff0066",
+      "textureFile": "texture_blue.jpg",
+      "animation": { "type": "rotation", "axis": "z", "speed": 0.025 }
+    }
+  },
+  "audioFile": "correct_answer.mp3",
+  "playOnControllerIntersect": true
 }
 ```
 
-## Циліндр з текстурою та анімацією обертання (замінив відео на маркері з ID 9)
+### 3D модель з анімацією
 ```json
 {
-  "id": 9,
-  "type": "barcode",
-  "target": 5,
-  "contentType": "primitive",
-  "primitive": {
-    "type": "CylinderGeometry",
-    "radiusTop": 0.3,
-    "radiusBottom": 0.3,
-    "height": 1,
-    "radialSegments": 16,
-    "color": "#0000ff",
-    "textureFile": "data/stripes.jpg",
-    "position": [0, 0, 0],
-    "rotation": [0, 0, 0],
-    "animation": { "type": "rotation", "axis": "z", "speed": 0.015 }
-  }
-}
-```
-
-## Конус з текстурою та анімацією обертання (новий маркер з ID 11)
-```json
-{
-  "id": 11,
-  "type": "barcode",
-  "target": 6,
-  "contentType": "primitive",
-  "primitive": {
-    "type": "ConeGeometry",
-    "radius": 0.5,
-    "height": 1,
-    "radialSegments": 16,
-    "color": "#ffff00",
-    "textureFile": "data/cone_texture.jpg",
-    "position": [0, 0, 0],
-    "rotation": [0, 0, 0],
+  "id": 2,
+  "type": "pattern",
+  "target": "pattern-Cat.patt",
+  "contentType": "model",
+  "contentFile": "cat.gltf",
+  "modelScale": 0.3,
+  "rotation": { "x": 1.5708, "y": 2.5 },
+  "animation": { "type": "rotation", "axis": "z", "speed": 0.01 },
+  "alternativeContent": {
+    "contentType": "model",
+    "contentFile": "Bender.glb",
+    "modelScale": 0.3,
+    "position": { "z": -0.5 },
+    "rotation": { "y": -1.5707963267948966, "x": -1.0 },
     "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
   }
 }
 ```
 
-## Тор з текстурою та анімацією обертання (новий маркер з ID 12)
+### Контролер
 ```json
 {
-  "id": 12,
+  "id": 11,
   "type": "barcode",
   "target": 7,
-  "contentType": "primitive",
-  "primitive": {
-    "type": "TorusGeometry",
-    "radius": 0.5,
-    "tubeRadius": 0.2,
-    "radialSegments": 16,
-    "tubularSegments": 32,
-    "color": "#ff00ff",
-    "textureFile": "data/torus_texture.jpg",
-    "position": [0, 0, 0],
-    "rotation": [0, 0, 0],
-    "animation": { "type": "rotation", "axis": "x", "speed": 0.02 }
-  }
+  "contentType": "controller"
 }
 ```
 
-## Великий куб без анімації (замінив відео на маркері з ID 13)
-```json
-{
-  "id": 13,
-  "type": "barcode",
-  "target": 8,
-  "contentType": "primitive",
-  "primitive": {
-    "type": "BoxGeometry",
-    "size": [2, 0.5, 1],
-    "color": "#ffff00",
-    "textureFile": "data/checkerboard.png",
-    "position": [0, 0, 0],
-    "rotation": [0.5, 0.5, 0]
-  }
-}
-```
+## Необхідні файли
+Для правильної роботи проекту необхідно мати наступні файли в кореневому каталозі:
 
-## Сфера з повільною анімацією обертання (замінив відео на маркері з ID 14)
-```json
-{
-  "id": 14,
-  "type": "barcode",
-  "target": 9,
-  "contentType": "primitive",
-  "primitive": {
-    "type": "SphereGeometry",
-    "radius": 0.7,
-    "widthSegments": 24,
-    "heightSegments": 24,
-    "color": "#ff00ff",
-    "textureFile": "data/gradient.jpg",
-    "position": [1, 0, 0],
-    "rotation": [0, 0.5, 0],
-    "animation": { "type": "rotation", "axis": "z", "speed": 0.005 }
-  }
-}
+- `helvetiker_regular.typeface.json` - файл шрифту для відображення текстових елементів
+- Інші файли, вказані в конфігурації (моделі, зображення, відео, аудіо тощо)
