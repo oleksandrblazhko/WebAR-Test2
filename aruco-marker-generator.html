@@ -28,12 +28,14 @@
     
     <label for="dictionary">Оберіть словник:</label>
     <select id="dictionary" onchange="updateMaxId()">
-        <option value="ARUCO">ARUCO (7x7)</option>
+        <option value="ARUCO">ARUCO (Original 4x4)</option>
         <option value="ARUCO_MIP_36h12">ARUCO_MIP_36h12 (8x8)</option>
         <option value="ARUCO_4X4_1000">ARUCO 4x4 (1000 маркерів)</option>
+        <option value="ARUCO_5X5_1000">ARUCO 5x5 (1000 маркерів)</option>
+        <option value="ARUCO_7X7_1000">ARUCO 7x7 (1000 маркерів)</option>
     </select>
     
-    <label for="markerId">ID маркера (0-1023 для ARUCO, 0-249 для ARUCO_MIP_36h12, 0-999 для ARUCO 4x4):</label>
+    <label for="markerId">ID маркера (0-1023 для ARUCO, 0-249 для ARUCO_MIP_36h12, 0-999 для ARUCO 4x4, ARUCO 5x5 та ARUCO 7x7):</label>
     <input type="number" id="markerId" min="0" value="0">
     
     <button onclick="generateMarker()">Згенерувати маркер</button>
@@ -48,16 +50,18 @@
     <script src="js-aruco2/svd.js"></script>
     <!-- Підключаємо словники -->
     <script src="js-aruco2/dictionaries/aruco_4x4_1000.js"></script>
+    <script src="js-aruco2/dictionaries/aruco_5x5_1000.js"></script>
+    <script src="js-aruco2/dictionaries/aruco_7x7_1000.js"></script>
 
     <script>
         function updateMaxId() {
             const dictionaryName = document.getElementById('dictionary').value;
             const markerIdInput = document.getElementById('markerId');
-            
+
             // Встановлюємо максимальне значення в залежності від обраного словника
             if (dictionaryName === 'ARUCO_MIP_36h12') {
                 markerIdInput.max = 249;
-            } else if (dictionaryName === 'ARUCO_4X4_1000') {
+            } else if (dictionaryName === 'ARUCO_4X4_1000' || dictionaryName === 'ARUCO_5X5_1000' || dictionaryName === 'ARUCO_7X7_1000') {
                 markerIdInput.max = 999;
             } else {
                 markerIdInput.max = 1023; // для ARUCO за замовчуванням
@@ -67,27 +71,27 @@
         function generateMarker() {
             const dictionaryName = document.getElementById('dictionary').value;
             const markerId = parseInt(document.getElementById('markerId').value);
-            
+
             // Перевіряємо обмеження для ID маркера
             let maxId = 1023; // за замовчуванням для ARUCO
             if (dictionaryName === 'ARUCO_MIP_36h12') {
                 maxId = 249; // для ARUCO_MIP_36h12
-            } else if (dictionaryName === 'ARUCO_4X4_1000') {
-                maxId = 999; // для ARUCO_4X4_1000
+            } else if (dictionaryName === 'ARUCO_4X4_1000' || dictionaryName === 'ARUCO_5X5_1000' || dictionaryName === 'ARUCO_7X7_1000') {
+                maxId = 999; // для ARUCO_4X4_1000, ARUCO_5X5_1000 та ARUCO_7X7_1000
             }
-            
+
             if (markerId < 0 || markerId > maxId) {
                 alert(`ID маркера має бути в межах 0-${maxId} для обраного словника`);
                 return;
             }
-            
+
             try {
                 // Створюємо словник
                 const dictionary = new AR.Dictionary(dictionaryName);
-                
+
                 // Генеруємо SVG для маркера
                 const svgContent = dictionary.generateSVG(markerId);
-                
+
                 // Виводимо результат
                 const outputDiv = document.getElementById('markerOutput');
                 outputDiv.innerHTML = `
@@ -95,7 +99,7 @@
                         <h3>Маркер ID: ${markerId} (Словник: ${dictionaryName})</h3>
                         <div class="marker">${svgContent}</div>
                         <p><a href="data:image/svg+xml;utf8,${encodeURIComponent(svgContent)}" download="aruco_marker_${dictionaryName}_${markerId}.svg">Завантажити SVG</a></p>
-                        <p>Відкрийте зображення у новій вкладці та роздрукуйте для використання</p>
+                        <p>Відкройте зображення у новій вкладці та роздрукуйте для використання</p>
                     </div>
                 `;
             } catch (error) {

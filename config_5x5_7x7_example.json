@@ -201,14 +201,29 @@
       "id": 13,
       "type": "aruco",
       "dictionary": "ARUCO_7X7_1000",
-      "markerId": 1,
+      "markerId": 5,
+      "contentType": "model",
+      "contentFile": "Octopus_toy.glb",
+      "modelScale": 0.3,
+      "position": { "z": -0.5 },
+      "rotation": { "y": -1.5707963267948966, "x": -1.0 },
+      "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+    },
+    {
+      "id": 14,
+      "type": "aruco",
+      "dictionary": "ARUCO_5X5_1000",
+      "markerId": 8,
       "contentType": "primitive",
       "primitive": {
-        "type": "BoxGeometry",
-        "size": [1, 1, 1],
+        "type": "TorusGeometry",
+        "radius": 0.5,
+        "tubeRadius": 0.2,
+        "radialSegments": 16,
+        "tubularSegments": 32,
+        "color": "#00ff00",
         "textureFile": "texture_green.jpg",
-        "color": "#ff0000",
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+        "animation": { "type": "rotation", "axis": "x", "speed": 0.02 }
       }
     }
   ]

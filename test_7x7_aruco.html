@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Тест 7x7 ArUco маркерів</title>
+    
+    <!-- Підключаємо необхідні бібліотеки -->
+    <script src="js/three.js"></script>
+    <script src="js/tween.umd.js"></script>
+    <script src='loaders/GLTFLoader.js'></script>
+    <script src='loaders/GLTF2Loader.js'></script>
+    <script src='loaders/MTLLoader.js'></script>
+    <script src='loaders/OBJLoader.js'></script>
+    
+    <!-- Підключаємо jsartoolkit -->
+    <script src="jsartoolkit5/artoolkit.min.js"></script>
+    <script src="jsartoolkit5/artoolkit.api.js"></script>
+    
+    <!-- Підключаємо threex.artoolkit -->
+    <script src="threex/threex-artoolkitsource.js"></script>
+    <script src="threex/threex-artoolkitcontext.js"></script>
+    <script src="threex/threex-arbasecontrols.js"></script>
+    <script src="threex/threex-armarkercontrols.js"></script>
+    
+    <!-- Підключаємо js-aruco2 бібліотеки -->
+    <script src="js-aruco2/aruco.js"></script>
+    <script src="js-aruco2/cv.js"></script>
+    <script src="js-aruco2/posit1.js"></script>
+    <script src="js-aruco2/posit2.js"></script>
+    <script src="js-aruco2/svd.js"></script>
+    
+    <!-- Підключаємо словники -->
+    <script src="js-aruco2/dictionaries/aruco_4x4_1000_browser.js"></script>
+    <script src="js-aruco2/dictionaries/aruco_7x7_1000.js"></script>
+    
+    <!-- Підключаємо наш клас для ArUco-маркерів -->
+    <script src="js/aruco-marker-controls.js"></script>
+</head>
+
+<body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
+    <div style="position: absolute; top: 10px; width: 100%; text-align: center; color: white; z-index: 100;">
+        <h2>Тест 7x7 ArUco маркерів</h2>
+        <p>Покажіть 7x7 ArUco маркер (ID: 5) перед камеру</p>
+        <button id="toggleMarker">Перемкнути видимість маркера</button>
+        <button id="switchDictionary">Перемкнути словник (4x4 ↔ 7x7)</button>
+    </div>
+
+    <script>
+        // Оголошуємо глобальні змінні
+        var scene, camera, renderer, clock, deltaTime, totalTime;
+
+        // Змінні необхідні для роботи AR оточення
+        var arToolkitSource, arToolkitContext;
+
+        // Головний контейнер, до якого увійдуть всі 3D об'єкти для програми
+        var markerRoot;
+
+        // Оголошуємо сцену, в яку додамо головний контейнер з усіма 3D об'єктами.
+        scene = new THREE.Scene();
+
+        // Додаємо світло на сцену, інакше базові матеріали будуть просто чорними.
+        let ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+        scene.add(ambientLight);
+
+        // Додаємо камеру, яка буде пізніше перепризначена на камеру смартфона
+        camera = new THREE.Camera();
+        scene.add(camera);
+
+        // Визначаємо роздільну здатність
+        let canvasWidth = window.innerWidth;
+        let canvasHeight = window.innerHeight;
+
+        // Створюємо рендерер
+        renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            alpha: true
+        });
+        renderer.setSize(canvasWidth, canvasHeight);
+        renderer.domElement.style.position = 'absolute';
+        renderer.domElement.style.top = '0px';
+        renderer.domElement.style.left = '0px';
+        renderer.domElement.style.zIndex = '99';
+        document.body.appendChild(renderer.domElement);
+
+        // Ініціалізуємо ARToolkit
+        arToolkitSource = new THREEx.ArToolkitSource({
+            sourceType: 'webcam',
+        });
+
+        arToolkitSource.init(() => {
+            arToolkitContext = new THREEx.ArToolkitContext({
+                detectionMode: 'mono',
+                maxDetectionRate: 30,
+                canvasWidth: 640,
+                canvasHeight: 480
+            });
+
+            arToolkitContext.init(arToolkitSource.domElement);
+
+            // Створюємо маркер
+            markerRoot = new THREE.Group();
+            scene.add(markerRoot);
+
+            // Створюємо 3D об'єкт для маркера
+            let geometry = new THREE.ConeGeometry(0.5, 1, 8);
+            let material = new THREE.MeshPhongMaterial({
+                color: 0xff0000,
+                shininess: 100,
+                flatShading: true
+            });
+            let cone = new THREE.Mesh(geometry, material);
+            cone.position.y = 0.5; // Піднімаємо конус, щоб вершина була вгорі
+            markerRoot.add(cone);
+
+            // Додаємо текстуру для кращого візуального представлення
+            let edgeGeometry = new THREE.EdgesGeometry(cone.geometry);
+            let lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 });
+            let wireframe = new THREE.LineSegments(edgeGeometry, lineMaterial);
+            cone.add(wireframe);
+
+            // Додаємо текст з ID маркера
+            createText('7x7', cone);
+
+            // Створюємо контролер для ArUco-маркерів
+            let markerControls = new THREEx.ArUcoMarkerControls(arToolkitContext, markerRoot, {
+                dictionaryName: 'ARUCO_7X7_1000', // Використовуємо 7x7 словник
+                markerId: 5, // ID маркера
+                size: 1, // Розмір маркера в метрах
+                maxHammingDistance: 3 // Допустима відстань для розпізнавання
+            });
+
+            // Змінна для відстеження поточного словника
+            let currentDictionary = 'ARUCO_7X7_1000';
+
+            // Функція для створення тексту
+            function createText(text, parent) {
+                // Спробуємо створити текстову мітку
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.width = 256;
+                canvas.height = 128;
+                
+                context.fillStyle = 'white';
+                context.fillRect(0, 0, canvas.width, canvas.height);
+                
+                context.font = 'Bold 40px Arial';
+                context.fillStyle = 'black';
+                context.textAlign = 'center';
+                context.textBaseline = 'middle';
+                context.fillText(text, canvas.width / 2, canvas.height / 2);
+                
+                const texture = new THREE.CanvasTexture(canvas);
+                const material = new THREE.MeshBasicMaterial({
+                    map: texture,
+                    transparent: true,
+                    side: THREE.DoubleSide
+                });
+                
+                const geometry = new THREE.PlaneGeometry(1, 0.5);
+                const textMesh = new THREE.Mesh(geometry, material);
+                textMesh.position.y = 0.8; // Розміщуємо трохи вище за конус
+                parent.add(textMesh);
+            }
+
+            // Функція оновлення
+            function update() {
+                // Оновлюємо розмір рендерера при зміні розміру вікна
+                if (arToolkitSource.onResize) {
+                    arToolkitSource.onResize();
+                }
+
+                // Оновлюємо AR контекст
+                if (arToolkitContext.update(arToolkitSource.domElement)) {
+                    // Отримуємо позицію маркера
+                    let projectionMatrix = new THREE.Matrix4().fromArray(arToolkitContext.getProjectionMatrix());
+                    camera.projectionMatrix.copy(projectionMatrix);
+                }
+            }
+
+            // Функція рендерингу
+            function render() {
+                renderer.render(scene, camera);
+            }
+
+            // Змінюємо видимість маркера
+            document.getElementById('toggleMarker').addEventListener('click', function() {
+                markerRoot.visible = !markerRoot.visible;
+            });
+
+            // Перемикаємо словник
+            document.getElementById('switchDictionary').addEventListener('click', function() {
+                if (currentDictionary === 'ARUCO_7X7_1000') {
+                    currentDictionary = 'ARUCO_4X4_1000';
+                    document.querySelector('p').textContent = 'Покажіть 4x4 ArUco маркер (ID: 5) перед камеру';
+                } else {
+                    currentDictionary = 'ARUCO_7X7_1000';
+                    document.querySelector('p').textContent = 'Покажіть 7x7 ArUco маркер (ID: 5) перед камеру';
+                }
+                
+                // Оновлюємо параметри контролера
+                markerControls.setParameters({
+                    dictionaryName: currentDictionary,
+                    markerId: 5
+                });
+                
+                // Оновлюємо текст на маркері
+                if (markerRoot.children.length > 0) {
+                    const cone = markerRoot.children[0];
+                    // Видаляємо старий текст
+                    if (cone.children.length > 1) {
+                        cone.remove(cone.children[1]);
+                    }
+                    // Додаємо новий текст
+                    createText(currentDictionary.substring(0, 6), cone);
+                }
+            });
+
+            // Запускаємо цикл анімації
+            function animate() {
+                requestAnimationFrame(animate);
+                update();
+                render();
+            }
+
+            animate();
+        });
+    </script>
+</body>
+</html>

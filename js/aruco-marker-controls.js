@@ -38,10 +38,18 @@ THREEx.ArUcoMarkerControls = function(arContext, object3d, parameters) {
         dictionaryName: this.parameters.dictionaryName,
         maxHammingDistance: this.parameters.maxHammingDistance
     };
-    
+
     // Для 4x4 словників збільшуємо maxHammingDistance для кращого розпізнавання
     if (this.parameters.dictionaryName.includes('4X4')) {
         detectorParams.maxHammingDistance = this.parameters.maxHammingDistance > 0 ? this.parameters.maxHammingDistance : 2; // Збільшуємо для 4x4
+    }
+    // Для 5x5 словників також можемо встановити оптимальне значення maxHammingDistance
+    else if (this.parameters.dictionaryName.includes('5X5')) {
+        detectorParams.maxHammingDistance = this.parameters.maxHammingDistance > 0 ? this.parameters.maxHammingDistance : 2; // Збільшуємо для 5x5
+    }
+    // Для 7x7 словників також можемо встановити оптимальне значення maxHammingDistance
+    else if (this.parameters.dictionaryName.includes('7X7')) {
+        detectorParams.maxHammingDistance = this.parameters.maxHammingDistance > 0 ? this.parameters.maxHammingDistance : 3; // Збільшуємо для 7x7
     }
     
     this.detector = new AR.Detector(detectorParams);
@@ -202,12 +210,20 @@ THREEx.ArUcoMarkerControls.prototype.setParameters = function(params) {
             dictionaryName: this.parameters.dictionaryName,
             maxHammingDistance: this.parameters.maxHammingDistance
         };
-        
+
         // Для 4x4 словників збільшуємо maxHammingDistance для кращого розпізнавання
         if (this.parameters.dictionaryName.includes('4X4')) {
             detectorParams.maxHammingDistance = this.parameters.maxHammingDistance > 0 ? this.parameters.maxHammingDistance : 2; // Збільшуємо для 4x4
         }
-        
+        // Для 5x5 словників також можемо встановити оптимальне значення maxHammingDistance
+        else if (this.parameters.dictionaryName.includes('5X5')) {
+            detectorParams.maxHammingDistance = this.parameters.maxHammingDistance > 0 ? this.parameters.maxHammingDistance : 2; // Збільшуємо для 5x5
+        }
+        // Для 7x7 словників також можемо встановити оптимальне значення maxHammingDistance
+        else if (this.parameters.dictionaryName.includes('7X7')) {
+            detectorParams.maxHammingDistance = this.parameters.maxHammingDistance > 0 ? this.parameters.maxHammingDistance : 3; // Збільшуємо для 7x7
+        }
+
         this.detector = new AR.Detector(detectorParams);
     }
 };
