@@ -153,13 +153,13 @@
                     case 'model':
                         return createAlternativeModelContent(markerRoot, alternativeContentConfig);
                     case 'primitive':
-                        return createAlternativePrimitiveContent(markerRoot, alternativeContentConfig);
+                        return createAlternativePrimitiveContent(markerRoot, alternativeContentConfig, markerIndex, config);
                     case 'image':
-                        return createAlternativeImageContent(markerRoot, alternativeContentConfig);
+                        return createAlternativeImageContent(markerRoot, alternativeContentConfig, markerIndex);
                     case 'video':
-                        return createAlternativeVideoContent(markerRoot, alternativeContentConfig);
+                        return createAlternativeVideoContent(markerRoot, alternativeContentConfig, markerIndex);
                     case 'text':
-                        return createAlternativeTextContent(markerRoot, alternativeContentConfig);
+                        return createAlternativeTextContent(markerRoot, alternativeContentConfig, markerIndex);
                     default:
                         return null;
                 }
@@ -199,8 +199,8 @@
             }
             
             // Function to create primitive content for alternative content
-            function createAlternativePrimitiveContent(markerRoot, config) {
-                const primitive = config.primitive;
+            function createAlternativePrimitiveContent(markerRoot, alternativeContentConfig, markerIndex, config) {
+                const primitive = alternativeContentConfig.primitive;
                 let geometry, material, mesh;
                 
                 switch(primitive.type) {
@@ -258,16 +258,28 @@
                     mesh.rotation.set(...primitive.rotation);
                 }
                 
+                // Створюємо обгортку для контенту
+                const contentWrapper = new THREE.Group();
+                contentWrapper.add(mesh);
+
+                // Якщо це aruco маркер, застосовуємо коригування обертання для правильного напрямку примітивів
+                if (config && config.markers && config.markers[markerIndex] && config.markers[markerIndex].type === 'aruco') {
+                    // Обертаємо на 135 градусів по осі X, щоб основа конуса була паралельна площині маркера
+                    // а вершина направлена у протилежну сторону від площини
+                    contentWrapper.rotation.x = 3 * Math.PI / 4; // 135 градусів
+                }
+
                 if (primitive.animation) {
                     mesh.userData.animation = primitive.animation;
                 }
-                
+
                 mesh.userData.isAlternativeContent = true;
-                return Promise.resolve(mesh);
+
+                return Promise.resolve(contentWrapper);
             }
             
             // Function to create image content for alternative content
-            function createAlternativeImageContent(markerRoot, config) {
+            function createAlternativeImageContent(markerRoot, config, markerIndex) {
                 return new Promise((resolve) => {
                     let loader = new THREE.TextureLoader();
                     loader.load(config.contentFile, (texture) => {
@@ -280,14 +292,26 @@
                         let material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
                         let mesh = new THREE.Mesh(geometry, material);
                         mesh.rotation.x = -Math.PI / 2;
+                        
+                        // Створюємо обгортку для контенту
+                        const contentWrapper = new THREE.Group();
+                        contentWrapper.add(mesh);
+
+                        // Якщо це aruco маркер, застосовуємо коригування обертання для правильного напрямку примітивів
+                        if (config && config.markers && config.markers[markerIndex] && config.markers[markerIndex].type === 'aruco') {
+                            // Обертаємо на 135 градусів по осі X, щоб основа конуса була паралельна площині маркера
+                            // а вершина направлена у протилежну сторону від площини
+                            contentWrapper.rotation.x = 3 * Math.PI / 4; // 135 градусів
+                        }
+                        
                         mesh.userData.isAlternativeContent = true;
-                        resolve(mesh);
+                        resolve(contentWrapper);
                     });
                 });
             }
             
             // Function to create video content for alternative content
-            function createAlternativeVideoContent(markerRoot, config) {
+            function createAlternativeVideoContent(markerRoot, config, markerIndex) {
                 let geometry = new THREE.PlaneBufferGeometry(1.6, 0.9);
                 let video = document.createElement('video');
                 video.src = config.contentFile;
@@ -300,13 +324,25 @@
                 let material = new THREE.MeshBasicMaterial({ map: texture });
                 let mesh = new THREE.Mesh(geometry, material);
                 mesh.rotation.x = -Math.PI / 2;
-                mesh.userData.isAlternativeContent = true;
                 
-                return Promise.resolve({ mesh, video });
+                // Створюємо обгортку для контенту
+                const contentWrapper = new THREE.Group();
+                contentWrapper.add(mesh);
+
+                // Якщо це aruco маркер, застосовуємо коригування обертання для правильного напрямку примітивів
+                if (config && config.markers && config.markers[markerIndex] && config.markers[markerIndex].type === 'aruco') {
+                    // Обертаємо на 135 градусів по осі X, щоб основа конуса була паралельна площині маркера
+                    // а вершина направлена у протилежну сторону від площини
+                    contentWrapper.rotation.x = 3 * Math.PI / 4; // 135 градусів
+                }
+                
+                mesh.userData.isAlternativeContent = true;
+
+                return Promise.resolve({ mesh: contentWrapper, video });
             }
-            
+
             // Function to create text content for alternative content
-            function createAlternativeTextContent(markerRoot, config) {
+            function createAlternativeTextContent(markerRoot, config, markerIndex) {
                 return fontPromise.then((font) => {
                     if (!config.text) return null;
 
@@ -346,12 +382,23 @@
                         mesh.rotation.set(rot.x || 0, rot.y || 0, rot.z || 0);
                     }
 
+                    // Створюємо обгортку для контенту
+                    const contentWrapper = new THREE.Group();
+                    contentWrapper.add(mesh);
+
+                    // Якщо це aruco маркер, застосовуємо коригування обертання для правильного напрямку примітивів
+                    if (config && config.markers && config.markers[markerIndex] && config.markers[markerIndex].type === 'aruco') {
+                        // Обертаємо на 135 градусів по осі X, щоб основа конуса була паралельна площині маркера
+                        // а вершина направлена у протилежну сторону від площини
+                        contentWrapper.rotation.x = 3 * Math.PI / 4; // 135 градусів
+                    }
+
                     if (textConfig.animation) {
                         mesh.userData.animation = textConfig.animation;
                     }
 
                     mesh.userData.isAlternativeContent = true;
-                    return mesh;
+                    return contentWrapper;
                 });
             }
             
@@ -805,7 +852,7 @@
                             if (config.markers[i] && config.markers[i].primitive) {
                                 const primitive = config.markers[i].primitive;
                                 let geometry, material, mesh;
-                                
+
                                 // Створюємо геометрію відповідно до типу
                                 switch(primitive.type) {
                                     case 'BoxGeometry':
@@ -816,49 +863,49 @@
                                         break;
                                     case 'CylinderGeometry':
                                         geometry = new THREE.CylinderGeometry(
-                                            primitive.radiusTop || 0.5, 
-                                            primitive.radiusBottom || 0.5, 
-                                            primitive.height || 1, 
+                                            primitive.radiusTop || 0.5,
+                                            primitive.radiusBottom || 0.5,
+                                            primitive.height || 1,
                                             primitive.radialSegments || 32
                                         );
                                         break;
                                     case 'ConeGeometry':
                                         geometry = new THREE.ConeGeometry(
-                                            primitive.radius || 0.5, 
-                                            primitive.height || 1, 
+                                            primitive.radius || 0.5,
+                                            primitive.height || 1,
                                             primitive.radialSegments || 32
                                         );
                                         break;
                                     case 'TorusGeometry':
                                         geometry = new THREE.TorusGeometry(
-                                            primitive.radius || 1, 
-                                            primitive.tubeRadius || 0.4, 
-                                            primitive.radialSegments || 16, 
+                                            primitive.radius || 1,
+                                            primitive.tubeRadius || 0.4,
+                                            primitive.radialSegments || 16,
                                             primitive.tubularSegments || 32
                                         );
                                         break;
                                     default:
                                         geometry = new THREE.BoxGeometry(1, 1, 1);
                                 }
-                                
+
                                 // Створюємо матеріал з кольором або текстурою
                                 if (primitive.textureFile) {
                                     // Завантажуємо текстуру, якщо вона вказана
                                     let texture = new THREE.TextureLoader().load(primitive.textureFile);
-                                    material = new THREE.MeshBasicMaterial({ 
+                                    material = new THREE.MeshBasicMaterial({
                                         map: texture,
                                         color: new THREE.Color(primitive.color || '#ffffff') // Додаємо базовий колір для випадку, якщо текстура не завантажиться
                                     });
                                 } else {
                                     // Використовуємо колір, якщо текстура не вказана
-                                    material = new THREE.MeshBasicMaterial({ 
-                                        color: new THREE.Color(primitive.color || '#ffffff') 
+                                    material = new THREE.MeshBasicMaterial({
+                                        color: new THREE.Color(primitive.color || '#ffffff')
                                     });
                                 }
-                                
+
                                 // Створюємо меш
                                 mesh = new THREE.Mesh(geometry, material);
-                                
+
                                 // Застосовуємо позицію та обертання
                                 if (primitive.position) {
                                     mesh.position.set(...primitive.position);
@@ -866,10 +913,22 @@
                                 if (primitive.rotation) {
                                     mesh.rotation.set(...primitive.rotation);
                                 }
+
+                                // Створюємо обгортку для контенту
+                                const contentWrapper = new THREE.Group();
+                                contentWrapper.add(mesh);
+
+                                // Якщо це aruco маркер, застосовуємо коригування обертання для правильного напрямку примітивів
+                                if (markerType === 'aruco') {
+                                    // Обертаємо на 135 градусів по осі X, щоб основа конуса була паралельна площині маркера
+                                    // а вершина направлена у протилежну сторону від площини
+                                    contentWrapper.rotation.x = 3 * Math.PI / 4; // 135 градусів
+                                }
+
+                                // Додаємо обгортку до контейнера маркера
+                                markerRoots[i].add(contentWrapper);
                                 
-                                // Додаємо до контейнера маркера
-                                markerRoots[i].add(mesh);
-                                
+
                                 // Зберігаємо для анімації
                                 if (primitive.animation) {
                                     mesh.userData.animation = primitive.animation;
@@ -919,6 +978,20 @@
                                         mesh.rotation.set(rot.x || 0, rot.y || 0, rot.z || 0);
                                     }
 
+                                    // Створюємо обгортку для контенту
+                                    const contentWrapper = new THREE.Group();
+                                    contentWrapper.add(mesh);
+
+                                    // Якщо це aruco маркер, застосовуємо коригування обертання для правильного напрямку примітивів
+                                    if (markerType === 'aruco') {
+                                        // Обертаємо на 135 градусів по осі X, щоб основа конуса була паралельна площині маркера
+                                        // а вершина направлена у протилежну сторону від площини
+                                        contentWrapper.rotation.x = 3 * Math.PI / 4; // 135 градусів
+                                    }
+
+                                    // Додаємо обгортку до контейнера маркера
+                                    markerRoots[i].add(contentWrapper);
+                                    
                                     // Store animation if specified (prefer textConfig, fallback to marker level)
                                     if (textConfig.animation) {
                                         mesh.userData.animation = textConfig.animation;
@@ -926,7 +999,6 @@
                                         mesh.userData.animation = config.markers[i].animation;
                                     }
 
-                                    markerRoots[i].add(mesh);
                                     console.log(`Text content for marker ${i} created`);
                                 }).catch((error) => {
                                     console.error(`Error creating text for marker ${i}:`, error);
@@ -1066,7 +1138,7 @@
                     if (intersectedMarkerIndex !== null && markerAlternativeContent.has(intersectedMarkerIndex)) {
                         switchMarkerContent(intersectedMarkerIndex, true);
                     }
-                    
+
                     // Reset all other markers to first content when controller is active but not intersecting them
                     for (let i = 0; i < markerRoots.length; i++) {
                         if (i !== intersectedMarkerIndex && markerContentState.get(i)) {
@@ -1141,31 +1213,25 @@
                         for (let idx = 0; idx < markerRoots.length; idx++) {
                             if (config.markers[idx] && (config.markers[idx].id === 5 || config.markers[idx].id === 12)) {
                                 if (markerRoots[idx] && markerRoots[idx].visible) {
-                                    console.log('Маркер ID ' + config.markers[idx].id + ': ВИДИМИЙ, markerIndex =', idx);
                                     
                                     // Додамо діагностику властивостей об'єкта
                                     const obj = markerRoots[idx];
-                                    console.log('  - Позиція: (' + obj.position.x + ', ' + obj.position.y + ', ' + obj.position.z + ')');
-                                    console.log('  - Обертання: (' + obj.rotation.x + ', ' + obj.rotation.y + ', ' + obj.rotation.z + ')');
-                                    console.log('  - Масштаб: (' + obj.scale.x + ', ' + obj.scale.y + ', ' + obj.scale.z + ')');
-                                    console.log('  - Кількість дочірніх елементів: ' + obj.children.length);
                                     
                                     if (obj.children.length > 0) {
                                         const child = obj.children[0];
-                                        console.log('  - Дочірній об\'єкт типу: ' + child.type);
                                         
                                         if (child.geometry) {
-                                            console.log('  - Геометрія: ' + child.geometry.type);
                                         }
                                         
                                         if (child.material) {
-                                            console.log('  - Матеріал: ' + child.material.type);
                                             
                                             if (child.material.color) {
-                                                console.log('  - Колір матеріалу: ' + child.material.color.getHexString());
                                             }
                                         }
                                     }
+                                } else if (config.markers[idx] && config.markers[idx].id === 12) {
+                                    // Додаткова діагностика для ARUCO-маркера з ID=12, коли він не видимий
+                                    
                                 }
                             }
                         }
@@ -1176,13 +1242,6 @@
                                 const arucoMarker = window.arucoMarkers[i];
                                 const markerIndex = arucoMarker.index;
 
-                                // Додамо діагностичне повідомлення для маркера з ID 12 лише коли він видимий
-                                if (config.markers[markerIndex] && config.markers[markerIndex].id === 12 && markerRoots[markerIndex] && markerRoots[markerIndex].visible) {
-                                    console.log('ArUco маркер ID 12: ВИДИМИЙ, markerIndex =', markerIndex);
-                                    console.log('ArUco маркер ID 12: Позиція об\'єкта =', markerRoots[markerIndex].position);
-                                    console.log('ArUco маркер ID 12: Масштаб об\'єкта =', markerRoots[markerIndex].scale);
-                                    console.log('ArUco маркер ID 12: Кількість дочірніх елементів =', markerRoots[markerIndex].children.length);
-                                }
 
                                 // Отримуємо аудіо дані для цього маркера
                                 let soundData = null;
@@ -1204,9 +1263,15 @@
                                     let sound = soundData.sound || soundData;
                                     let playOnControllerIntersect = soundData.playOnControllerIntersect || false;
                                     
-                                    // Перевіряємо, чи маркер виявлено (це визначається через видимість об'єкта маркера)
-                                    let markerDetected = markerRoots[markerIndex] && markerRoots[markerIndex].visible;
+                                    // Перевіряємо, чи маркер виявлено (це визначається через inCurrent властивість ARUCO-контролера)
+                                    let markerDetected = arucoMarker.controls && arucoMarker.controls.inCurrent;
                                     let controllerIntersects = currentIntersectedMarker === markerIndex;
+                                    
+                                    // Встановлюємо видимість маркера на основі виявлення
+                                    if (markerRoots[markerIndex]) {
+                                        markerRoots[markerIndex].visible = markerDetected;
+                                    }
+                                    
 
                                     // Determine if should play based on flag
                                     let shouldPlay = markerDetected;
@@ -1226,6 +1291,11 @@
                                         }
                                         if (sound.isPlaying) sound.stop();
                                     }
+                                    
+                                }
+                                
+                                // Додаткова діагностика для ARUCO-маркера з ID=12
+                                if (config.markers[markerIndex] && config.markers[markerIndex].id === 12) {
                                 }
                             }
                         }
@@ -1240,10 +1310,6 @@
 
                                 // Додамо діагностичне повідомлення для маркера з ID 5 лише коли він видимий
                                 if (elem === 5 && markerRoots[markerIndex] && markerRoots[markerIndex].visible) {
-                                    console.log('Barcode маркер ID 5: ВИДИМИЙ, markerIndex =', markerIndex);
-                                    console.log('Barcode маркер ID 5: Позиція об\'єкта =', markerRoots[markerIndex].position);
-                                    console.log('Barcode маркер ID 5: Масштаб об\'єкта =', markerRoots[markerIndex].scale);
-                                    console.log('Barcode маркер ID 5: Кількість дочірніх елементів =', markerRoots[markerIndex].children.length);
                                 }
 
                                 let sound = soundData.sound || soundData; // Support both old format (direct) and new format (object)

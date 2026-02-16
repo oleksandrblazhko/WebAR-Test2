@@ -83,6 +83,16 @@ THREEx.ArUcoMarkerControls.prototype.update = function(sourceImageData) {
             if (targetMarker) {
                 this.processMarker(targetMarker);
                 this.lastDetectedMarker = targetMarker;
+                
+                // Додатково встановлюємо властивість для відстеження стану виявлення
+                this.inCurrent = true;
+                
+                
+                // Встановлюємо об'єкт як видимий при виявленні маркера
+                this.object3d.visible = true;
+                
+                
+
                 return true;
             }
         } else {
@@ -105,19 +115,17 @@ THREEx.ArUcoMarkerControls.prototype.processMarker = function(marker) {
     // Оновлюємо позицію та обертання об'єкта на основі кутів маркера
     // Для цього використовуємо POS.Posit для обчислення позиції та обертання
 
-    // Створюємо екземпляр POS.Posit для обчислення позиції
-    // Розмір моделі встановлюємо відповідно до параметрів
-    // Використовуємо ширину відео як фокусну відстань (це стандартне значення для більшості камер)
-    var videoWidth = 640; // можна отримати з джерела відео
-    var videoHeight = 480; // можна отримати з джерела відео
+    // Отримуємо розміри зображення з контексту AR для правильного масштабування
+    var videoWidth = this.arContext.arController.canvas.width;
+    var videoHeight = this.arContext.arController.canvas.height;
     var posit = new POS.Posit(this.parameters.size, videoWidth); // використовуємо ширину як фокусну відстань
 
     // Потрібно відцентрувати кути маркера
     var corners = [];
     for (var i = 0; i < marker.corners.length; i++) {
         var corner = {
-            x: marker.corners[i].x - (640 / 2),
-            y: (480 / 2) - marker.corners[i].y
+            x: marker.corners[i].x - (videoWidth / 2),
+            y: (videoHeight / 2) - marker.corners[i].y
         };
         corners.push(corner);
     }
@@ -125,7 +133,6 @@ THREEx.ArUcoMarkerControls.prototype.processMarker = function(marker) {
     // Обчислюємо позицію та обертання
     var pose = posit.pose(corners);
     
-    console.log('ArUco: Обчислено позу для маркера, bestTranslation:', pose ? pose.bestTranslation : 'null');
 
     if (pose) {
         // Оновлюємо матрицю об'єкта
@@ -134,8 +141,6 @@ THREEx.ArUcoMarkerControls.prototype.processMarker = function(marker) {
         // Показуємо об'єкт
         this.object3d.visible = true;
 
-        // Додамо діагностичне повідомлення лише коли об'єкт встановлюється як видимий
-        console.log('ArUco: Об\'єкт встановлено як ВИДИМИЙ, позиція:', pose.bestTranslation);
     }
 };
 
@@ -167,17 +172,12 @@ THREEx.ArUcoMarkerControls.prototype.updateObject3D = function(translation, rota
     // Інвертуємо Z-координату, щоб узгодити з системою координат ARToolKit
     this.object3d.position.z *= -1;
     
+    // Оновлюємо матрицю на основі зміненої позиції
+    this.object3d.updateMatrix();
+    
     // Позначаємо, що матриця не повинна автоматично оновлюватися
     this.object3d.matrixAutoUpdate = false;
     
-    // Додамо діагностичне повідомлення з повною інформацією про об'єкт
-    console.log('ArUco: Об\'єкт оновлено, позиція:', this.object3d.position, 'обертання:', rotation, 'масштаб:', this.object3d.scale);
-    
-    // Додамо додаткову перевірку для відладки
-    console.log('ArUco: Об\'єкт видимий:', this.object3d.visible, 'індекс маркера:', this.parameters.markerId);
-    
-    // Додамо діагностику для аналізу X-координати
-    console.log('ArUco: X-координата для маркера ID', this.parameters.id, '=', this.object3d.position.x, '(центр = 0, права сторона > 0, ліва сторона < 0)');
 };
 
 // Метод для отримання останнього виявленого маркера
