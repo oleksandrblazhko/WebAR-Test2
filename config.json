@@ -86,6 +86,21 @@
       "type": "barcode",
       "target": 7,      
       "contentType": "controller"
+    },
+    {
+      "id": 5,
+      "type": "aruco:ARUCO_4X4_1000", 
+      "target": 1,
+      "contentType": "primitive",
+      "primitive": {
+        "type": "ConeGeometry",
+        "radius": 0.5,
+        "height": 1,
+        "radialSegments": 16,
+        "color": "#ffff00",
+        "textureFile": "texture_green.jpg",
+        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+      }
     }
   ]
 }

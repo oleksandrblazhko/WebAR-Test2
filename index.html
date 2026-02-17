@@ -18,6 +18,14 @@
     <script src="threex/threex-artoolkitcontext.js"></script>
     <script src="threex/threex-arbasecontrols.js"></script>
     <script src="threex/threex-armarkercontrols.js"></script>
+
+    <!-- Додаємо js-aruco2 -->
+    <script type="text/javascript" src="js-aruco2/src/svd.js"></script>
+    <script type="text/javascript" src="js-aruco2/src/posit1.js"></script>
+    <script type="text/javascript" src="js-aruco2/src/cv.js"></script>
+    <script type="text/javascript" src="js-aruco2/src/aruco.js"></script>
+    <script type="text/javascript" src="js-aruco2/src/dictionaries/aruco_4x4_1000.js"></script>
+    <script src="js/aruco.js"></script>
 </head>
 
 <body style='margin : 0px; overflow: hidden; font-family: Monospace; user-select: none; pointer-events: none;'>
@@ -104,6 +112,8 @@
             let barcodeToMarkerIndex = new Map();
             let patternToMarkerIndex = new Map();
 
+            let arucoControls = [];
+            
             let controller;
             
             // Track current content state for each marker (true = alternative content, false = first content)
@@ -603,20 +613,30 @@
                 for (let i = 0; i < maxMarkers; i++) {
                     mainContainer.add(markerRoots[i]);
 
-                    // Якщо поточний маркер – це баркод, створюємо AR контролер під баркод
-                    // якщо поточний маркер це патерн, аналогічно створюємо AR контролер під патерн
-                    if (patternBarcode[i] === -1) {
-                        let markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, markerRoots[i], {
-                            type: 'pattern', patternUrl: patternNames[i], size: 1 + (i + 1) / patternIdOffset
-                        })
-                        patternsID.push(patternNames[i]);
-                        patternToMarkerIndex.set(patternNames[i], i);
-                    } else {
-                        let markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, markerRoots[i], {
-                            type: "barcode", barcodeValue: patternBarcode[i],
-                        })
-                        barcodesID.push(patternBarcode[i]);
-                        barcodeToMarkerIndex.set(patternBarcode[i], i);
+                    const markerConfig = config.markers[i];
+                    // Визначаємо тип маркера і створюємо відповідний контролер
+                    if (markerConfig.type === 'pattern') {
+                        let markerControls = new THREEx.ArMarkerControls(arToolkitContext, markerRoots[i], {
+                            type: 'pattern',
+                            patternUrl: "patterns/pattern-" + markerConfig.target + ".patt",
+                        });
+                        patternsID.push(markerConfig.target);
+                        patternToMarkerIndex.set(markerConfig.target, i);
+                    } else if (markerConfig.type === 'barcode') {
+                        let markerControls = new THREEx.ArMarkerControls(arToolkitContext, markerRoots[i], {
+                            type: "barcode",
+                            barcodeValue: markerConfig.target,
+                        });
+                        barcodesID.push(markerConfig.target);
+                        barcodeToMarkerIndex.set(markerConfig.target, i);
+                    } else if (markerConfig.type.startsWith('aruco:')) {
+                        const dictionaryName = markerConfig.type.split(':')[1];
+                        let markerControls = new ArucoMarkerControls(arToolkitContext, markerRoots[i], {
+                            id: markerConfig.target,
+                            dictionaryName: dictionaryName,
+                            modelSize: 35.0 // Розмір маркера в мм, можна винести в конфіг
+                        }, canvasWidth);
+                        arucoControls.push(markerControls);
                     }
 
                     // Create alternative content if it exists in configuration
@@ -1091,6 +1111,38 @@
             function update() {
                 if (arToolkitSource.ready !== false) {
                     arToolkitContext.update(arToolkitSource.domElement);
+
+                    // --- DIAGNOSTIC LOG for Barcode Marker ---
+                    const barcodeIdToLog = 1;
+                    const markerIndexToLog = barcodeToMarkerIndex.get(barcodeIdToLog);
+
+                    if (markerIndexToLog !== undefined) {
+                        const markerObject = markerRoots[markerIndexToLog];
+                        if (markerObject.visible) {
+                            markerObject.updateMatrixWorld(); // Ensure matrixWorld is up-to-date
+                            console.log("DIAGNOSTIC: Barcode Marker", {
+                                id: barcodeIdToLog,
+                                visible: markerObject.visible,
+                                position: { x: markerObject.position.x, y: markerObject.position.y, z: markerObject.position.z },
+                                rotation: { 
+                                    x: THREE.Math.radToDeg(markerObject.rotation.x), 
+                                    y: THREE.Math.radToDeg(markerObject.rotation.y), 
+                                    z: THREE.Math.radToDeg(markerObject.rotation.z) 
+                                },
+                                quaternion: { x: markerObject.quaternion.x, y: markerObject.quaternion.y, z: markerObject.quaternion.z, w: markerObject.quaternion.w },
+                                scale: { x: markerObject.scale.x, y: markerObject.scale.y, z: markerObject.scale.z },
+                                matrixWorld: markerObject.matrixWorld.elements
+                            });
+                        }
+                    }
+
+                    // Оновлюємо Aruco маркери
+                    if (arucoControls && arucoControls.length > 0) {
+                        arucoControls.forEach(controls => {
+                            controls.update(arToolkitSource);
+                        });
+                    }
+                    
                     if (contentInitialized) {
                         if (barcodesID.length) {
                             barcodesID.forEach((elem, index) => {
