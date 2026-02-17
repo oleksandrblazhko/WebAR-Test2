@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>AR Marker Detector - ARUCO 4x4</title>
+
+  <script type="text/javascript" src="libs/polyfill.js"></script>
+
+  <script type="text/javascript" src="../../src/svd.js"></script>
+  <script type="text/javascript" src="../../src/posit1.js"></script>
+  <script type="text/javascript" src="../../src/cv.js"></script>
+  <script type="text/javascript" src="../../src/aruco.js"></script>
+  <script type="text/javascript" src="../../src/dictionaries/aruco_4x4_1000.js"></script>
+
+  <script>
+    var video, canvas, context, imageData, detector, posit;
+    var modelSize = 35.0; // millimeters
+
+    // Statistics tracking
+    var markerStats = {}; // { markerId: { detectedFrames, totalFrames, wasDetectedLastFrame } }
+    var frameCount = 0;
+    var lastStatsUpdate = 0;
+    var statsInterval = 1000; // Update stats every 1 second
+    var targetFPS = 60; // Expected frame rate for loss calculation
+
+    function onLoad(){
+      video = document.getElementById("video");
+      canvas = document.getElementById("canvas");
+      context = canvas.getContext("2d");
+
+      canvas.width = 1280;
+      canvas.height = 720;
+
+      if (navigator.mediaDevices === undefined) {
+        navigator.mediaDevices = {};
+      }
+
+      if (navigator.mediaDevices.getUserMedia === undefined) {
+        navigator.mediaDevices.getUserMedia = function(constraints) {
+          var getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+          if (!getUserMedia) {
+            return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
+          }
+
+          return new Promise(function(resolve, reject) {
+            getUserMedia.call(navigator, constraints, resolve, reject);
+          });
+        };
+      }
+
+      navigator.mediaDevices
+        .getUserMedia({ video: { width: 1280, height: 720 } })
+        .then(function(stream) {
+          video.srcObject = stream;
+          video.play();
+        })
+        .catch(function(err) {
+          console.error("Помилка доступу до вебкамери:", err.name + ": " + err.message);
+          alert("Не вдалося отримати доступ до вебкамери: " + err.message);
+        });
+
+      // Додатково встановлюємо розміри відео
+      video.width = 1280;
+      video.height = 720;
+
+      detector = new AR.Detector({
+        dictionaryName: 'ARUCO_4X4_1000'
+      });
+
+      posit = new POS.Posit(modelSize, canvas.width);
+
+      requestAnimationFrame(tick);
+    }
+
+    function tick(){
+      requestAnimationFrame(tick);
+
+      if (video.readyState === video.HAVE_ENOUGH_DATA){
+        snapshot();
+        frameCount++;
+
+        var markers = detector.detect(imageData);
+        updateStats(markers);
+        drawCorners(markers);
+        drawInfo(markers);
+        drawStats();
+      }
+    }
+
+    function updateStats(markers){
+      var now = Date.now();
+      var detectedIds = {};
+
+      // Mark detected markers
+      for (var i = 0; i < markers.length; i++){
+        var id = markers[i].id;
+        detectedIds[id] = true;
+
+        if (!markerStats[id]){
+          markerStats[id] = {
+            detectedFrames: 0,
+            totalFrames: 0,
+            wasDetectedLastFrame: false
+          };
+        }
+
+        var stats = markerStats[id];
+        stats.detectedFrames++;
+        stats.totalFrames++;
+        stats.wasDetectedLastFrame = true;
+      }
+
+      // Update stats for markers not currently detected
+      for (var id in markerStats){
+        if (!detectedIds[id]){
+          markerStats[id].totalFrames++;
+          markerStats[id].wasDetectedLastFrame = false;
+        }
+      }
+
+      // Update statistics every second
+      if (now - lastStatsUpdate >= statsInterval){
+        var elapsedSeconds = (now - lastStatsUpdate) / 1000;
+
+        for (var id in markerStats){
+          var stats = markerStats[id];
+          if (stats.totalFrames > 0){
+            // Detection rate for this interval
+            stats.detectionRate = (stats.detectedFrames / stats.totalFrames) * 100;
+
+            // Calculate losses: frames where marker was not detected
+            var missedFrames = stats.totalFrames - stats.detectedFrames;
+            // Losses per second based on missed frames
+            stats.lossesPerSecond = missedFrames / elapsedSeconds;
+          }
+          // Reset counters for next interval
+          stats.detectedFrames = 0;
+          stats.totalFrames = 0;
+        }
+        lastStatsUpdate = now;
+      }
+    }
+
+    function snapshot(){
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+    }
+
+    function drawCorners(markers){
+      var corners, corner, i, j;
+
+      context.lineWidth = 3;
+
+      for (i = 0; i !== markers.length; ++ i){
+        corners = markers[i].corners;
+
+        context.strokeStyle = "red";
+        context.beginPath();
+
+        for (j = 0; j !== corners.length; ++ j){
+          corner = corners[j];
+          context.moveTo(corner.x, corner.y);
+          corner = corners[(j + 1) % corners.length];
+          context.lineTo(corner.x, corner.y);
+        }
+
+        context.stroke();
+        context.closePath();
+
+        context.strokeStyle = "green";
+        context.strokeRect(corners[0].x - 2, corners[0].y - 2, 4, 4);
+      }
+    }
+
+    function drawInfo(markers){
+      var corners, corner, x, y, i, j;
+      var pose;
+
+      context.strokeStyle = "blue";
+      context.lineWidth = 1;
+      context.font = "14px monospace";
+
+      for (i = 0; i !== markers.length; ++ i){
+        corners = markers[i].corners;
+
+        // Знайти мінімальні координати для розміщення тексту
+        x = Infinity;
+        y = Infinity;
+
+        for (j = 0; j !== corners.length; ++ j){
+          corner = corners[j];
+          x = Math.min(x, corner.x);
+          y = Math.min(y, corner.y);
+        }
+
+        // Намалювати ID маркера
+        context.strokeText("ID: " + markers[i].id, x, y - 20);
+
+        // Обчислити позицію маркера
+        var centeredCorners = [];
+        for (j = 0; j < corners.length; ++ j){
+          corner = corners[j];
+          centeredCorners.push({
+            x: corner.x - (canvas.width / 2),
+            y: (canvas.height / 2) - corner.y
+          });
+        }
+
+        pose = posit.pose(centeredCorners);
+
+        // Отримати кути Ейлера з матриці обертання
+        var rotation = pose.bestRotation;
+        var translation = pose.bestTranslation;
+
+        var yaw = -Math.atan2(rotation[0][2], rotation[2][2]);
+        var pitch = -Math.asin(-rotation[1][2]);
+        var roll = Math.atan2(rotation[1][0], rotation[1][1]);
+
+        // Конвертувати в градуси
+        var yawDeg = Math.round(-yaw * 180.0 / Math.PI);
+        var pitchDeg = Math.round(-pitch * 180.0 / Math.PI);
+        var rollDeg = Math.round(roll * 180.0 / Math.PI);
+
+        // Намалювати інформацію про позицію
+        var infoY = y;
+        context.strokeText("x: " + Math.round(translation[0]), x, infoY);
+        context.strokeText("y: " + Math.round(translation[1]), x, infoY + 15);
+        context.strokeText("z: " + Math.round(translation[2]), x, infoY + 30);
+        context.strokeText("a_x: " + rollDeg + "°", x, infoY + 45);
+        context.strokeText("a_y: " + pitchDeg + "°", x, infoY + 60);
+        context.strokeText("a_z: " + yawDeg + "°", x, infoY + 75);
+      }
+    }
+
+    function drawStats(){
+      // Draw statistics panel at the bottom of the screen
+      var panelX = 10;
+      var panelY = canvas.height - 100;
+      var lineHeight = 18;
+
+      // Background
+      context.fillStyle = "rgba(0, 0, 0, 0.7)";
+      context.fillRect(panelX - 5, panelY - 25, 350, 80 + (Object.keys(markerStats).length * lineHeight));
+
+      // Title
+      context.fillStyle = "white";
+      context.font = "bold 16px monospace";
+      context.fillText("=== Recognition Quality Statistics ===", panelX, panelY);
+
+      // Stats for each marker
+      context.font = "14px monospace";
+      var y = panelY + 25;
+
+      var markerIds = Object.keys(markerStats).sort(function(a, b){ return parseInt(a) - parseInt(b); });
+
+      if (markerIds.length === 0){
+        context.fillStyle = "#888";
+        context.fillText("No markers detected yet...", panelX, y);
+      } else {
+        for (var i = 0; i < markerIds.length; i++){
+          var id = markerIds[i];
+          var stats = markerStats[id];
+
+          // Color based on detection rate
+          var color;
+          if (stats.detectionRate >= 90){
+            color = "#0f0"; // Green - excellent
+          } else if (stats.detectionRate >= 70){
+            color = "#ff0"; // Yellow - good
+          } else if (stats.detectionRate >= 50){
+            color = "#fa0"; // Orange - fair
+          } else {
+            color = "#f00"; // Red - poor
+          }
+
+          context.fillStyle = color;
+          context.fillText(
+            "Marker ID " + id + ": " +
+            stats.detectionRate.toFixed(1) + "% detection rate | " +
+            stats.lossesPerSecond.toFixed(1) + " losses/sec",
+            panelX,
+            y
+          );
+          y += lineHeight;
+        }
+      }
+    }
+
+    window.onload = onLoad;
+  </script>
+
+</head>
+
+<body style="font-family: monospace;">
+
+  <center>
+    <div style="margin: 10px;"><strong>-= AR Marker Detector (ARUCO 4x4) =-</strong></div>
+    <video id="video" autoplay="true" style="display:none;"></video>
+    <canvas id="canvas" style="width:1280px; height:720px;"></canvas>
+    <div style="margin: 15px;">
+      <strong>Powered by <a href="https://damianofalcioni.github.io/js-aruco2/">js-aruco2</a></strong>
+    </div>
+    <div style="margin: 10px; max-width: 1280px; text-align: left;">
+      <strong>Легенда:</strong><br>
+      • <span style="color: red;">Червоний</span> контур - виявлений маркер<br>
+      • <span style="color: green;">Зелений</span> квадрат - перший кут маркера<br>
+      • <span style="color: blue;">Синій</span> текст - інформація про маркер:<br>
+      &nbsp;&nbsp;- ID: ідентифікатор маркера<br>
+      &nbsp;&nbsp;- x, y, z: позиція у просторі (мм)<br>
+      &nbsp;&nbsp;- a_x: кут нахилу (roll)<br>
+      &nbsp;&nbsp;- a_y: кут нахилу (pitch)<br>
+      &nbsp;&nbsp;- a_z: кут повороту (yaw)<br>
+      • <strong>Статистика якості</strong> (внизу екрану):<br>
+      &nbsp;&nbsp;- <span style="color: #0f0;">Зелений</span> - відмінне розпізнавання (&gt;= 90%)<br>
+      &nbsp;&nbsp;- <span style="color: #ff0;">Жовтий</span> - хороше розпізнавання (&gt;= 70%)<br>
+      &nbsp;&nbsp;- <span style="color: #fa0;">Помаранчевий</span> - задовільне розпізнавання (&gt;= 50%)<br>
+      &nbsp;&nbsp;- <span style="color: #f00;">Червоний</span> - погане розпізнавання (&lt; 50%)<br>
+      &nbsp;&nbsp;- losses/sec - кількість пропущених кадрів на секунду (нижче = краще)
+    </div>
+  </center>
+
+</body>
+
+</html>
