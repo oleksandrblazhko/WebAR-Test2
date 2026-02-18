@@ -1,0 +1,768 @@
+:8080/favicon.ico:1   Failed to load resource: the server responded with a status of 404 (Not Found)
+:8080/favicon.ico:1   Failed to load resource: the server responded with a status of 404 (Not Found)
+ ========================================
+ WebAR-Test2 версія: 2026-02-17-ARUCO-FIX
+ Створено: 17.02.2026, 23:24:19
+ ========================================
+ [INFO] Initialize started...
+ [INFO] Config markers count: 5
+ [INFO] Marker 4 (aruco): Object
+ THREE.WebGLRenderer 86
+ [CONE] ConeGeometry created for marker 0: radius=0.5, height=1
+ [CONE] Texture loaded: texture_green.jpg, color: #ffff00
+ [CONE] Mesh created for marker 0, adding to markerRoots[0]
+ [CONE] Mesh added to markerRoots[0], children count: 1
+ Aruco detector initialized for dictionary: ARUCO_4X4_1000
+ Posit initialized with modelSize: 30 and canvasWidth: 1280
+ [ArucoMarkerControls] Marker 1 initialized, visible=true
+ [CONE-ARUCO] ConeGeometry created for aruco marker 4
+ [CONE-ARUCO] Mesh added to markerRoots[4]
+ Alternative content for marker 1 created
+ Alternative content for marker 2 created
+ Text content for marker 1 created
+ Text content for marker 2 created
+ Alternative content for marker 0 created
+ *** Camera Parameter resized from 640, 480. ***
+ Allocated videoFrameSize 3686400
+ Pattern detection mode set to 4.
+ Pattern ratio size set to 0.900000.
+ File wrong_answer.mp3 loaded
+ File correct_answer.mp3 loaded
+  THREE.WebGLRenderer: image is not power of two (199x176). Resized to 256x128 
+makePowerOfTwo @ three.js:18028
+ File question.mp3 loaded
+ Most of the content loaded
+  obsolete function arToolkitSource.onResize. Use arToolkitSource.onResizeElement
+ARjs.Source.onResize @ threex-artoolkitsource.js:388
+  obsolete function arToolkitSource.copySizeTo. Use arToolkitSource.copyElementSizeTo
+ARjs.Source.copySizeTo @ threex-artoolkitsource.js:378
+  obsolete function arToolkitSource.copySizeTo. Use arToolkitSource.copyElementSizeTo
+ARjs.Source.copySizeTo @ threex-artoolkitsource.js:378
+  Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently
+ArucoMarkerControls.update @ aruco.js:67
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] NOT DETECTED! framesLost=2, visible=true
+ [Marker 1] NOT DETECTED! framesLost=3, visible=true
+ [Marker 1] NOT DETECTED! framesLost=4, visible=true
+ [Marker 1] NOT DETECTED! framesLost=5, visible=true
+ [Marker 1] NOT DETECTED! framesLost=6, visible=true
+ [Marker 1] NOT DETECTED! framesLost=7, visible=true
+ [Marker 1] NOT DETECTED! framesLost=8, visible=true
+ [Marker 1] NOT DETECTED! framesLost=9, visible=true
+ [Marker 1] NOT DETECTED! framesLost=10, visible=true
+ [Marker 1] NOT DETECTED! framesLost=11, visible=true
+ [Marker 1] NOT DETECTED! framesLost=12, visible=true
+ [Marker 1] NOT DETECTED! framesLost=13, visible=true
+ [Marker 1] NOT DETECTED! framesLost=14, visible=true
+ [Marker 1] NOT DETECTED! framesLost=15, visible=true
+ [Marker 1] NOT DETECTED! framesLost=16, visible=true
+ [Marker 1] NOT DETECTED! framesLost=17, visible=true
+ [Marker 1] NOT DETECTED! framesLost=18, visible=true
+ [Marker 1] NOT DETECTED! framesLost=19, visible=true
+ [Marker 1] NOT DETECTED! framesLost=20, visible=true
+ [Marker 1] NOT DETECTED! framesLost=21, visible=true
+ [Marker 1] NOT DETECTED! framesLost=22, visible=true
+ [Marker 1] NOT DETECTED! framesLost=23, visible=true
+ [Marker 1] NOT DETECTED! framesLost=24, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.91, nBest=-0.77)
+ Marker 1: Y=93.3, Z=662.5, n=0.91, lastN=0.90, visible=true
+ [Marker 1] Position: x=-0.065, y=0.093, z=0.662 (метри)
+ [Marker 1] Quaternion: x=0.21, y=-0.01, z=-0.02, w=0.98
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.90, nBest=-0.76)
+ Marker 1: Y=92.9, Z=661.7, n=0.90, lastN=0.90, visible=true
+ [Marker 1] Position: x=-0.066, y=0.093, z=0.662 (метри)
+ [Marker 1] Quaternion: x=0.22, y=-0.01, z=-0.03, w=0.98
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.89, nBest=-0.75)
+ Marker 1: Y=92.0, Z=667.4, n=0.89, lastN=0.90, visible=true
+ [Marker 1] Position: x=-0.065, y=0.092, z=0.667 (метри)
+ [Marker 1] Quaternion: x=0.23, y=0.00, z=-0.03, w=0.97
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] NOT DETECTED! framesLost=2, visible=true
+ [Marker 1] NOT DETECTED! framesLost=3, visible=true
+ [Marker 1] NOT DETECTED! framesLost=4, visible=true
+ [Marker 1] NOT DETECTED! framesLost=5, visible=true
+ [Marker 1] NOT DETECTED! framesLost=6, visible=true
+ [Marker 1] NOT DETECTED! framesLost=7, visible=true
+ [Marker 1] NOT DETECTED! framesLost=8, visible=true
+ [Marker 1] NOT DETECTED! framesLost=9, visible=true
+ [Marker 1] NOT DETECTED! framesLost=10, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.87, nBest=-0.77)
+ Marker 1: Y=59.6, Z=669.7, n=0.87, lastN=0.89, visible=true
+ [Marker 1] Position: x=-0.058, y=0.060, z=0.670 (метри)
+ [Marker 1] Quaternion: x=0.26, y=-0.03, z=-0.03, w=0.97
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] NOT DETECTED! framesLost=2, visible=true
+ [Marker 1] NOT DETECTED! framesLost=3, visible=true
+ [Marker 1] NOT DETECTED! framesLost=4, visible=true
+ [Marker 1] NOT DETECTED! framesLost=5, visible=true
+ [Marker 1] NOT DETECTED! framesLost=6, visible=true
+ [Marker 1] NOT DETECTED! framesLost=7, visible=true
+ [Marker 1] NOT DETECTED! framesLost=8, visible=true
+ [Marker 1] NOT DETECTED! framesLost=9, visible=true
+ [Marker 1] NOT DETECTED! framesLost=10, visible=true
+ [Marker 1] NOT DETECTED! framesLost=11, visible=true
+ [Marker 1] NOT DETECTED! framesLost=12, visible=true
+ [Marker 1] NOT DETECTED! framesLost=13, visible=true
+ [Marker 1] NOT DETECTED! framesLost=14, visible=true
+ [Marker 1] NOT DETECTED! framesLost=15, visible=true
+ [Marker 1] NOT DETECTED! framesLost=16, visible=true
+ [Marker 1] NOT DETECTED! framesLost=17, visible=true
+ [Marker 1] NOT DETECTED! framesLost=18, visible=true
+ [Marker 1] NOT DETECTED! framesLost=19, visible=true
+ [Marker 1] NOT DETECTED! framesLost=20, visible=true
+ [Marker 1] NOT DETECTED! framesLost=21, visible=true
+ [Marker 1] NOT DETECTED! framesLost=22, visible=true
+ [Marker 1] NOT DETECTED! framesLost=23, visible=true
+ [Marker 1] NOT DETECTED! framesLost=24, visible=true
+ [Marker 1] NOT DETECTED! framesLost=25, visible=true
+ [Marker 1] NOT DETECTED! framesLost=26, visible=true
+ [Marker 1] NOT DETECTED! framesLost=27, visible=true
+ [Marker 1] NOT DETECTED! framesLost=28, visible=true
+ [Marker 1] NOT DETECTED! framesLost=29, visible=true
+ [Marker 1] NOT DETECTED! framesLost=30, visible=true
+ [Marker 1] NOT DETECTED! framesLost=31, visible=true
+ [Marker 1] NOT DETECTED! framesLost=32, visible=true
+ [Marker 1] NOT DETECTED! framesLost=33, visible=true
+ [Marker 1] NOT DETECTED! framesLost=34, visible=true
+ [Marker 1] NOT DETECTED! framesLost=35, visible=true
+ [Marker 1] NOT DETECTED! framesLost=36, visible=true
+ [Marker 1] NOT DETECTED! framesLost=37, visible=true
+ [Marker 1] NOT DETECTED! framesLost=38, visible=true
+ [Marker 1] NOT DETECTED! framesLost=39, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.84, nBest=-0.73)
+ Marker 1: Y=69.8, Z=719.1, n=0.84, lastN=0.88, visible=true
+ [Marker 1] Position: x=-0.025, y=0.070, z=0.719 (метри)
+ [Marker 1] Quaternion: x=0.28, y=-0.01, z=-0.02, w=0.96
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.87, nBest=-0.77)
+ Marker 1: Y=67.1, Z=677.3, n=0.87, lastN=0.88, visible=true
+ [Marker 1] Position: x=-0.026, y=0.067, z=0.677 (метри)
+ [Marker 1] Quaternion: x=0.25, y=-0.01, z=-0.03, w=0.97
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.87, nBest=-0.76)
+ Marker 1: Y=68.7, Z=693.4, n=0.87, lastN=0.87, visible=true
+ [Marker 1] Position: x=-0.026, y=0.069, z=0.693 (метри)
+ [Marker 1] Quaternion: x=0.26, y=-0.03, z=-0.02, w=0.97
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.87, nBest=-0.76)
+ Marker 1: Y=69.8, Z=702.0, n=0.87, lastN=0.87, visible=true
+ [Marker 1] Position: x=-0.030, y=0.070, z=0.702 (метри)
+ [Marker 1] Quaternion: x=0.26, y=-0.02, z=-0.02, w=0.97
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.86, nBest=-0.75)
+ Marker 1: Y=68.3, Z=701.9, n=0.86, lastN=0.87, visible=true
+ [Marker 1] Position: x=-0.034, y=0.068, z=0.702 (метри)
+ [Marker 1] Quaternion: x=0.27, y=-0.00, z=-0.02, w=0.96
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.87, nBest=-0.76)
+ Marker 1: Y=68.4, Z=694.0, n=0.87, lastN=0.87, visible=true
+ [Marker 1] Position: x=-0.034, y=0.068, z=0.694 (метри)
+ [Marker 1] Quaternion: x=0.26, y=-0.03, z=-0.02, w=0.97
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] NOT DETECTED! framesLost=2, visible=true
+ [Marker 1] NOT DETECTED! framesLost=3, visible=true
+ [Marker 1] NOT DETECTED! framesLost=4, visible=true
+ [Marker 1] NOT DETECTED! framesLost=5, visible=true
+ [Marker 1] NOT DETECTED! framesLost=6, visible=true
+ [Marker 1] NOT DETECTED! framesLost=7, visible=true
+ [Marker 1] NOT DETECTED! framesLost=8, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.85, nBest=-0.77)
+ Marker 1: Y=51.3, Z=700.5, n=0.85, lastN=0.86, visible=true
+ [Marker 1] Position: x=-0.023, y=0.051, z=0.700 (метри)
+ [Marker 1] Quaternion: x=0.27, y=-0.01, z=-0.04, w=0.96
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.85, nBest=-0.77)
+ Marker 1: Y=51.1, Z=701.6, n=0.85, lastN=0.86, visible=true
+ [Marker 1] Position: x=-0.023, y=0.051, z=0.702 (метри)
+ [Marker 1] Quaternion: x=0.27, y=-0.01, z=-0.02, w=0.96
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.85, nBest=-0.77)
+ Marker 1: Y=51.9, Z=710.1, n=0.85, lastN=0.86, visible=true
+ [Marker 1] Position: x=-0.023, y=0.052, z=0.710 (метри)
+ [Marker 1] Quaternion: x=0.27, y=-0.02, z=-0.02, w=0.96
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.85, nBest=-0.76)
+ Marker 1: Y=53.6, Z=708.9, n=0.85, lastN=0.85, visible=true
+ [Marker 1] Position: x=-0.023, y=0.054, z=0.709 (метри)
+ [Marker 1] Quaternion: x=0.27, y=-0.01, z=-0.03, w=0.96
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.84, nBest=-0.75)
+ Marker 1: Y=55.8, Z=716.7, n=0.84, lastN=0.85, visible=true
+ [Marker 1] Position: x=-0.022, y=0.056, z=0.717 (метри)
+ [Marker 1] Quaternion: x=0.28, y=0.00, z=-0.04, w=0.96
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.85, nBest=-0.76)
+ Marker 1: Y=57.5, Z=718.6, n=0.85, lastN=0.85, visible=true
+ [Marker 1] Position: x=-0.020, y=0.057, z=0.719 (метри)
+ [Marker 1] Quaternion: x=0.27, y=-0.02, z=-0.03, w=0.96
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.84, nBest=-0.75)
+ Marker 1: Y=58.3, Z=726.2, n=0.84, lastN=0.85, visible=true
+ [Marker 1] Position: x=-0.018, y=0.058, z=0.726 (метри)
+ [Marker 1] Quaternion: x=0.28, y=-0.00, z=-0.04, w=0.96
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] NOT DETECTED! framesLost=2, visible=true
+ [Marker 1] NOT DETECTED! framesLost=3, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.87, nBest=-0.79)
+ Marker 1: Y=53.4, Z=693.6, n=0.87, lastN=0.86, visible=true
+ [Marker 1] Position: x=-0.013, y=0.053, z=0.694 (метри)
+ [Marker 1] Quaternion: x=0.25, y=-0.00, z=-0.02, w=0.97
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] NOT DETECTED! framesLost=2, visible=true
+ [Marker 1] NOT DETECTED! framesLost=3, visible=true
+ [Marker 1] NOT DETECTED! framesLost=4, visible=true
+ [Marker 1] NOT DETECTED! framesLost=5, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.85, nBest=-0.78)
+ Marker 1: Y=52.1, Z=728.2, n=0.85, lastN=0.86, visible=true
+ [Marker 1] Position: x=-0.037, y=0.052, z=0.728 (метри)
+ [Marker 1] Quaternion: x=0.27, y=-0.00, z=-0.02, w=0.96
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.87, nBest=-0.79)
+ Marker 1: Y=52.8, Z=703.3, n=0.87, lastN=0.86, visible=true
+ [Marker 1] Position: x=-0.045, y=0.053, z=0.703 (метри)
+ [Marker 1] Quaternion: x=0.26, y=-0.01, z=-0.00, w=0.97
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] NOT DETECTED! framesLost=2, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.88, nBest=-0.81)
+ Marker 1: Y=48.9, Z=694.1, n=0.88, lastN=0.86, visible=true
+ [Marker 1] Position: x=-0.043, y=0.049, z=0.694 (метри)
+ [Marker 1] Quaternion: x=0.25, y=-0.00, z=-0.01, w=0.97
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.86, nBest=-0.78)
+ Marker 1: Y=52.0, Z=718.7, n=0.86, lastN=0.86, visible=true
+ [Marker 1] Position: x=-0.042, y=0.052, z=0.719 (метри)
+ [Marker 1] Quaternion: x=0.27, y=0.00, z=-0.02, w=0.96
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.87, nBest=-0.79)
+ Marker 1: Y=51.5, Z=710.7, n=0.87, lastN=0.86, visible=true
+ [Marker 1] Position: x=-0.040, y=0.051, z=0.711 (метри)
+ [Marker 1] Quaternion: x=0.25, y=-0.01, z=-0.02, w=0.97
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.87, nBest=-0.79)
+ Marker 1: Y=51.1, Z=703.0, n=0.87, lastN=0.87, visible=true
+ [Marker 1] Position: x=-0.039, y=0.051, z=0.703 (метри)
+ [Marker 1] Quaternion: x=0.26, y=-0.01, z=-0.00, w=0.97
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.86, nBest=-0.78)
+ Marker 1: Y=51.5, Z=701.7, n=0.86, lastN=0.86, visible=true
+ [Marker 1] Position: x=-0.040, y=0.051, z=0.702 (метри)
+ [Marker 1] Quaternion: x=0.26, y=-0.00, z=-0.02, w=0.96
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.85, nBest=-0.77)
+ Marker 1: Y=53.3, Z=719.7, n=0.85, lastN=0.86, visible=true
+ [Marker 1] Position: x=-0.041, y=0.053, z=0.720 (метри)
+ [Marker 1] Quaternion: x=0.27, y=-0.00, z=-0.00, w=0.96
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.86, nBest=-0.78)
+ Marker 1: Y=51.5, Z=701.8, n=0.86, lastN=0.86, visible=true
+ [Marker 1] Position: x=-0.041, y=0.051, z=0.702 (метри)
+ [Marker 1] Quaternion: x=0.26, y=-0.00, z=-0.02, w=0.96
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.87, nBest=-0.80)
+ Marker 1: Y=51.0, Z=702.7, n=0.87, lastN=0.86, visible=true
+ [Marker 1] Position: x=-0.041, y=0.051, z=0.703 (метри)
+ [Marker 1] Quaternion: x=0.25, y=-0.01, z=-0.01, w=0.97
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.87, nBest=-0.79)
+ Marker 1: Y=50.8, Z=702.4, n=0.87, lastN=0.86, visible=true
+ [Marker 1] Position: x=-0.040, y=0.051, z=0.702 (метри)
+ [Marker 1] Quaternion: x=0.26, y=-0.01, z=-0.01, w=0.97
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.87, nBest=-0.79)
+ Marker 1: Y=50.8, Z=702.4, n=0.87, lastN=0.87, visible=true
+ [Marker 1] Position: x=-0.040, y=0.051, z=0.702 (метри)
+ [Marker 1] Quaternion: x=0.26, y=-0.01, z=-0.01, w=0.97
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.84, nBest=-0.76)
+ Marker 1: Y=52.3, Z=726.2, n=0.84, lastN=0.86, visible=true
+ [Marker 1] Position: x=-0.040, y=0.052, z=0.726 (метри)
+ [Marker 1] Quaternion: x=0.28, y=0.02, z=-0.02, w=0.96
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.86, nBest=-0.79)
+ Marker 1: Y=51.4, Z=710.9, n=0.86, lastN=0.86, visible=true
+ [Marker 1] Position: x=-0.039, y=0.051, z=0.711 (метри)
+ [Marker 1] Quaternion: x=0.26, y=-0.01, z=-0.01, w=0.97
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.86, nBest=-0.79)
+ Marker 1: Y=51.4, Z=710.9, n=0.86, lastN=0.86, visible=true
+ [Marker 1] Position: x=-0.039, y=0.051, z=0.711 (метри)
+ [Marker 1] Quaternion: x=0.26, y=-0.01, z=-0.01, w=0.97
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.86, nBest=-0.78)
+ Marker 1: Y=53.1, Z=718.6, n=0.86, lastN=0.86, visible=true
+ [Marker 1] Position: x=-0.039, y=0.053, z=0.719 (метри)
+ [Marker 1] Quaternion: x=0.26, y=0.00, z=-0.02, w=0.96
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.86, nBest=-0.78)
+ Marker 1: Y=57.9, Z=780.4, n=0.86, lastN=0.86, visible=true
+ [Marker 1] Position: x=-0.041, y=0.058, z=0.780 (метри)
+ [Marker 1] Quaternion: x=0.27, y=0.02, z=0.00, w=0.96
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.87, nBest=-0.80)
+ Marker 1: Y=51.7, Z=693.2, n=0.87, lastN=0.86, visible=true
+ [Marker 1] Position: x=-0.038, y=0.052, z=0.693 (метри)
+ [Marker 1] Quaternion: x=0.25, y=0.00, z=-0.02, w=0.97
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] NOT DETECTED! framesLost=2, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.88, nBest=-0.80)
+ Marker 1: Y=53.8, Z=693.9, n=0.88, lastN=0.87, visible=true
+ [Marker 1] Position: x=-0.039, y=0.054, z=0.694 (метри)
+ [Marker 1] Quaternion: x=0.24, y=-0.00, z=-0.01, w=0.97
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.87, nBest=-0.79)
+ Marker 1: Y=56.8, Z=702.6, n=0.87, lastN=0.87, visible=true
+ [Marker 1] Position: x=-0.042, y=0.057, z=0.703 (метри)
+ [Marker 1] Quaternion: x=0.25, y=-0.01, z=-0.01, w=0.97
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.88, nBest=-0.79)
+ Marker 1: Y=57.0, Z=694.2, n=0.88, lastN=0.87, visible=true
+ [Marker 1] Position: x=-0.043, y=0.057, z=0.694 (метри)
+ [Marker 1] Quaternion: x=0.25, y=-0.01, z=-0.00, w=0.97
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.87, nBest=-0.78)
+ Marker 1: Y=58.6, Z=701.3, n=0.87, lastN=0.87, visible=true
+ [Marker 1] Position: x=-0.041, y=0.059, z=0.701 (метри)
+ [Marker 1] Quaternion: x=0.26, y=0.01, z=-0.01, w=0.97
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.86, nBest=-0.77)
+ Marker 1: Y=60.1, Z=719.6, n=0.86, lastN=0.87, visible=true
+ [Marker 1] Position: x=-0.040, y=0.060, z=0.720 (метри)
+ [Marker 1] Quaternion: x=0.27, y=-0.00, z=-0.00, w=0.96
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.87, nBest=-0.78)
+ Marker 1: Y=58.5, Z=701.1, n=0.87, lastN=0.87, visible=true
+ [Marker 1] Position: x=-0.036, y=0.059, z=0.701 (метри)
+ [Marker 1] Quaternion: x=0.26, y=0.01, z=-0.01, w=0.97
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.87, nBest=-0.78)
+ Marker 1: Y=61.1, Z=719.7, n=0.87, lastN=0.87, visible=true
+ [Marker 1] Position: x=-0.036, y=0.061, z=0.720 (метри)
+ [Marker 1] Quaternion: x=0.25, y=0.00, z=-0.00, w=0.97
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.87, nBest=-0.77)
+ Marker 1: Y=62.4, Z=719.3, n=0.87, lastN=0.87, visible=true
+ [Marker 1] Position: x=-0.037, y=0.062, z=0.719 (метри)
+ [Marker 1] Quaternion: x=0.26, y=0.00, z=-0.01, w=0.97
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.88, nBest=-0.78)
+ Marker 1: Y=60.8, Z=701.0, n=0.88, lastN=0.87, visible=true
+ [Marker 1] Position: x=-0.037, y=0.061, z=0.701 (метри)
+ [Marker 1] Quaternion: x=0.25, y=0.01, z=-0.01, w=0.97
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.86, nBest=-0.77)
+ Marker 1: Y=61.0, Z=710.1, n=0.86, lastN=0.87, visible=true
+ [Marker 1] Position: x=-0.039, y=0.061, z=0.710 (метри)
+ [Marker 1] Quaternion: x=0.26, y=0.01, z=-0.01, w=0.97
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.86, nBest=-0.77)
+ Marker 1: Y=60.7, Z=701.5, n=0.86, lastN=0.87, visible=true
+ [Marker 1] Position: x=-0.041, y=0.061, z=0.701 (метри)
+ [Marker 1] Quaternion: x=0.26, y=0.01, z=-0.00, w=0.96
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.87, nBest=-0.78)
+ Marker 1: Y=60.4, Z=701.5, n=0.87, lastN=0.87, visible=true
+ [Marker 1] Position: x=-0.039, y=0.060, z=0.701 (метри)
+ [Marker 1] Quaternion: x=0.25, y=0.01, z=-0.00, w=0.97
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.87, nBest=-0.78)
+ Marker 1: Y=59.4, Z=692.1, n=0.87, lastN=0.87, visible=true
+ [Marker 1] Position: x=-0.041, y=0.059, z=0.692 (метри)
+ [Marker 1] Quaternion: x=0.25, y=0.02, z=-0.01, w=0.97
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.88, nBest=-0.80)
+ Marker 1: Y=60.4, Z=710.2, n=0.88, lastN=0.87, visible=true
+ [Marker 1] Position: x=-0.038, y=0.060, z=0.710 (метри)
+ [Marker 1] Quaternion: x=0.24, y=0.01, z=-0.01, w=0.97
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.87, nBest=-0.78)
+ Marker 1: Y=59.9, Z=709.8, n=0.87, lastN=0.87, visible=true
+ [Marker 1] Position: x=-0.037, y=0.060, z=0.710 (метри)
+ [Marker 1] Quaternion: x=0.25, y=0.01, z=-0.01, w=0.97
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] NOT DETECTED! framesLost=2, visible=true
+ [Marker 1] NOT DETECTED! framesLost=3, visible=true
+ [Marker 1] NOT DETECTED! framesLost=4, visible=true
+ [Marker 1] NOT DETECTED! framesLost=5, visible=true
+ [Marker 1] NOT DETECTED! framesLost=6, visible=true
+ [Marker 1] NOT DETECTED! framesLost=7, visible=true
+ [Marker 1] NOT DETECTED! framesLost=8, visible=true
+ [Marker 1] NOT DETECTED! framesLost=9, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.87, nBest=-0.76)
+ Marker 1: Y=75.1, Z=743.1, n=0.87, lastN=0.87, visible=true
+ [Marker 1] Position: x=0.022, y=0.075, z=0.743 (метри)
+ [Marker 1] Quaternion: x=0.25, y=0.01, z=-0.06, w=0.97
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.89, nBest=-0.79)
+ Marker 1: Y=74.4, Z=716.2, n=0.89, lastN=0.88, visible=true
+ [Marker 1] Position: x=0.021, y=0.074, z=0.716 (метри)
+ [Marker 1] Quaternion: x=0.22, y=0.01, z=-0.06, w=0.97
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] NOT DETECTED! framesLost=2, visible=true
+ [Marker 1] NOT DETECTED! framesLost=3, visible=true
+ [Marker 1] NOT DETECTED! framesLost=4, visible=true
+ [Marker 1] NOT DETECTED! framesLost=5, visible=true
+ [Marker 1] NOT DETECTED! framesLost=6, visible=true
+ [Marker 1] NOT DETECTED! framesLost=7, visible=true
+ [Marker 1] NOT DETECTED! framesLost=8, visible=true
+ [Marker 1] NOT DETECTED! framesLost=9, visible=true
+ [Marker 1] NOT DETECTED! framesLost=10, visible=true
+ [Marker 1] NOT DETECTED! framesLost=11, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.90, nBest=-0.80)
+ Marker 1: Y=73.6, Z=751.5, n=0.90, lastN=0.88, visible=true
+ [Marker 1] Position: x=0.015, y=0.074, z=0.752 (метри)
+ [Marker 1] Quaternion: x=0.22, y=-0.02, z=-0.06, w=0.97
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] NOT DETECTED! framesLost=2, visible=true
+ [Marker 1] NOT DETECTED! framesLost=3, visible=true
+ [Marker 1] NOT DETECTED! framesLost=4, visible=true
+ [Marker 1] NOT DETECTED! framesLost=5, visible=true
+ [Marker 1] NOT DETECTED! framesLost=6, visible=true
+ [Marker 1] NOT DETECTED! framesLost=7, visible=true
+ [Marker 1] NOT DETECTED! framesLost=8, visible=true
+ [Marker 1] NOT DETECTED! framesLost=9, visible=true
+ [Marker 1] NOT DETECTED! framesLost=10, visible=true
+ [Marker 1] NOT DETECTED! framesLost=11, visible=true
+ [Marker 1] NOT DETECTED! framesLost=12, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.92, nBest=-0.84)
+ Marker 1: Y=66.5, Z=804.8, n=0.92, lastN=0.89, visible=true
+ [Marker 1] Position: x=-0.065, y=0.067, z=0.805 (метри)
+ [Marker 1] Quaternion: x=0.20, y=-0.09, z=-0.04, w=0.97
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.93, nBest=-0.85)
+ Marker 1: Y=67.4, Z=804.7, n=0.93, lastN=0.90, visible=true
+ [Marker 1] Position: x=-0.065, y=0.067, z=0.805 (метри)
+ [Marker 1] Quaternion: x=0.19, y=-0.09, z=-0.04, w=0.98
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] NOT DETECTED! framesLost=2, visible=true
+ [Marker 1] NOT DETECTED! framesLost=3, visible=true
+ [Marker 1] NOT DETECTED! framesLost=4, visible=true
+ [Marker 1] NOT DETECTED! framesLost=5, visible=true
+ [Marker 1] NOT DETECTED! framesLost=6, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.88, nBest=-0.83)
+ Marker 1: Y=44.0, Z=819.4, n=0.88, lastN=0.90, visible=true
+ [Marker 1] Position: x=-0.049, y=0.044, z=0.819 (метри)
+ [Marker 1] Quaternion: x=0.23, y=-0.06, z=-0.08, w=0.97
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] NOT DETECTED! framesLost=2, visible=true
+ [Marker 1] NOT DETECTED! framesLost=3, visible=true
+ [Marker 1] NOT DETECTED! framesLost=4, visible=true
+ [Marker 1] NOT DETECTED! framesLost=5, visible=true
+ [Marker 1] NOT DETECTED! framesLost=6, visible=true
+ [Marker 1] NOT DETECTED! framesLost=7, visible=true
+ [Marker 1] NOT DETECTED! framesLost=8, visible=true
+ [Marker 1] NOT DETECTED! framesLost=9, visible=true
+ [Marker 1] NOT DETECTED! framesLost=10, visible=true
+ [Marker 1] NOT DETECTED! framesLost=11, visible=true
+ Marker 1: Y=79.7, Z=824.8, n=0.90, lastN=0.90, visible=true
+ [Marker 1] Position: x=-0.009, y=0.080, z=0.825 (метри)
+ [Marker 1] Quaternion: x=0.21, y=-0.02, z=-0.07, w=0.97
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.92, nBest=-0.83)
+ Marker 1: Y=80.6, Z=810.0, n=0.92, lastN=0.90, visible=true
+ [Marker 1] Position: x=-0.007, y=0.081, z=0.810 (метри)
+ [Marker 1] Quaternion: x=0.19, y=-0.06, z=-0.06, w=0.98
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] NOT DETECTED! framesLost=2, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.91, nBest=-0.81)
+ Marker 1: Y=82.2, Z=810.8, n=0.91, lastN=0.91, visible=true
+ [Marker 1] Position: x=0.000, y=0.082, z=0.811 (метри)
+ [Marker 1] Quaternion: x=0.20, y=-0.06, z=-0.06, w=0.98
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.91, nBest=-0.81)
+ Marker 1: Y=83.7, Z=817.0, n=0.91, lastN=0.91, visible=true
+ [Marker 1] Position: x=0.001, y=0.084, z=0.817 (метри)
+ [Marker 1] Quaternion: x=0.20, y=-0.06, z=-0.08, w=0.97
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] NOT DETECTED! framesLost=2, visible=true
+ [Marker 1] NOT DETECTED! framesLost=3, visible=true
+ [Marker 1] NOT DETECTED! framesLost=4, visible=true
+ [Marker 1] NOT DETECTED! framesLost=5, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=6, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=7, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=8, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=9, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=10, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=11, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=12, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=13, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=14, visible=true
+aruco.js:148 Marker 1: Y=41.8, Z=735.5, n=0.86, lastN=0.89, visible=true
+aruco.js:195 [Marker 1] Position: x=-0.072, y=0.042, z=0.735 (метри)
+aruco.js:196 [Marker 1] Quaternion: x=0.26, y=0.01, z=-0.01, w=0.96
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=1, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=2, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=3, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=4, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=5, visible=true
+aruco.js:125 [Marker 1] SWAP: alt обрано замість best (nAlt=0.85, nBest=-0.82)
+aruco.js:148 Marker 1: Y=25.6, Z=721.0, n=0.85, lastN=0.88, visible=true
+aruco.js:195 [Marker 1] Position: x=-0.078, y=0.026, z=0.721 (метри)
+aruco.js:196 [Marker 1] Quaternion: x=0.27, y=-0.01, z=0.01, w=0.96
+aruco.js:125 [Marker 1] SWAP: alt обрано замість best (nAlt=0.86, nBest=-0.82)
+aruco.js:148 Marker 1: Y=25.5, Z=711.8, n=0.86, lastN=0.87, visible=true
+aruco.js:195 [Marker 1] Position: x=-0.079, y=0.026, z=0.712 (метри)
+aruco.js:196 [Marker 1] Quaternion: x=0.27, y=-0.01, z=0.02, w=0.96
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=1, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=2, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=3, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=4, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=5, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=6, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=7, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=8, visible=true
+aruco.js:125 [Marker 1] SWAP: alt обрано замість best (nAlt=0.86, nBest=-0.84)
+aruco.js:148 Marker 1: Y=11.7, Z=703.6, n=0.86, lastN=0.87, visible=true
+aruco.js:195 [Marker 1] Position: x=-0.068, y=0.012, z=0.704 (метри)
+aruco.js:196 [Marker 1] Quaternion: x=0.27, y=-0.01, z=0.00, w=0.96
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=1, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=2, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=3, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=4, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=5, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=6, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=7, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=8, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=9, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=10, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=11, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=12, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=13, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=14, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=15, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=16, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=17, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=18, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=19, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=20, visible=true
+aruco.js:125 [Marker 1] SWAP: alt обрано замість best (nAlt=0.84, nBest=-0.74)
+aruco.js:148 Marker 1: Y=53.7, Z=591.2, n=0.84, lastN=0.86, visible=true
+aruco.js:195 [Marker 1] Position: x=-0.081, y=0.054, z=0.591 (метри)
+aruco.js:196 [Marker 1] Quaternion: x=0.28, y=-0.02, z=-0.01, w=0.96
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=1, visible=true
+aruco.js:125 [Marker 1] SWAP: alt обрано замість best (nAlt=0.84, nBest=-0.74)
+aruco.js:148 Marker 1: Y=54.3, Z=575.4, n=0.84, lastN=0.85, visible=true
+aruco.js:195 [Marker 1] Position: x=-0.079, y=0.054, z=0.575 (метри)
+aruco.js:196 [Marker 1] Quaternion: x=0.28, y=-0.03, z=0.01, w=0.96
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=1, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=2, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=3, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=4, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=5, visible=true
+aruco.js:125 [Marker 1] SWAP: alt обрано замість best (nAlt=0.86, nBest=-0.78)
+aruco.js:148 Marker 1: Y=44.0, Z=556.2, n=0.86, lastN=0.86, visible=true
+aruco.js:195 [Marker 1] Position: x=-0.087, y=0.044, z=0.556 (метри)
+aruco.js:196 [Marker 1] Quaternion: x=0.26, y=-0.06, z=0.03, w=0.96
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=1, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=2, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=3, visible=true
+aruco.js:125 [Marker 1] SWAP: alt обрано замість best (nAlt=0.84, nBest=-0.76)
+aruco.js:148 Marker 1: Y=39.9, Z=531.6, n=0.84, lastN=0.85, visible=true
+aruco.js:195 [Marker 1] Position: x=-0.088, y=0.040, z=0.532 (метри)
+aruco.js:196 [Marker 1] Quaternion: x=0.28, y=-0.05, z=0.02, w=0.96
+aruco.js:125 [Marker 1] SWAP: alt обрано замість best (nAlt=0.84, nBest=-0.75)
+aruco.js:148 Marker 1: Y=42.0, Z=531.5, n=0.84, lastN=0.85, visible=true
+aruco.js:195 [Marker 1] Position: x=-0.089, y=0.042, z=0.532 (метри)
+aruco.js:196 [Marker 1] Quaternion: x=0.28, y=-0.05, z=0.02, w=0.96
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=1, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=2, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=3, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=4, visible=true
+aruco.js:125 [Marker 1] SWAP: alt обрано замість best (nAlt=0.86, nBest=-0.75)
+aruco.js:148 Marker 1: Y=49.5, Z=518.4, n=0.86, lastN=0.85, visible=true
+aruco.js:195 [Marker 1] Position: x=-0.090, y=0.049, z=0.518 (метри)
+aruco.js:196 [Marker 1] Quaternion: x=0.27, y=-0.05, z=0.02, w=0.96
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=1, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=2, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=3, visible=true
+aruco.js:125 [Marker 1] SWAP: alt обрано замість best (nAlt=0.86, nBest=-0.75)
+aruco.js:148 Marker 1: Y=56.0, Z=533.5, n=0.86, lastN=0.85, visible=true
+aruco.js:195 [Marker 1] Position: x=-0.097, y=0.056, z=0.533 (метри)
+aruco.js:196 [Marker 1] Quaternion: x=0.26, y=-0.07, z=0.03, w=0.96
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=1, visible=true
+aruco.js:125 [Marker 1] SWAP: alt обрано замість best (nAlt=0.85, nBest=-0.74)
+aruco.js:148 Marker 1: Y=50.4, Z=493.0, n=0.85, lastN=0.85, visible=true
+aruco.js:195 [Marker 1] Position: x=-0.088, y=0.050, z=0.493 (метри)
+ [Marker 1] Quaternion: x=0.27, y=-0.06, z=0.02, w=0.96
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.86, nBest=-0.77)
+ Marker 1: Y=42.5, Z=508.7, n=0.86, lastN=0.86, visible=true
+ [Marker 1] Position: x=-0.084, y=0.042, z=0.509 (метри)
+ [Marker 1] Quaternion: x=0.27, y=-0.06, z=0.00, w=0.96
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] NOT DETECTED! framesLost=2, visible=true
+ [Marker 1] NOT DETECTED! framesLost=3, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.83, nBest=-0.75)
+ Marker 1: Y=32.6, Z=478.8, n=0.83, lastN=0.85, visible=true
+ [Marker 1] Position: x=-0.072, y=0.033, z=0.479 (метри)
+ [Marker 1] Quaternion: x=0.29, y=-0.05, z=0.00, w=0.95
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] NOT DETECTED! framesLost=2, visible=true
+ [Marker 1] NOT DETECTED! framesLost=3, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.82, nBest=-0.74)
+ Marker 1: Y=35.4, Z=468.9, n=0.82, lastN=0.84, visible=true
+ [Marker 1] Position: x=-0.078, y=0.035, z=0.469 (метри)
+ [Marker 1] Quaternion: x=0.30, y=-0.06, z=0.01, w=0.95
+ [Marker 1] NOT DETECTED! framesLost=1, visible=true
+ [Marker 1] NOT DETECTED! framesLost=2, visible=true
+ [Marker 1] NOT DETECTED! framesLost=3, visible=true
+ [Marker 1] NOT DETECTED! framesLost=4, visible=true
+ [Marker 1] NOT DETECTED! framesLost=5, visible=true
+ [Marker 1] NOT DETECTED! framesLost=6, visible=true
+ [Marker 1] NOT DETECTED! framesLost=7, visible=true
+ [Marker 1] NOT DETECTED! framesLost=8, visible=true
+ [Marker 1] NOT DETECTED! framesLost=9, visible=true
+ [Marker 1] NOT DETECTED! framesLost=10, visible=true
+ [Marker 1] NOT DETECTED! framesLost=11, visible=true
+ [Marker 1] NOT DETECTED! framesLost=12, visible=true
+ [Marker 1] NOT DETECTED! framesLost=13, visible=true
+ [Marker 1] NOT DETECTED! framesLost=14, visible=true
+ [Marker 1] NOT DETECTED! framesLost=15, visible=true
+ [Marker 1] NOT DETECTED! framesLost=16, visible=true
+ [Marker 1] NOT DETECTED! framesLost=17, visible=true
+ [Marker 1] NOT DETECTED! framesLost=18, visible=true
+ [Marker 1] NOT DETECTED! framesLost=19, visible=true
+ [Marker 1] NOT DETECTED! framesLost=20, visible=true
+ [Marker 1] NOT DETECTED! framesLost=21, visible=true
+ [Marker 1] NOT DETECTED! framesLost=22, visible=true
+ [Marker 1] NOT DETECTED! framesLost=23, visible=true
+ [Marker 1] NOT DETECTED! framesLost=24, visible=true
+ [Marker 1] NOT DETECTED! framesLost=25, visible=true
+ [Marker 1] NOT DETECTED! framesLost=26, visible=true
+ [Marker 1] NOT DETECTED! framesLost=27, visible=true
+ [Marker 1] NOT DETECTED! framesLost=28, visible=true
+ [Marker 1] NOT DETECTED! framesLost=29, visible=true
+ [Marker 1] NOT DETECTED! framesLost=30, visible=true
+ [Marker 1] NOT DETECTED! framesLost=31, visible=true
+ [Marker 1] NOT DETECTED! framesLost=32, visible=true
+ [Marker 1] NOT DETECTED! framesLost=33, visible=true
+ [Marker 1] SWAP: alt обрано замість best (nAlt=0.81, nBest=-0.80)
+ Marker 1: Y=7.2, Z=432.0, n=0.81, lastN=0.83, visible=true
+ [Marker 1] Position: x=-0.054, y=0.007, z=0.432 (метри)
+ [Marker 1] Quaternion: x=0.31, y=-0.04, z=0.01, w=0.95
+aruco.js:125 [Marker 1] SWAP: alt обрано замість best (nAlt=0.81, nBest=-0.79)
+aruco.js:148 Marker 1: Y=8.3, Z=441.8, n=0.81, lastN=0.82, visible=true
+aruco.js:195 [Marker 1] Position: x=-0.056, y=0.008, z=0.442 (метри)
+aruco.js:196 [Marker 1] Quaternion: x=0.31, y=-0.04, z=0.02, w=0.95
+aruco.js:148 Marker 1: Y=9.4, Z=448.4, n=0.81, lastN=0.82, visible=true
+aruco.js:195 [Marker 1] Position: x=-0.057, y=0.009, z=0.448 (метри)
+aruco.js:196 [Marker 1] Quaternion: x=0.31, y=-0.04, z=0.01, w=0.95
+aruco.js:125 [Marker 1] SWAP: alt обрано замість best (nAlt=0.82, nBest=-0.80)
+aruco.js:148 Marker 1: Y=10.2, Z=451.9, n=0.82, lastN=0.82, visible=true
+aruco.js:195 [Marker 1] Position: x=-0.057, y=0.010, z=0.452 (метри)
+aruco.js:196 [Marker 1] Quaternion: x=0.30, y=-0.04, z=0.01, w=0.95
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=1, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=2, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=3, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=4, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=5, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=6, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=7, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=8, visible=true
+aruco.js:125 [Marker 1] SWAP: alt обрано замість best (nAlt=0.85, nBest=-0.81)
+aruco.js:148 Marker 1: Y=23.1, Z=541.1, n=0.85, lastN=0.83, visible=true
+aruco.js:195 [Marker 1] Position: x=-0.050, y=0.023, z=0.541 (метри)
+aruco.js:196 [Marker 1] Quaternion: x=0.28, y=-0.01, z=0.01, w=0.96
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=1, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=2, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=3, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=4, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=5, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=6, visible=true
+aruco.js:125 [Marker 1] SWAP: alt обрано замість best (nAlt=0.85, nBest=-0.81)
+aruco.js:148 Marker 1: Y=24.8, Z=556.0, n=0.85, lastN=0.83, visible=true
+aruco.js:195 [Marker 1] Position: x=-0.044, y=0.025, z=0.556 (метри)
+aruco.js:196 [Marker 1] Quaternion: x=0.27, y=-0.01, z=0.02, w=0.96
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=1, visible=true
+aruco.js:125 [Marker 1] SWAP: alt обрано замість best (nAlt=0.85, nBest=-0.81)
+aruco.js:148 Marker 1: Y=25.8, Z=550.5, n=0.85, lastN=0.84, visible=true
+aruco.js:195 [Marker 1] Position: x=-0.046, y=0.026, z=0.551 (метри)
+aruco.js:196 [Marker 1] Quaternion: x=0.27, y=-0.01, z=0.02, w=0.96
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=1, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=2, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=3, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=4, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=5, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=6, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=7, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=8, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=9, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=10, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=11, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=12, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=13, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=14, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=15, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=16, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=17, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=18, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=19, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=20, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=21, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=22, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=23, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=24, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=25, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=26, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=27, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=28, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=29, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=30, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=31, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=32, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=33, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=34, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=35, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=36, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=37, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=38, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=39, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=40, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=41, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=42, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=43, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=44, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=45, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=46, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=47, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=48, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=49, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=50, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=51, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=52, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=53, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=54, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=55, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=56, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=57, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=58, visible=true
+threex-artoolkitsource.js:388  obsolete function arToolkitSource.onResize. Use arToolkitSource.onResizeElement
+ARjs.Source.onResize @ threex-artoolkitsource.js:388
+threex-artoolkitsource.js:378  obsolete function arToolkitSource.copySizeTo. Use arToolkitSource.copyElementSizeTo
+ARjs.Source.copySizeTo @ threex-artoolkitsource.js:378
+threex-artoolkitsource.js:378  obsolete function arToolkitSource.copySizeTo. Use arToolkitSource.copyElementSizeTo
+ARjs.Source.copySizeTo @ threex-artoolkitsource.js:378
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=59, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=60, visible=true
+threex-artoolkitsource.js:388  obsolete function arToolkitSource.onResize. Use arToolkitSource.onResizeElement
+ARjs.Source.onResize @ threex-artoolkitsource.js:388
+threex-artoolkitsource.js:378  obsolete function arToolkitSource.copySizeTo. Use arToolkitSource.copyElementSizeTo
+ARjs.Source.copySizeTo @ threex-artoolkitsource.js:378
+threex-artoolkitsource.js:378  obsolete function arToolkitSource.copySizeTo. Use arToolkitSource.copyElementSizeTo
+ARjs.Source.copySizeTo @ threex-artoolkitsource.js:378
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=61, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=62, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=63, visible=true
+[NEW] Explain Console errors by using Copilot in Edge: click
+         
+         to explain an error. 
+        Learn more
+        Don't show again
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=64, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=65, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=66, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=67, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=68, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=69, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=70, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=71, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=72, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=73, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=74, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=75, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=76, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=77, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=78, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=79, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=80, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=81, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=82, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=83, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=84, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=85, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=86, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=87, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=88, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=89, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=90, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=91, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=92, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=93, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=94, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=95, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=96, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=97, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=98, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=99, visible=true
+aruco.js:205 [Marker 1] NOT DETECTED! framesLost=100, visible=true

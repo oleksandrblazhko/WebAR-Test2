@@ -25,7 +25,7 @@
 3) приклад програми, яка розпізнає aruco-маркери бібліотеки ARUCO_4X4_1000 - js-aruco2\samples\getusermedia\4x4.html
 4) конфігураційний файл проекту - config.json
 5) приклад опису експериментального маркеру для конфігураційного файлу:
-      "id": 5ти,
+      "id": 5Про,
       "type": "aruco:ARUCO_4X4_1000", 
       "target": 1,
       "contentType": "primitive",

@@ -17,8 +17,9 @@ var ArucoMarkerControls = function (arToolkitContext, object3d, parameters, canv
 
     // Persistence mechanism for smoother tracking
     this.framesLost = 0;
-    this.maxFramesLost = 5; // Keep visible for 5 frames after loss of detection
+    this.maxFramesLost = 100; // Keep visible for 100 frames after loss of detection (збільшено для стабільності)
     this.lastPose = null;
+    this.lastNormalY = 0.9; // Початково очікуємо, що нормаль дивиться вгору
 
     // --- Ініціалізація детектора ---
     // Детектор ініціалізується один раз і зберігається у статичній змінній,
@@ -36,14 +37,15 @@ var ArucoMarkerControls = function (arToolkitContext, object3d, parameters, canv
     // POSIT використовується для визначення 3D-позиції маркера.
     // Також ініціалізується один раз.
     if (!ArucoMarkerControls.posit) {
-        var modelSize = parameters.modelSize || 35.0; // Розмір маркера в міліметрах.
+        var modelSize = parameters.modelSize || 35.0; // Розмір маркера в міліметрах (з конфігурації).
         ArucoMarkerControls.posit = new POS.Posit(modelSize, canvasWidth);
         console.log('Posit initialized with modelSize:', modelSize, 'and canvasWidth:', canvasWidth);
     }
     this.posit = ArucoMarkerControls.posit;
-    
-    // Початково об'єкт невидимий, доки не буде знайдено маркер.
-    this.object3d.visible = false;
+
+    // Початково об'єкт видимий (щоб конус було видно навіть без маркера)
+    this.object3d.visible = true;
+    console.log(`[ArucoMarkerControls] Marker ${this.id} initialized, visible=${this.object3d.visible}`);
 
     /**
      * Функція оновлення стану маркера.
@@ -88,55 +90,119 @@ var ArucoMarkerControls = function (arToolkitContext, object3d, parameters, canv
            if (pose) {
                     let chosenPose = pose; // Default to 'best'
    
+                    // --- Обчислюємо нормалі для обох поз ---
+                    var rotationMatrixBest = new THREE.Matrix4();
+                    rotationMatrixBest.set(
+                        pose.bestRotation[0][0], pose.bestRotation[0][1], pose.bestRotation[0][2], 0,
+                        pose.bestRotation[1][0], pose.bestRotation[1][1], pose.bestRotation[1][2], 0,
+                        pose.bestRotation[2][0], pose.bestRotation[2][1], pose.bestRotation[2][2], 0,
+                        0, 0, 0, 1
+                    );
+                    var localNormal = new THREE.Vector3(0, 0, 1);
+                    var worldNormalBest = localNormal.clone().applyMatrix4(rotationMatrixBest);
+                    
+                    var rotationMatrixAlt = new THREE.Matrix4();
+                    rotationMatrixAlt.set(
+                        pose.alternativeRotation[0][0], pose.alternativeRotation[0][1], pose.alternativeRotation[0][2], 0,
+                        pose.alternativeRotation[1][0], pose.alternativeRotation[1][1], pose.alternativeRotation[1][2], 0,
+                        pose.alternativeRotation[2][0], pose.alternativeRotation[2][1], pose.alternativeRotation[2][2], 0,
+                        0, 0, 0, 1
+                    );
+                    var worldNormalAlt = localNormal.clone().applyMatrix4(rotationMatrixAlt);
+   
                     // --- Pose Stabilization Logic ---
-                    if (_this.lastPose) {
-                        const distBest = new THREE.Vector3().fromArray(pose.bestTranslation)
-                            .distanceTo(new THREE.Vector3().fromArray(_this.lastPose.translation));
-   
-                        const distAlt = new THREE.Vector3().fromArray(pose.alternativeTranslation)
-                            .distanceTo(new THREE.Vector3().fromArray(_this.lastPose.translation));
-   
-                        // Heuristic: if the alternative pose is closer, and the best pose represents a significant "jump",
-                        // it's likely a flip. Use the alternative instead.
-                        if (distAlt < distBest && distBest > 2) { // The '2' is a threshold in mm, can be tuned
-                             chosenPose = {
+                    // Обираємо позу, у якої нормаль ближча до попередньої стабільної нормалі
+                    if (_this.lastNormalY !== null) {
+                        const diffBest = Math.abs(worldNormalBest.y - _this.lastNormalY);
+                        const diffAlt = Math.abs(worldNormalAlt.y - _this.lastNormalY);
+                        
+                        // Якщо нормалі різні (одна +, інша -), обираємо ту, що ближча до попередньої
+                        if (diffAlt < diffBest && Math.abs(diffBest - diffAlt) > 0.5) {
+                            chosenPose = {
                                 bestRotation: pose.alternativeRotation,
                                 bestTranslation: pose.alternativeTranslation
-                             };
+                            };
+                            console.log(`[Marker ${_this.id}] SWAP: alt обрано замість best (nAlt=${worldNormalAlt.y.toFixed(2)}, nBest=${worldNormalBest.y.toFixed(2)})`);
                         }
                     }
    
-                    // Store the translation of the chosen pose for the next frame
-                    _this.lastPose = { translation: chosenPose.bestTranslation };
-                    // --- End of Stabilization Logic ---
+                    // Store the chosen pose for the next frame
+                    _this.lastPose = { 
+                        translation: chosenPose.bestTranslation,
+                        rotation: chosenPose.bestRotation
+                    };
+                    
+                    // Оновлюємо останню нормаль (з деякою інерцією)
+                    var chosenRotationMatrix = new THREE.Matrix4();
+                    chosenRotationMatrix.set(
+                        chosenPose.bestRotation[0][0], chosenPose.bestRotation[0][1], chosenPose.bestRotation[0][2], 0,
+                        chosenPose.bestRotation[1][0], chosenPose.bestRotation[1][1], chosenPose.bestRotation[1][2], 0,
+                        chosenPose.bestRotation[2][0], chosenPose.bestRotation[2][1], chosenPose.bestRotation[2][2], 0,
+                        0, 0, 0, 1
+                    );
+                    var chosenNormal = localNormal.clone().applyMatrix4(chosenRotationMatrix);
+                    // Ковзне середнє для нормалі (інерція)
+                    _this.lastNormalY = _this.lastNormalY * 0.7 + chosenNormal.y * 0.3;
+                    
+                    // --- Debug Log: вивід інформації про позу ---
+                    console.log(`Marker ${_this.id}: Y=${chosenPose.bestTranslation[1].toFixed(1)}, Z=${chosenPose.bestTranslation[2].toFixed(1)}, n=${chosenNormal.y.toFixed(2)}, lastN=${_this.lastNormalY.toFixed(2)}, visible=${_this.object3d.visible}`);
+                    // --- End Debug Log ---
    
                     var rotation = chosenPose.bestRotation;
                     var translation = chosenPose.bestTranslation;
-                    var scaleFactor = 35.0; // The original model size in mm
+                    // Конвертація мм → одиниці Three.js (1 одиниця = 1 метр)
+                    var mmToUnits = 0.001; // 1 мм = 0.001 одиниць (метрів)
    
-                    // Create the matrix from the POSIT result, with scaled translation
-                    var poseMatrix = new THREE.Matrix4();
-                    poseMatrix.set(
-                        rotation[0][0], rotation[0][1],  rotation[0][2], translation[0] / scaleFactor,
-                        rotation[1][0], rotation[1][1],  rotation[1][2], translation[1] / scaleFactor,
-                       -rotation[2][0],-rotation[2][1], -rotation[2][2],-translation[2] / scaleFactor,
-                        0,              0,               0,              1
+                    // --- Create rotation matrix from POSIT result ---
+                    // Матриця обертання від POSIT
+                    var rotationMatrix = chosenRotationMatrix;
+                    
+                    // --- Create the correction matrix to make the cone "stand up" ---
+                    // Конус має стояти вертикально на маркері (вісь Y)
+                    // Корекція: повертаємо на +90° навколо X (виправлено!)
+                    var correctionMatrix = new THREE.Matrix4().makeRotationX(Math.PI / 2);
+   
+                    // Create the translation matrix (конвертація мм → метри)
+                    var translationMatrix = new THREE.Matrix4();
+                    translationMatrix.makeTranslation(
+                        translation[0] * mmToUnits,
+                        translation[1] * mmToUnits,
+                        translation[2] * mmToUnits
                     );
-   
-                    // Create the correction matrix to make the cone "stand up"
-                    var correctionMatrix = new THREE.Matrix4().makeRotationX(-Math.PI / 2);
-   
-                    // Combine the matrices
-                    _this.object3d.matrix.multiplyMatrices(poseMatrix, correctionMatrix);
+                    
+                    // Combine matrices: translation × rotation × correction
+                    var poseMatrix = new THREE.Matrix4();
+                    poseMatrix.multiplyMatrices(translationMatrix, rotationMatrix);
+                    poseMatrix.multiply(correctionMatrix);
    
                     // Decompose the final matrix into position, quaternion, and scale.
+                    _this.object3d.matrix.copy(poseMatrix);
                     _this.object3d.matrix.decompose(_this.object3d.position, _this.object3d.quaternion, _this.object3d.scale);
+                    
+                    // --- FIX: Інверсія кватерніона для стабільності ---
+                    // Кватерніони (x,y,z,w) і (-x,-y,-z,-w) представляють однакову орієнтацію
+                    // Обираємо варіант з додатнім w для стабільності
+                    if (_this.object3d.quaternion.w < 0 || 
+                        (_this.object3d.quaternion.w < 0.5 && _this.object3d.quaternion.x < 0)) {
+                        _this.object3d.quaternion.x *= -1;
+                        _this.object3d.quaternion.y *= -1;
+                        _this.object3d.quaternion.z *= -1;
+                        _this.object3d.quaternion.w *= -1;
+                    }
+                    
+                    // --- Діагностика позиції ---
+                    if (_this.framesLost < 2) {
+                        console.log(`[Marker ${_this.id}] Position: x=${_this.object3d.position.x.toFixed(3)}, y=${_this.object3d.position.y.toFixed(3)}, z=${_this.object3d.position.z.toFixed(3)} (метри)`);
+                        console.log(`[Marker ${_this.id}] Quaternion: x=${_this.object3d.quaternion.x.toFixed(2)}, y=${_this.object3d.quaternion.y.toFixed(2)}, z=${_this.object3d.quaternion.z.toFixed(2)}, w=${_this.object3d.quaternion.w.toFixed(2)}`);
+                    }
+                    // --- End Debug ---
             }
         } else {
             _this.framesLost++; // Increment lost frames counter
             if (_this.framesLost > _this.maxFramesLost) {
                 _this.object3d.visible = false; // Hide object only after grace period
             }
+            console.log(`[Marker ${_this.id}] NOT DETECTED! framesLost=${_this.framesLost}, visible=${_this.object3d.visible}`);
         }
     };
 };

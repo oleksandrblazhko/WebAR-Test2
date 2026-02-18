@@ -456,6 +456,15 @@
                 // Оголошуємо сцену, в яку додамо головний контейнер з усіма 3D об'єктами.
                 scene = new THREE.Scene();
 
+                // === ВЕРСІЯ ПРОГРАМИ ===
+                console.log('========================================');
+                console.log('WebAR-Test2 версія: 2026-02-17-ARUCO-FIX');
+                console.log('Створено:', new Date().toLocaleString('uk-UA'));
+                console.log('========================================');
+                console.log('[INFO] Initialize started...');
+                console.log('[INFO] Config markers count:', config.markers.length);
+                console.log('[INFO] Marker 4 (aruco):', config.markers[4]);
+
                 // Додаємо світло на сцену, інакше базові матеріали будуть просто чорними.
                 // т.к. їм нема чого відображати, зверніться до документації бібліотеки three.js, щоб
                 // прочитати про докладну роботу класу Material
@@ -634,9 +643,80 @@
                         let markerControls = new ArucoMarkerControls(arToolkitContext, markerRoots[i], {
                             id: markerConfig.target,
                             dictionaryName: dictionaryName,
-                            modelSize: 35.0 // Розмір маркера в мм, можна винести в конфіг
+                            modelSize: markerConfig.modelSize || 35.0 // Розмір маркера в мм з конфігурації
                         }, canvasWidth);
                         arucoControls.push(markerControls);
+                        
+                        // --- Створення примітиву для aruco-маркера ---
+                        if (markerConfig.contentType === 'primitive' && markerConfig.primitive) {
+                            const primitive = markerConfig.primitive;
+                            let geometry, material, mesh;
+                            
+                            switch(primitive.type) {
+                                case 'BoxGeometry':
+                                    geometry = new THREE.BoxGeometry(...primitive.size);
+                                    break;
+                                case 'SphereGeometry':
+                                    geometry = new THREE.SphereGeometry(primitive.radius, primitive.widthSegments || 32, primitive.heightSegments || 32);
+                                    break;
+                                case 'CylinderGeometry':
+                                    geometry = new THREE.CylinderGeometry(
+                                        primitive.radiusTop || 0.5,
+                                        primitive.radiusBottom || 0.5,
+                                        primitive.height || 1,
+                                        primitive.radialSegments || 32
+                                    );
+                                    break;
+                                case 'ConeGeometry':
+                                    geometry = new THREE.ConeGeometry(
+                                        primitive.radius || 0.5,
+                                        primitive.height || 1,
+                                        primitive.radialSegments || 32
+                                    );
+                                    console.log(`[CONE-ARUCO] ConeGeometry created for aruco marker ${i}`);
+                                    break;
+                                case 'TorusGeometry':
+                                    geometry = new THREE.TorusGeometry(
+                                        primitive.radius || 1,
+                                        primitive.tubeRadius || 0.4,
+                                        primitive.radialSegments || 16,
+                                        primitive.tubularSegments || 32
+                                    );
+                                    break;
+                                default:
+                                    geometry = new THREE.BoxGeometry(1, 1, 1);
+                            }
+                            
+                            if (primitive.textureFile) {
+                                let texture = new THREE.TextureLoader().load(primitive.textureFile);
+                                material = new THREE.MeshBasicMaterial({
+                                    map: texture,
+                                    color: new THREE.Color(primitive.color || '#ffffff')
+                                });
+                            } else {
+                                material = new THREE.MeshBasicMaterial({
+                                    color: new THREE.Color(primitive.color || '#ffffff')
+                                });
+                            }
+                            
+                            mesh = new THREE.Mesh(geometry, material);
+                            
+                            // Додаємо конус до markerRoots для AR трекингу
+                            if (primitive.position) {
+                                mesh.position.set(...primitive.position);
+                            }
+                            if (primitive.rotation) {
+                                mesh.rotation.set(...primitive.rotation);
+                            }
+                            
+                            markerRoots[i].add(mesh);
+                            console.log(`[CONE-ARUCO] Mesh added to markerRoots[${i}]`);
+                            
+                            if (primitive.animation) {
+                                mesh.userData.animation = primitive.animation;
+                            }
+                        }
+                        // --- Кінець створення примітиву ---
                     }
 
                     // Create alternative content if it exists in configuration
@@ -653,7 +733,9 @@
                     }
 
                     // Використовуємо switch для роботи з кожним окремим випадком контенту
-                    switch (modes[i]) {
+                    // Пропускаємо для aruco-маркерів (вони обробляються окремо)
+                    if (!markerConfig.type.startsWith('aruco:')) {
+                        switch (modes[i]) {
                         // Якщо контент під маркер це модель
                         case 'model':
                             function onProgress(xhr) { console.log((xhr.loaded / xhr.total * 100) + '% loaded'); }
@@ -809,49 +891,52 @@
                                         break;
                                     case 'CylinderGeometry':
                                         geometry = new THREE.CylinderGeometry(
-                                            primitive.radiusTop || 0.5, 
-                                            primitive.radiusBottom || 0.5, 
-                                            primitive.height || 1, 
+                                            primitive.radiusTop || 0.5,
+                                            primitive.radiusBottom || 0.5,
+                                            primitive.height || 1,
                                             primitive.radialSegments || 32
                                         );
                                         break;
                                     case 'ConeGeometry':
                                         geometry = new THREE.ConeGeometry(
-                                            primitive.radius || 0.5, 
-                                            primitive.height || 1, 
+                                            primitive.radius || 0.5,
+                                            primitive.height || 1,
                                             primitive.radialSegments || 32
                                         );
+                                        console.log(`[CONE] ConeGeometry created for marker ${i}: radius=${primitive.radius}, height=${primitive.height}`);
                                         break;
                                     case 'TorusGeometry':
                                         geometry = new THREE.TorusGeometry(
-                                            primitive.radius || 1, 
-                                            primitive.tubeRadius || 0.4, 
-                                            primitive.radialSegments || 16, 
+                                            primitive.radius || 1,
+                                            primitive.tubeRadius || 0.4,
+                                            primitive.radialSegments || 16,
                                             primitive.tubularSegments || 32
                                         );
                                         break;
                                     default:
                                         geometry = new THREE.BoxGeometry(1, 1, 1);
                                 }
-                                
+
                                 // Створюємо матеріал з кольором або текстурою
                                 if (primitive.textureFile) {
                                     // Завантажуємо текстуру, якщо вона вказана
                                     let texture = new THREE.TextureLoader().load(primitive.textureFile);
-                                    material = new THREE.MeshBasicMaterial({ 
+                                    material = new THREE.MeshBasicMaterial({
                                         map: texture,
                                         color: new THREE.Color(primitive.color || '#ffffff') // Додаємо базовий колір для випадку, якщо текстура не завантажиться
                                     });
+                                    console.log(`[CONE] Texture loaded: ${primitive.textureFile}, color: ${primitive.color}`);
                                 } else {
                                     // Використовуємо колір, якщо текстура не вказана
-                                    material = new THREE.MeshBasicMaterial({ 
-                                        color: new THREE.Color(primitive.color || '#ffffff') 
+                                    material = new THREE.MeshBasicMaterial({
+                                        color: new THREE.Color(primitive.color || '#ffffff')
                                     });
                                 }
-                                
+
                                 // Створюємо меш
                                 mesh = new THREE.Mesh(geometry, material);
-                                
+                                console.log(`[CONE] Mesh created for marker ${i}, adding to markerRoots[${i}]`);
+
                                 // Застосовуємо позицію та обертання
                                 if (primitive.position) {
                                     mesh.position.set(...primitive.position);
@@ -859,10 +944,11 @@
                                 if (primitive.rotation) {
                                     mesh.rotation.set(...primitive.rotation);
                                 }
-                                
+
                                 // Додаємо до контейнера маркера
                                 markerRoots[i].add(mesh);
-                                
+                                console.log(`[CONE] Mesh added to markerRoots[${i}], children count:`, markerRoots[i].children.length);
+
                                 // Зберігаємо для анімації
                                 if (primitive.animation) {
                                     mesh.userData.animation = primitive.animation;
@@ -1006,7 +1092,8 @@
                             console.log(`File ${sound.name} loaded`)
                         }))
                     }
-                }
+                } // end of if (!markerConfig.type.startsWith('aruco:'))
+                } // end of for loop
 
                 // Ховаємо лоадер після завантаження компонентів
                 Promise.all(contentPromises)

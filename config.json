@@ -89,8 +89,9 @@
     },
     {
       "id": 5,
-      "type": "aruco:ARUCO_4X4_1000", 
+      "type": "aruco:ARUCO_4X4_1000",
       "target": 1,
+      "modelSize": 30.0,
       "contentType": "primitive",
       "primitive": {
         "type": "ConeGeometry",

@@ -123,6 +123,7 @@ WebAR-Test2 - це веб-додаток доповненої реальност
 - QR-код генератор: https://www.qrcode-monkey.com/#
 - Генератор баркод-маркерів: https://au.gmented.com/app/marker/marker.php
 - Генератор патерн-маркерів: https://jeromeetienne.github.io/AR.js/three.js/examples/marker-training/examples/generator.html
+- Генератор aruco-маркерів: https://chev.me/arucogen/
 
 ## Висновки
 
