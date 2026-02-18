@@ -4,25 +4,41 @@
  * @author Alex P.
  * @author D. Falcioni
  * @author Google Gemini
- * 
+ *
  * Цей модуль забезпечує розпізнавання Aruco-маркерів та інтеграцію з three.js.
  * Він використовує бібліотеку js-aruco2 для детектування маркерів та POSIT для оцінки 3D пози.
+ * Оновлено для використання стабільної логіки на основі матриць та правильного масштабування.
  */
+
+// Спільний detection canvas для всіх маркерів (як у 4x4-3d.html)
+// Використовуємо нижчу роздільну здатність для обробки (640x480) для кращої продуктивності
+var detectionCanvas = null;
+var detectionContext = null;
+var canvasWidthGlobal = null;
+var canvasHeightGlobal = null;
+var DETECTION_WIDTH = 640;  // Роздільна здатність для обробки (нижча = швидше)
+var DETECTION_HEIGHT = 480; // Співвідношення 4:3
+
 var ArucoMarkerControls = function (arToolkitContext, object3d, parameters, canvasWidth) {
     var _this = this;
 
     this.object3d = object3d;
-    this.id = parameters.id; // ID Aruco-маркера для відстеження
-    this.object3d.rotation.order = 'YXZ'; // Встановлюємо порядок обертання
+    this.id = parameters.id;
+    this.modelSize = parameters.modelSize; // Розмір маркера в мм (має передаватися з конфігурації)
 
-    // Persistence mechanism for smoother tracking
+    // Змінні для згладжування видимості
     this.framesLost = 0;
-    this.maxFramesLost = 5; // Keep visible for 5 frames after loss of detection
-    this.lastPose = null;
+    this.maxFramesLost = 60; // Збільшено: конус не зникає при великих кутах огляду
 
-    // --- Ініціалізація детектора ---
-    // Детектор ініціалізується один раз і зберігається у статичній змінній,
-    // щоб уникнути зайвих ініціалізацій для кожного маркера.
+    // Змінні для інтерполяції позиції (LERP) для плавності
+    this.targetPosition = new THREE.Vector3();
+    this.targetQuaternion = new THREE.Quaternion();
+    this.currentPosition = new THREE.Vector3();
+    this.currentQuaternion = new THREE.Quaternion();
+    this.lerpFactor = 0.5; // Коефіцієнт інтерполяції (0.1 = дуже плавно, 0.5 = швидше, 1.0 = без інтерполяції)
+    this.firstUpdate = true;
+
+    // Ініціалізація детектора (один раз для всіх маркерів)
     if (!ArucoMarkerControls.detector) {
         var dictionaryName = parameters.dictionaryName || 'ARUCO_4X4_1000';
         ArucoMarkerControls.detector = new AR.Detector({
@@ -32,115 +48,152 @@ var ArucoMarkerControls = function (arToolkitContext, object3d, parameters, canv
     }
     this.detector = ArucoMarkerControls.detector;
 
-    // --- Ініціалізація POSIT ---
-    // POSIT використовується для визначення 3D-позиції маркера.
-    // Також ініціалізується один раз.
+    // Ініціалізація POSIT (один раз для всіх маркерів)
+    // Використовуємо DETECTION_WIDTH для POSIT, а не canvasWidth
     if (!ArucoMarkerControls.posit) {
-        var modelSize = parameters.modelSize || 35.0; // Розмір маркера в міліметрах.
-        ArucoMarkerControls.posit = new POS.Posit(modelSize, canvasWidth);
-        console.log('Posit initialized with modelSize:', modelSize, 'and canvasWidth:', canvasWidth);
+        ArucoMarkerControls.posit = new POS.Posit(this.modelSize, DETECTION_WIDTH);
+        console.log('Posit initialized with modelSize:', this.modelSize, 'and detectionWidth:', DETECTION_WIDTH);
     }
     this.posit = ArucoMarkerControls.posit;
-    
-    // Початково об'єкт невидимий, доки не буде знайдено маркер.
+
+    // Ініціалізація спільного detection canvas (як у 4x4-3d.html)
+    if (!detectionCanvas) {
+        detectionCanvas = document.createElement('canvas');
+        detectionContext = detectionCanvas.getContext('2d');
+        canvasWidthGlobal = DETECTION_WIDTH;
+        canvasHeightGlobal = DETECTION_HEIGHT;
+        detectionCanvas.width = canvasWidthGlobal;
+        detectionCanvas.height = canvasHeightGlobal;
+        console.log('Detection canvas initialized:', DETECTION_WIDTH + 'x' + DETECTION_HEIGHT);
+    }
+
+    // Об'єкт невидимий, доки маркер не знайдено
     this.object3d.visible = false;
 
     /**
-     * Функція оновлення стану маркера.
-     * Викликається у головному циклі анімації.
+     * Функція для оновлення позиції 3D-об'єкта через пряме встановлення quaternion та position.
+     * Цей підхід забезпечує більшу стабільність порівняно з matrix.decompose().
+     * @param {Array} rotation - Матриця обертання 3x3 від POSIT.
+     * @param {Array} translation - Вектор переміщення від POSIT.
      */
-    this.update = function (arToolkitSource) {
-        var arController = arToolkitContext.arController;
+    var updateObjectPose = function(rotation, translation) {
+        var object = _this.object3d;
+
+        // Створюємо матрицю обертання з даних POSIT
+        var rotMatrix = new THREE.Matrix4();
+        rotMatrix.set(
+            rotation[0][0], rotation[0][1], rotation[0][2], 0,
+            rotation[1][0], rotation[1][1], rotation[1][2], 0,
+            rotation[2][0], rotation[2][1], rotation[2][2], 0,
+            0, 0, 0, 1
+        );
+
+        // Встановлюємо кватерніон з матриці обертання (без корекції - геометрія вже правильно орієнтована)
+        _this.targetQuaternion.setFromRotationMatrix(rotMatrix);
+
+        // Встановлення позиції (як у 4x4-3d.html, тільки інвертуємо Z)
+        _this.targetPosition.set(
+            translation[0],
+            translation[1],
+            -translation[2]
+        );
+
+        // Ініціалізуємо поточну позицію при першому оновленні
+        if (_this.firstUpdate) {
+            _this.currentPosition.copy(_this.targetPosition);
+            _this.currentQuaternion.copy(_this.targetQuaternion);
+            _this.firstUpdate = false;
+        }
+
+        // Ітерполяція позиції (LERP) для плавності
+        _this.currentPosition.lerp(_this.targetPosition, _this.lerpFactor);
+
+        // Ітерполяція кватерніона (SLERP) для плавного обертання
+        _this.currentQuaternion.slerp(_this.targetQuaternion, _this.lerpFactor);
+
+        // Застосовуємо інтерпольовані значення до об'єкта
+        object.position.copy(_this.currentPosition);
+        object.quaternion.copy(_this.currentQuaternion);
+    };
+
+    /**
+     * Головна функція оновлення, викликається на кожному кадрі.
+     */
+    this.update = function (arToolkitSource, preDetectedMarkers) {
         var video = arToolkitSource.domElement;
 
-        // Перевіряємо, чи готове відео для обробки.
         if (video.readyState !== video.HAVE_ENOUGH_DATA) {
             return;
         }
 
-        // Отримуємо поточний кадр з відео.
-        var canvas = arController.canvas;
-        var context = canvas.getContext('2d');
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-
-        // Детектуємо маркери на кадрі.
-        var markers = _this.detector.detect(imageData);
+        var markers = preDetectedMarkers;
         
-        // Шукаємо маркер з потрібним ID.
+        // Якщо маркери не передані, детектуємо самостійно (для сумісності)
+        if (!markers) {
+            // Малюємо відео на кешований canvas (як у 4x4-3d.html)
+            detectionContext.drawImage(video, 0, 0, detectionCanvas.width, detectionCanvas.height);
+            
+            // Отримуємо imageData з кешованого canvas
+            var imageData = detectionContext.getImageData(0, 0, detectionCanvas.width, detectionCanvas.height);
+            markers = _this.detector.detect(imageData);
+        }
+        
         var foundMarker = markers.find(marker => marker.id === _this.id);
+        var markerFoundAndPoseOk = false;
 
         if (foundMarker) {
-            _this.framesLost = 0; // Reset lost frames counter
-            _this.object3d.visible = true; // Make object visible
-
-            var corners = foundMarker.corners;
-            
-            // POSIT вимагає координати кутів, центровані відносно центру канвасу.
-            var centeredCorners = corners.map(corner => ({
-                x: corner.x - (canvas.width / 2),
-                y: (canvas.height / 2) - corner.y
+            var corners = foundMarker.corners.map(corner => ({
+                x: corner.x - (detectionCanvas.width / 2),
+                y: (detectionCanvas.height / 2) - corner.y
             }));
 
-            // Оцінюємо 3D позу маркера.
-            var pose = _this.posit.pose(centeredCorners);
-            
-           if (pose) {
-                    let chosenPose = pose; // Default to 'best'
-   
-                    // --- Pose Stabilization Logic ---
-                    if (_this.lastPose) {
-                        const distBest = new THREE.Vector3().fromArray(pose.bestTranslation)
-                            .distanceTo(new THREE.Vector3().fromArray(_this.lastPose.translation));
-   
-                        const distAlt = new THREE.Vector3().fromArray(pose.alternativeTranslation)
-                            .distanceTo(new THREE.Vector3().fromArray(_this.lastPose.translation));
-   
-                        // Heuristic: if the alternative pose is closer, and the best pose represents a significant "jump",
-                        // it's likely a flip. Use the alternative instead.
-                        if (distAlt < distBest && distBest > 2) { // The '2' is a threshold in mm, can be tuned
-                             chosenPose = {
-                                bestRotation: pose.alternativeRotation,
-                                bestTranslation: pose.alternativeTranslation
-                             };
-                        }
-                    }
-   
-                    // Store the translation of the chosen pose for the next frame
-                    _this.lastPose = { translation: chosenPose.bestTranslation };
-                    // --- End of Stabilization Logic ---
-   
-                    var rotation = chosenPose.bestRotation;
-                    var translation = chosenPose.bestTranslation;
-                    var scaleFactor = 35.0; // The original model size in mm
-   
-                    // Create the matrix from the POSIT result, with scaled translation
-                    var poseMatrix = new THREE.Matrix4();
-                    poseMatrix.set(
-                        rotation[0][0], rotation[0][1],  rotation[0][2], translation[0] / scaleFactor,
-                        rotation[1][0], rotation[1][1],  rotation[1][2], translation[1] / scaleFactor,
-                       -rotation[2][0],-rotation[2][1], -rotation[2][2],-translation[2] / scaleFactor,
-                        0,              0,               0,              1
-                    );
-   
-                    // Create the correction matrix to make the cone "stand up"
-                    var correctionMatrix = new THREE.Matrix4().makeRotationX(-Math.PI / 2);
-   
-                    // Combine the matrices
-                    _this.object3d.matrix.multiplyMatrices(poseMatrix, correctionMatrix);
-   
-                    // Decompose the final matrix into position, quaternion, and scale.
-                    _this.object3d.matrix.decompose(_this.object3d.position, _this.object3d.quaternion, _this.object3d.scale);
+            var pose = _this.posit.pose(corners);
+
+            if (pose) {
+                updateObjectPose(pose.bestRotation, pose.bestTranslation);
+                markerFoundAndPoseOk = true;
             }
+        }
+
+        // Логіка згладжування
+        if (markerFoundAndPoseOk) {
+            _this.object3d.visible = true;
+            _this.framesLost = 0;
         } else {
-            _this.framesLost++; // Increment lost frames counter
+            _this.framesLost++;
             if (_this.framesLost > _this.maxFramesLost) {
-                _this.object3d.visible = false; // Hide object only after grace period
+                _this.object3d.visible = false;
             }
         }
     };
 };
 
-// Статичні змінні для спільного використання детектора та posit між усіма екземплярами контролерів.
+// Статичні змінні для спільного використання детектора та posit
 ArucoMarkerControls.detector = null;
 ArucoMarkerControls.posit = null;
+
+// Експортуємо функцію для отримання спільного canvas
+ArucoMarkerControls.getDetectionCanvas = function() {
+    return detectionCanvas;
+};
+
+// Експортуємо функцію для детектування маркерів один раз на кадр
+ArucoMarkerControls.detectMarkers = function(arToolkitSource) {
+    if (!detectionCanvas || !detectionContext) {
+        return [];
+    }
+    
+    var video = arToolkitSource.domElement;
+    if (video.readyState !== video.HAVE_ENOUGH_DATA) {
+        return [];
+    }
+    
+    detectionContext.drawImage(video, 0, 0, detectionCanvas.width, detectionCanvas.height);
+    var imageData = detectionContext.getImageData(0, 0, detectionCanvas.width, detectionCanvas.height);
+    
+    if (ArucoMarkerControls.detector) {
+        return ArucoMarkerControls.detector.detect(imageData);
+    }
+    
+    return [];
+};

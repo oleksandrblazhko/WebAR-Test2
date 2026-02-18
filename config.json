@@ -3,10 +3,10 @@
     "resolution": "high",
     "welcomeText": "Press here<br>to start the WebAR-BoardGame"
   },
-  "markers": [ 
+  "markers": [
     {
       "id": 1,
-      "type": "barcode", 
+      "type": "barcode",
       "target": 1,
       "contentType": "primitive",
       "primitive": {
@@ -80,22 +80,23 @@
       },
       "audioFile": "wrong_answer.mp3",
       "playOnControllerIntersect": true
-    },   
+    },
     {
       "id": 4,
       "type": "barcode",
-      "target": 7,      
+      "target": 7,
       "contentType": "controller"
     },
     {
       "id": 5,
-      "type": "aruco:ARUCO_4X4_1000", 
-      "target": 1,
+      "type": "aruco:ARUCO_4X4_1000",
+      "target": 5,
+      "matrixSize": 30.0,
       "contentType": "primitive",
       "primitive": {
         "type": "ConeGeometry",
-        "radius": 0.5,
-        "height": 1,
+        "radius": 30,
+        "height": 40,
         "radialSegments": 16,
         "color": "#ffff00",
         "textureFile": "texture_green.jpg",

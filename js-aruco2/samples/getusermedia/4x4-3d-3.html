@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AR Marker Detector - OneEuro Filter</title>
+
+  <script src="libs/polyfill.js"></script>
+  <script src="../../../js/three.js"></script>
+
+  <script src="../../src/svd.js"></script>
+  <script src="../../src/posit1.js"></script>
+  <script src="../../src/cv.js"></script>
+  <script src="../../src/aruco.js"></script>
+  <script src="../../src/dictionaries/aruco_4x4_1000.js"></script>
+
+  <style>
+    body { margin:0; overflow:hidden; }
+    #container { position:relative; width:1280px; height:720px; margin:auto; }
+    #canvas, #three_canvas { position:absolute; top:0; left:0; width:100%; height:100%; }
+    #three_canvas { pointer-events:none; }
+  </style>
+</head>
+<body>
+
+<div id="container">
+  <video id="video" autoplay playsinline style="display:none;"></video>
+  <canvas id="canvas"></canvas>
+  <canvas id="three_canvas"></canvas>
+</div>
+
+<script>
+
+// === OneEuro Filter Class ===
+class OneEuroFilter {
+  constructor(freq=60, minCutoff=1.0, beta=0.0, dcutoff=1.0){
+    this.freq = freq;
+    this.minCutoff = minCutoff;
+    this.beta = beta;
+    this.dcutoff = dcutoff;
+
+    this.lastTime = null;
+    this.xPrev = null;
+    this.dxPrev = 0;
+  }
+
+  alpha(cutoff){
+    const te = 1.0 / this.freq;
+    const tau = 1.0 / (2*Math.PI*cutoff);
+    return 1.0 / (1.0 + tau/te);
+  }
+
+  filter(value, dt=null){
+    if(this.lastTime !== null && dt!==null){
+      this.freq = 1.0/dt;
+    }
+
+    if(this.xPrev===null){
+      this.xPrev = value.clone();
+      return value.clone();
+    }
+
+    // derivative
+    let dx = new THREE.Vector3().subVectors(value, this.xPrev).multiplyScalar(this.freq);
+
+    // smoothed derivative
+    const aD = this.alpha(this.dcutoff);
+    dx.lerp(new THREE.Vector3(this.dxPrev, this.dxPrev, this.dxPrev), 1-aD);
+    this.dxPrev = dx.clone();
+
+    // adaptive cutoff
+    const cutoff = this.minCutoff + this.beta*dx.length();
+
+    const a = this.alpha(cutoff);
+
+    // exponential smoothing
+    const result = this.xPrev.clone().lerp(value, a);
+    this.xPrev = result.clone();
+    return result;
+  }
+}
+
+// Quaternion version of OneEuroFilter
+class OneEuroFilterQuat {
+  constructor(freq=60, minCutoff=1.0, beta=0.0, dcutoff=1.0){
+    this.freq = freq;
+    this.minCutoff = minCutoff;
+    this.beta = beta;
+    this.dcutoff = dcutoff;
+
+    this.lastTime = null;
+    this.qPrev = null;
+  }
+
+  alpha(cutoff){
+    const te = 1.0/this.freq;
+    const tau = 1.0/(2*Math.PI*cutoff);
+    return 1.0/(1.0 + tau/te);
+  }
+
+  filter(quat, dt=null){
+    if(this.lastTime!==null && dt!==null){
+      this.freq = 1.0/dt;
+    }
+
+    if(this.qPrev===null){
+      this.qPrev = quat.clone();
+      return quat.clone();
+    }
+
+    // approximate derivative magnitude via angle difference
+    const angle = this.qPrev.angleTo(quat);
+    const cutoff = this.minCutoff + this.beta*angle;
+    const a = this.alpha(cutoff);
+
+    const result = new THREE.Quaternion().slerpQuaternions(this.qPrev, quat, a);
+    this.qPrev.copy(result);
+    return result;
+  }
+}
+
+// === AR Variables ===
+let video, canvas, context, imageData;
+let detector, posit;
+let renderer, scene, camera;
+let markerRoot, cone;
+let lastTime = performance.now();
+let hideFrames = 0;
+const HIDE_THRESHOLD = 10;
+const modelSize = 30.0;
+
+// Filters
+const posFilter = new OneEuroFilter(60, 1.0, 0.0, 1.0);
+const rotFilter = new OneEuroFilterQuat(60, 1.0, 0.0, 1.0);
+
+function onLoad(){
+  video = document.getElementById("video");
+  canvas = document.getElementById("canvas");
+  context = canvas.getContext("2d");
+
+  canvas.width = 1280; canvas.height = 720;
+
+  navigator.mediaDevices.getUserMedia({ video:{width:1280,height:720} })
+    .then(stream=>{ video.srcObject=stream; video.play(); });
+
+  detector = new AR.Detector({ dictionaryName:'ARUCO_4X4_1000' });
+  posit = new POS.Posit(modelSize, canvas.width);
+
+  initThree();
+  requestAnimationFrame(tick);
+}
+
+function initThree(){
+  const threeCanvas = document.getElementById("three_canvas");
+  renderer = new THREE.WebGLRenderer({ canvas:threeCanvas, alpha:true });
+  renderer.setSize(canvas.width, canvas.height);
+
+  scene = new THREE.Scene();
+
+  const focalLength = canvas.width;
+  const fov = 2*Math.atan(canvas.height/(2*focalLength))*(180/Math.PI);
+  camera = new THREE.PerspectiveCamera(fov, canvas.width/canvas.height, 0.1, 2000);
+  scene.add(camera);
+
+  scene.add(new THREE.AmbientLight(0xffffff,0.6));
+  const light = new THREE.DirectionalLight(0xffffff,0.6);
+  light.position.set(1,1,1);
+  scene.add(light);
+
+  markerRoot = new THREE.Object3D();
+  markerRoot.visible = false;
+  scene.add(markerRoot);
+
+  const geometry = new THREE.ConeGeometry(20,40,16);
+  geometry.translate(0,20,0);
+  const material = new THREE.MeshStandardMaterial({ color:0xffff00 });
+  cone = new THREE.Mesh(geometry, material);
+  markerRoot.add(cone);
+}
+
+function tick(){
+  requestAnimationFrame(tick);
+
+  if(video.readyState === video.HAVE_ENOUGH_DATA){
+    context.drawImage(video,0,0,canvas.width,canvas.height);
+    imageData = context.getImageData(0,0,canvas.width,canvas.height);
+
+    const markers = detector.detect(imageData);
+    update3D(markers);
+    renderThree();
+  }
+}
+
+function update3D(markers){
+  let markerFound = false;
+  const now = performance.now();
+  const dt = (now-lastTime)/1000.0;
+  lastTime = now;
+
+  if(markers.length>0){
+    const marker = markers[0];
+    const corners = marker.corners;
+    const centeredCorners = corners.map(c=>({ x:c.x - canvas.width/2, y:canvas.height/2 - c.y }));
+
+    const pose = posit.pose(centeredCorners);
+    if(pose){
+      applyPose(pose.bestRotation, pose.bestTranslation, dt);
+      markerFound = true;
+    }
+  }
+
+  if(markerFound){
+    markerRoot.visible = true;
+    hideFrames = 0;
+  } else {
+    hideFrames++;
+    if(hideFrames>HIDE_THRESHOLD){
+      markerRoot.visible=false;
+      posFilter.xPrev = null;
+      rotFilter.qPrev = null;
+    }
+  }
+}
+
+function applyPose(rotation, translation, dt){
+  const rotMatrix = new THREE.Matrix4();
+  rotMatrix.set(
+    rotation[0][0], rotation[0][1], rotation[0][2],0,
+    rotation[1][0], rotation[1][1], rotation[1][2],0,
+    rotation[2][0], rotation[2][1], rotation[2][2],0,
+    0,0,0,1
+  );
+
+  const correction = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0), -Math.PI/2);
+  let targetQuat = new THREE.Quaternion().setFromRotationMatrix(rotMatrix).multiply(correction);
+  let targetPos = new THREE.Vector3(translation[0], translation[1], -translation[2]);
+
+  // One-Euro Filter
+  targetPos = posFilter.filter(targetPos, dt);
+  targetQuat = rotFilter.filter(targetQuat, dt);
+
+  markerRoot.position.copy(targetPos);
+  markerRoot.quaternion.copy(targetQuat);
+}
+
+function renderThree(){
+  if(markerRoot.visible) cone.rotation.y += 0.02;
+  renderer.render(scene,camera);
+}
+
+window.onload = onLoad;
+
+</script>
+</body>
+</html>

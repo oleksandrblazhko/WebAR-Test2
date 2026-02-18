@@ -222,12 +222,14 @@
                         );
                         break;
                     case 'ConeGeometry':
-                        geometry = new THREE.ConeGeometry(
-                            primitive.radius || 0.5, 
-                            primitive.height || 1, 
-                            primitive.radialSegments || 32
-                        );
-                        break;
+                                                                var coneHeight = primitive.height || 1;
+                                                                geometry = new THREE.ConeGeometry(
+                                                                    primitive.radius || 0.5, 
+                                                                    coneHeight, 
+                                                                    primitive.radialSegments || 32
+                                                                );
+                                                                // Зміщуємо геометрію конуса, щоб його основа була в центрі координат
+                                                                geometry.translate(0, coneHeight / 2, 0);                        break;
                     case 'TorusGeometry':
                         geometry = new THREE.TorusGeometry(
                             primitive.radius || 1, 
@@ -531,7 +533,7 @@
                     cameraParametersUrl: 'data/camera_para.dat',
                     detectionMode: 'mono_and_matrix',
                     matrixCodeType: "3x3",
-                    maxDetectionRate: 60,
+                    maxDetectionRate: -1,  // Вимикаємо обмеження частоти для AR.js (детектуємо самі)
                     canvasWidth: canvasWidth,
                     canvasHeight: canvasHeight
                 });
@@ -634,7 +636,7 @@
                         let markerControls = new ArucoMarkerControls(arToolkitContext, markerRoots[i], {
                             id: markerConfig.target,
                             dictionaryName: dictionaryName,
-                            modelSize: 35.0 // Розмір маркера в мм, можна винести в конфіг
+                            modelSize: markerConfig.matrixSize || 30.0 // Розмір маркера в мм з конфігурації
                         }, canvasWidth);
                         arucoControls.push(markerControls);
                     }
@@ -816,11 +818,24 @@
                                         );
                                         break;
                                     case 'ConeGeometry':
+                                        var coneHeight = primitive.height || 1;
                                         geometry = new THREE.ConeGeometry(
                                             primitive.radius || 0.5, 
-                                            primitive.height || 1, 
+                                            coneHeight, 
                                             primitive.radialSegments || 32
                                         );
+                                        // Зміщуємо геометрію конуса, щоб його основа була в центрі координат
+                                        geometry.translate(0, coneHeight / 2, 0);
+                                        
+                                        // Діагностичний вивід для параметрів конуса
+                                        console.log('Створення конуса з параметрами:', {
+                                            radius: primitive.radius || 0.5,
+                                            height: primitive.height || 1,
+                                            radialSegments: primitive.radialSegments || 32,
+                                            color: primitive.color, // Додаємо діагностику кольору
+                                            textureFile: primitive.textureFile, // Додаємо діагностику файлу текстури
+                                            animation: primitive.animation // Додаємо діагностику анімації
+                                        });
                                         break;
                                     case 'TorusGeometry':
                                         geometry = new THREE.TorusGeometry(
@@ -1136,13 +1151,17 @@
                         }
                     }
 
-                    // Оновлюємо Aruco маркери
+                    // Оновлюємо Aruco маркери (детектуємо один раз на кадр для всіх маркерів)
                     if (arucoControls && arucoControls.length > 0) {
+                        // Детектуємо маркери один раз на кадр (як у 4x4-3d.html)
+                        var arucoMarkers = ArucoMarkerControls.detectMarkers(arToolkitSource);
+                        
+                        // Оновлюємо кожен контролер з попередньо детектованими маркерами
                         arucoControls.forEach(controls => {
-                            controls.update(arToolkitSource);
+                            controls.update(arToolkitSource, arucoMarkers);
                         });
                     }
-                    
+
                     if (contentInitialized) {
                         if (barcodesID.length) {
                             barcodesID.forEach((elem, index) => {
