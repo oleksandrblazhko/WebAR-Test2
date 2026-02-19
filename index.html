@@ -1147,13 +1147,15 @@
                                         // Обчислюємо зміну позиції (дельта)
                                         const positionDelta = markerObject.position.clone().sub(lastState.position).length();
                                         
-                                                                                                // Обчислюємо зміну обертання (дельта) у градусах
-                                                                                                // Розбиваємо ланцюжок викликів для сумісності зі старою версією Three.js (r86)
-                                                                                                const lastQuaternionClone = lastState.quaternion.clone();
-                                                                                                lastQuaternionClone.invert();
-                                                                                                const rotationDelta = markerObject.quaternion.clone().multiply(lastQuaternionClone);
-                                                                                                const rotationAngleDelta = 2 * Math.atan2(rotationDelta.length(), rotationDelta.w) * (180 / Math.PI);                                        // Виводимо структуроване повідомлення
+                                        // Розрахунок зміни обертання. Порядок: q_previous_inverse * q_current
+                                        const lastQuaternionClone = lastState.quaternion.clone().conjugate();
+                                        const rotationDelta = lastQuaternionClone.multiply(markerObject.quaternion);
+                                        const vectorLength = Math.sqrt(rotationDelta.x * rotationDelta.x + rotationDelta.y * rotationDelta.y + rotationDelta.z * rotationDelta.z);
+                                        const rotationAngleDelta = 2 * Math.atan2(vectorLength, rotationDelta.w) * (180 / Math.PI);
+
+                                        // Виводимо структуроване повідомлення
                                         console.log(`[Тест 2] Маркер ${barcodeIdToTrack}:`, {
+                                            'Timestamp (ms)': currentTime.toFixed(0),
                                             'Видимість': 'Так',
                                             'Час кадру (ms)': timeDelta.toFixed(1),
                                             'Pos Δ (Jitter)': positionDelta.toFixed(4), // Наскільки сильно "стрибнула" позиція
