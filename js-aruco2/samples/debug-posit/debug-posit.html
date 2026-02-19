@@ -1,41 +1,124 @@
+<!--
+================================================================================
+  WEBAR-ARUCO2 DEBUG-POSIT.HTML - ПРОГРАМА ДЛЯ ВІДЛАГОДЖЕННЯ POSE ESTIMATION
+================================================================================
+
+1. ОСНОВНЕ ПРИЗНАЧЕННЯ:
+   - Демонстрація та відладка алгоритму POSIT (Perspective-n-Point) для 
+     визначення 3D позиції та орієнтації AR-маркерів
+   - Візуалізація роботи бібліотеки js-aruco2 з розпізнавання маркерів
+   - Порівняння двох можливих рішень пози (best та alternative)
+
+2. ВИКОРИСТАНІ ТЕХНОЛОГІЇ/БІБЛІОТЕКИ:
+   - js-aruco2 (src/aruco.js) - розпізнавання AR-маркерів
+   - POSIT1 (src/posit1.js) - алгоритм POSIT для оцінки пози
+   - SVD (src/svd.js) - сингулярне розкладання для матричних обчислень
+   - CV (src/cv.js) - функції комп'ютерного зору
+   - Three.js - 3D рендеринг сцен та об'єктів
+   - WebRTC (getUserMedia) - доступ до веб-камери
+
+3. КЛЮЧОВІ ФУНКЦІЇ ТА МОЖЛИВОСТІ:
+   a) Захоплення відео в реальному часі з веб-камери (320x240)
+   b) Детектування AR-маркерів у кожному кадрі
+   c) Візуалізація знайдених маркерів (червоні контури, зелені кути)
+   d) Обчислення 3D пози маркера за допомогою алгоритму POSIT
+   e) Відображення 4-х візуальних сцен:
+      - canvas: відео з накладеними маркерами
+      - container: відео з текстурою + 3D модель (сфера з текстурою Землі)
+      - container1: жовтий фон + площина з best pose
+      - container2: жовтий фон + площина з alternative pose
+   f) Виведення числових даних пози (помилка, координати, кути Ейлера)
+
+4. ЯК ПРАЦЮЄ РОЗПІЗНАВАННЯ МАРКЕРІВ ТА ОЦІНКА ПОЗИ:
+   a) AR.Detector.detect() аналізує кадр і знаходить квадратні маркери
+   b) Для кожного маркера визначаються 4 кути (corners)
+   c) Координати кутів нормалізуються відносно центру зображення
+   d) POS.Posit.pose() застосовує алгоритм POSIT:
+      - Вхідні дані: 2D координати 4-х кутів маркера
+      - Вихідні дані: 3D rotation matrix (3x3) та translation vector (x,y,z)
+      - Розмір маркера: 35.0 мм (modelSize)
+   e) POSIT повертає два можливих рішення:
+      - bestRotation/bestTranslation (найменша помилка)
+      - alternativeRotation/alternativeTranslation (альтернативне рішення)
+   f) updateObject() конвертує матрицю обертання в кути Ейлера для Three.js
+
+5. ВІДЛАГОДЖУВАЛЬНА ІНФОРМАЦІЯ:
+   - error: помилка апроксимації для кожного рішення POSIT
+   - x, y, z: координати позиції маркера відносно камери (в мм)
+   - yaw: обертання навколо осі Y (в градусах)
+   - pitch: обертання навколо осі X (в градусах)
+   - roll: обертання навколо осі Z (в градусах)
+   - Візуальне порівняння best vs alternative позицій
+   - Зелений квадрат у першому куті маркера для орієнтації
+
+6. АРХІТЕКТУРНІ ОСОБЛИВОСТІ:
+   - Використання requestAnimationFrame для плавного циклу рендерингу
+   - Окремі Three.js сцени для різних аспектів візуалізації
+   - eulerOrder = 'YXZ' для правильного порядку обертання
+   - OrthographicCamera для фонового відео, PerspectiveCamera для 3D сцени
+   - Автоматичне оновлення текстури відео кожен кадр
+
+7. ПОТЕНЦІЙНІ ПРОБЛЕМИ/ОБМЕЖЕННЯ:
+   - Застарілий API getUserMedia (використовує polyfill)
+   - THREE.ImageUtils.loadTexture - застарілий API Three.js
+   - Фіксований розмір маркера 35мм має відповідати реальному фізичному розміру
+   - Чутливість до освітлення та якості камери
+   - Можливі проблеми з product() матриць обертання при певних кутах
+
+================================================================================
+-->
 <html>
 
 <head>
   <title>Augmented Reality</title>
 
-  <script type="text/javascript" src="libs/Three.js"></script> 
+  <!-- Підключення бібліотеки Three.js для 3D графіки -->
+  <script type="text/javascript" src="libs/Three.js"></script>
 
-  <script type="text/javascript" src="../../src/svd.js"></script> 
-  <script type="text/javascript" src="../../src/posit1.js"></script> 
-  <script type="text/javascript" src="../../src/cv.js"></script> 
-  <script type="text/javascript" src="../../src/aruco.js"></script> 
+  <!-- Підключення модулів js-aruco2 -->
+  <script type="text/javascript" src="../../src/svd.js"></script>      <!-- SVD: сингулярне розкладання матриць -->
+  <script type="text/javascript" src="../../src/posit1.js"></script>   <!-- POSIT: алгоритм оцінки пози -->
+  <script type="text/javascript" src="../../src/cv.js"></script>       <!-- CV: функції комп'ютерного зору -->
+  <script type="text/javascript" src="../../src/aruco.js"></script>    <!-- ARUco: детектор маркерів -->
 
   <script>
+    // ================================================================
+    // ГЛОБАЛЬНІ ЗМІННІ
+    // ================================================================
     var video, canvas, context, imageData, detector, posit;
-    var renderer1, renderer2, renderer3;
-    var scene1, scene2, scene3, scene4;
-    var camera1, camera2, camera3, camera4;
-    var plane1, plane2, model, texture;
-    var step = 0.0;
+    var renderer1, renderer2, renderer3;  // Рендерери Three.js для різних сцен
+    var scene1, scene2, scene3, scene4;   // 3D сцени
+    var camera1, camera2, camera3, camera4; // Камери для сцен
+    var plane1, plane2, model, texture;   // 3D об'єкти (площини, модель, текстура)
+    var step = 0.0;  // Крок обертання для анімації моделі
 
+    // Розмір AR-маркера в міліметрах (важливо для коректного розрахунку пози)
     var modelSize = 35.0; //millimeters
 
+    // ================================================================
+    // ІНІЦІАЛІЗАЦІЯ ПРОГРАМИ
+    // ================================================================
     function onLoad(){
+      // Отримуємо елементи DOM
       video = document.getElementById("video");
       canvas = document.getElementById("canvas");
       context = canvas.getContext("2d");
-    
+
+      // Встановлюємо розміри canvas з CSS-стилів
       canvas.width = parseInt(canvas.style.width);
       canvas.height = parseInt(canvas.style.height);
-      
+
+      // --------------------------------------------------------------
+      // Polyfill для getUserMedia (підтримка старих браузерів)
+      // --------------------------------------------------------------
       if (navigator.mediaDevices === undefined) {
         navigator.mediaDevices = {};
       }
-      
+
       if (navigator.mediaDevices.getUserMedia === undefined) {
         navigator.mediaDevices.getUserMedia = function(constraints) {
           var getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-          
+
           if (!getUserMedia) {
             return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
           }
@@ -45,7 +128,10 @@
           });
         }
       }
-      
+
+      // --------------------------------------------------------------
+      // Запит доступу до веб-камери
+      // --------------------------------------------------------------
       navigator.mediaDevices
         .getUserMedia({ video: true })
         .then(function(stream) {
@@ -59,62 +145,84 @@
           console.log(err.name + ": " + err.message);
         }
       );
-      
+
+      // Створюємо детектор маркерів та POSIT-алгоритм
       detector = new AR.Detector();
       posit = new POS.Posit(modelSize, canvas.width);
 
+      // Створюємо рендерери та сцени
       createRenderers();
       createScenes();
 
+      // Запускаємо цикл рендерингу
       requestAnimationFrame(tick);
     };
 
+    // ================================================================
+    // ОСНОВНИЙ ЦИКЛ РЕНДЕРИНГУ (викликається кожен кадр)
+    // ================================================================
     function tick(){
-      requestAnimationFrame(tick);
-      
-      if (video.readyState === video.HAVE_ENOUGH_DATA){
-        snapshot();
+      requestAnimationFrame(tick);  // Плануємо наступний кадр
 
-        var markers = detector.detect(imageData);
-        drawCorners(markers);
-        updateScenes(markers);
-        
-        render();
+      // Перевіряємо, чи відео готове до читання
+      if (video.readyState === video.HAVE_ENOUGH_DATA){
+        snapshot();  // Робимо знімок кадру
+
+        var markers = detector.detect(imageData);  // Детектуємо маркери
+        drawCorners(markers);  // Малюємо контури маркерів
+        updateScenes(markers);  // Оновлюємо 3D сцени
+
+        render();  // Рендеримо сцени
       }
     };
 
+    // ================================================================
+    // ЗНИМОК КАДРУ З ВІДЕО
+    // ================================================================
     function snapshot(){
+      // Копіюємо поточний кадр відео на canvas
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      // Отримуємо дані пікселів для обробки детектором
       imageData = context.getImageData(0, 0, canvas.width, canvas.height);
     };
-    
+
+    // ================================================================
+    // ВІЗУАЛІЗАЦІЯ КУТІВ МАРКЕРІВ
+    // ================================================================
     function drawCorners(markers){
       var corners, corner, i, j;
-    
-      context.lineWidth = 3;
 
+      context.lineWidth = 3;  // Товщина ліній
+
+      // Проходимо по всіх знайдених маркерах
       for (i = 0; i < markers.length; ++ i){
         corners = markers[i].corners;
-        
+
+        // Малюємо червоний контур маркера
         context.strokeStyle = "red";
         context.beginPath();
-        
+
         for (j = 0; j < corners.length; ++ j){
           corner = corners[j];
           context.moveTo(corner.x, corner.y);
-          corner = corners[(j + 1) % corners.length];
+          corner = corners[(j + 1) % corners.length];  // Наступний кут (з циклічним переходом)
           context.lineTo(corner.x, corner.y);
         }
 
         context.stroke();
         context.closePath();
-        
+
+        // Малюємо зелений квадрат у першому куті (для орієнтації)
         context.strokeStyle = "green";
         context.strokeRect(corners[0].x - 2, corners[0].y - 2, 4, 4);
       }
     };
 
+    // ================================================================
+    // СТВОРЕННЯ RENDERER-ІВ THREE.JS
+    // ================================================================
     function createRenderers(){
+      // Renderer 1 - для візуалізації best pose (жовтий фон)
       renderer1 = new THREE.WebGLRenderer();
       renderer1.setClearColor(0xffff00, 1);
       renderer1.setSize(canvas.width, canvas.height);
@@ -123,6 +231,7 @@
       camera1 = new THREE.PerspectiveCamera(40, canvas.width / canvas.height, 1, 1000);
       scene1.add(camera1);
 
+      // Renderer 2 - для візуалізації alternative pose (жовтий фон)
       renderer2 = new THREE.WebGLRenderer();
       renderer2.setClearColor(0xffff00, 1);
       renderer2.setSize(canvas.width, canvas.height);
@@ -131,147 +240,191 @@
       camera2 = new THREE.PerspectiveCamera(40, canvas.width / canvas.height, 1, 1000);
       scene2.add(camera2);
 
+      // Renderer 3 - для композиції відео + 3D модель
       renderer3 = new THREE.WebGLRenderer();
       renderer3.setClearColor(0xffffff, 1);
       renderer3.setSize(canvas.width, canvas.height);
       document.getElementById("container").appendChild(renderer3.domElement);
-      
+
       scene3 = new THREE.Scene();
+      // OrthographicCamera для плоского відображення відео
       camera3 = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5);
       scene3.add(camera3);
-      
+
       scene4 = new THREE.Scene();
+      // PerspectiveCamera для 3D моделі
       camera4 = new THREE.PerspectiveCamera(40, canvas.width / canvas.height, 1, 1000);
       scene4.add(camera4);
     };
 
+    // ================================================================
+    // РЕНДЕРИНГ ВСІХ СЦЕН
+    // ================================================================
     function render(){
+      // Очищаємо та рендеримо сцену 1
       renderer1.clear();
       renderer1.render(scene1, camera1);
-      
+
+      // Очищаємо та рендеримо сцену 2
       renderer2.clear();
       renderer2.render(scene2, camera2);
 
-      renderer3.autoClear = false;
+      // Рендеримо сцени 3 та 4 разом (відео + модель)
+      renderer3.autoClear = false;  // Вимикаємо авто-очищення
       renderer3.clear();
-      renderer3.render(scene3, camera3);
-      renderer3.render(scene4, camera4);
+      renderer3.render(scene3, camera3);  // Спочатку відео
+      renderer3.render(scene4, camera4);  // Потім 3D модель
     };
 
+    // ================================================================
+    // СТВОРЕННЯ 3D ОБ'ЄКТІВ СЦЕН
+    // ================================================================
     function createScenes(){
-      plane1 = createPlane();
+      plane1 = createPlane();  // Площина для scene1
       scene1.add(plane1);
 
-      plane2 = createPlane();
+      plane2 = createPlane();  // Площина для scene2
       scene2.add(plane2);
-      
-      texture = createTexture();
+
+      texture = createTexture();  // Текстура з відео
       scene3.add(texture);
-    
-      model = createModel();
+
+      model = createModel();  // 3D модель (сфера)
       scene4.add(model);
     };
-    
+
+    // ================================================================
+    // СТВОРЕННЯ ПЛОЩИНИ (для візуалізації пози)
+    // ================================================================
     function createPlane(){
       var object = new THREE.Object3D(),
-          geometry = new THREE.PlaneGeometry(1.0, 1.0, 0.0),
-          material = new THREE.MeshNormalMaterial(),
+          geometry = new THREE.PlaneGeometry(1.0, 1.0, 0.0),  // Плоска геометрія 1x1
+          material = new THREE.MeshNormalMaterial(),  // Матеріал з нормалізованими кольорами
           mesh = new THREE.Mesh(geometry, material);
-      
-      object.eulerOrder = 'YXZ';
-      
+
+      object.eulerOrder = 'YXZ';  // Порядок обертання Euler angles
+
       object.add(mesh);
-      
-      return object;
-    };
-    
-    function createTexture(){
-      var texture = new THREE.Texture(video),
-          object = new THREE.Object3D(),
-          geometry = new THREE.PlaneGeometry(1.0, 1.0, 0.0),
-          material = new THREE.MeshBasicMaterial( {map: texture, depthTest: false, depthWrite: false} ),
-          mesh = new THREE.Mesh(geometry, material);
-      
-      object.position.z = -1;
-      
-      object.add(mesh);
-      
-      return object;
-    };
-    
-    function createModel(){
-      var object = new THREE.Object3D(),
-          geometry = new THREE.SphereGeometry(0.5, 15, 15, Math.PI),
-          texture = THREE.ImageUtils.loadTexture("textures/earth.jpg"),
-          material = new THREE.MeshBasicMaterial( {map: texture} ),
-          mesh = new THREE.Mesh(geometry, material);
-      
-      object.add(mesh);
-      
+
       return object;
     };
 
+    // ================================================================
+    // СТВОРЕННЯ ТЕКСТУРИ З ВІДЕО
+    // ================================================================
+    function createTexture(){
+      var texture = new THREE.Texture(video),  // Текстура з відеопотоку
+          object = new THREE.Object3D(),
+          geometry = new THREE.PlaneGeometry(1.0, 1.0, 0.0),
+          // MeshBasicMaterial не залежить від освітлення
+          material = new THREE.MeshBasicMaterial( {map: texture, depthTest: false, depthWrite: false} ),
+          mesh = new THREE.Mesh(geometry, material);
+
+      object.position.z = -1;  // Зміщуємо назад, щоб бути фоном
+
+      object.add(mesh);
+
+      return object;
+    };
+
+    // ================================================================
+    // СТВОРЕННЯ 3D МОДЕЛІ (СФЕРА З ТЕКСТУРОЮ ЗЕМЛІ)
+    // ================================================================
+    function createModel(){
+      var object = new THREE.Object3D(),
+          geometry = new THREE.SphereGeometry(0.5, 15, 15, Math.PI),  // Півсфера
+          texture = THREE.ImageUtils.loadTexture("textures/earth.jpg"),  // Завантажуємо текстуру
+          material = new THREE.MeshBasicMaterial( {map: texture} ),
+          mesh = new THREE.Mesh(geometry, material);
+
+      object.add(mesh);
+
+      return object;
+    };
+
+    // ================================================================
+    // ОНОВЛЕННЯ СЦЕН НА ОСНОВІ ЗНАЙДЕНИХ МАРКЕРІВ
+    // ================================================================
     function updateScenes(markers){
       var corners, corner, pose, i;
-      
+
+      // Якщо знайдено хоча б один маркер
       if (markers.length > 0){
         corners = markers[0].corners;
-        
+
+        // Нормалізація координат кутів відносно центру зображення
         for (i = 0; i < corners.length; ++ i){
           corner = corners[i];
-          
-          corner.x = corner.x - (canvas.width / 2);
-          corner.y = (canvas.height / 2) - corner.y;
+
+          corner.x = corner.x - (canvas.width / 2);  // Центр по X
+          corner.y = (canvas.height / 2) - corner.y;  // Інверсія по Y (canvas має Y вниз)
         }
-        
+
+        // Обчислюємо позу маркера за алгоритмом POSIT
         pose = posit.pose(corners);
-        
+
+        // Оновлюємо об'єкти з best та alternative позиціями
         updateObject(plane1, pose.bestRotation, pose.bestTranslation);
         updateObject(plane2, pose.alternativeRotation, pose.alternativeTranslation);
         updateObject(model, pose.bestRotation, pose.bestTranslation);
 
+        // Оновлюємо текстову інформацію про позу
         updatePose("pose1", pose.bestError, pose.bestRotation, pose.bestTranslation);
         updatePose("pose2", pose.alternativeError, pose.alternativeRotation, pose.alternativeTranslation);
-        
+
+        // Збільшуємо крок обертання
         step += 0.025;
-        
+
+        // Обертаємо модель навколо осі Z
         model.rotation.z -= step;
       }
-      
+
+      // Оновлюємо текстуру відео
       texture.children[0].material.map.needsUpdate = true;
     };
-    
+
+    // ================================================================
+    // ОНОВЛЕННЯ ПОЗИЦІЇ 3D ОБ'ЄКТА
+    // ================================================================
     function updateObject(object, rotation, translation){
+      // Встановлюємо масштаб об'єкта (розмір маркера)
       object.scale.x = modelSize;
       object.scale.y = modelSize;
       object.scale.z = modelSize;
-      
+
+      // Конвертація матриці обертання в кути Ейлера
       object.rotation.x = -Math.asin(-rotation[1][2]);
       object.rotation.y = -Math.atan2(rotation[0][2], rotation[2][2]);
       object.rotation.z = Math.atan2(rotation[1][0], rotation[1][1]);
 
+      // Встановлюємо позицію (Z інвертується для WebGL)
       object.position.x = translation[0];
       object.position.y = translation[1];
       object.position.z = -translation[2];
     };
-    
+
+    // ================================================================
+    // ОНОВЛЕННЯ ВІДОБРАЖЕННЯ ПОЗИ (ТЕКСТОВІ ДАНІ)
+    // ================================================================
     function updatePose(id, error, rotation, translation){
-      var yaw = -Math.atan2(rotation[0][2], rotation[2][2]);
-      var pitch = -Math.asin(-rotation[1][2]);
-      var roll = Math.atan2(rotation[1][0], rotation[1][1]);
-      
+      // Обчислюємо кути Ейлера з матриці обертання
+      var yaw = -Math.atan2(rotation[0][2], rotation[2][2]);    // Обертання навколо Y
+      var pitch = -Math.asin(-rotation[1][2]);                   // Обертання навколо X
+      var roll = Math.atan2(rotation[1][0], rotation[1][1]);     // Обертання навколо Z
+
       var d = document.getElementById(id);
-      d.innerHTML = " error: " + error
+      d.innerHTML = " error: " + error  // Помилка апроксимації POSIT
                   + "<br/>"
-                  + " x: " + (translation[0] | 0)
-                  + " y: " + (translation[1] | 0)
-                  + " z: " + (translation[2] | 0)
+                  + " x: " + (translation[0] | 0)  // Позиція X (ціле число)
+                  + " y: " + (translation[1] | 0)  // Позиція Y
+                  + " z: " + (translation[2] | 0)  // Позиція Z
                   + "<br/>"
-                  + " yaw: " + Math.round(-yaw * 180.0/Math.PI)
-                  + " pitch: " + Math.round(-pitch * 180.0/Math.PI)
-                  + " roll: " + Math.round(roll * 180.0/Math.PI);
+                  + " yaw: " + Math.round(-yaw * 180.0/Math.PI)  // Yaw в градусах
+                  + " pitch: " + Math.round(-pitch * 180.0/Math.PI)  // Pitch в градусах
+                  + " roll: " + Math.round(roll * 180.0/Math.PI);  // Roll в градусах
     };
 
+    // Точка входу після завантаження сторінки
     window.onload = onLoad;
   </script>
 
@@ -279,25 +432,41 @@
 
 <body style="text-align: center; font-family: monospace;">
 
+  <!-- Прихований відеоелемент для захоплення потоку з веб-камери -->
   <video id="video" width=320 height=240 autoplay="true" style="display:none;"></video>
-  
+
+  <!-- Заголовок сторінки -->
   <div style="margin: 10px;"><strong>-= Augmented Reality =-</strong></div>
+  
+  <!-- Головний контейнер для всіх елементів візуалізації -->
   <div style="width: 100%;">
     <div style="width: 650px; margin-left:auto; margin-right:auto;">
+      
+      <!-- Canvas для відображення відео з накладеними маркерами (червоні контури, зелені кути) -->
       <canvas id="canvas" style="width: 320px; height: 240px; float: left; border: solid 1px black;"></canvas>
+      
+      <!-- Контейнер для композиції: відео-текстура + 3D модель (сфера) -->
       <div id="container" style="width: 320px; height: 240px; float: left; border: solid 1px black; background: green;"></div>
+      
       <div style="clear: both;"></div>
+      
+      <!-- Контейнер 1: візуалізація best pose (жовтий фон + площина) + текстові дані -->
       <div style="float: left; border: solid 1px black;">
         <div id="container1" style="width: 320px; height: 240px; background: red;"></div>
-        <div id="pose1"></div>
+        <div id="pose1"></div>  <!-- Сюди виводяться дані: error, x, y, z, yaw, pitch, roll -->
       </div>
+      
+      <!-- Контейнер 2: візуалізація alternative pose (жовтий фон + площина) + текстові дані -->
       <div style="float: left; border: solid 1px black;">
         <div id="container2" style="width: 320px; height: 240px; background: blue;"></div>
-        <div id="pose2"></div>
+        <div id="pose2"></div>  <!-- Сюди виводяться дані: error, x, y, z, yaw, pitch, roll -->
       </div>
     </div>
   </div>
+  
   <div style="clear: both;"></div>
+  
+  <!-- Посилання на використані бібліотеки -->
   <div style="margin: 15px;"><strong>Powered by <a href="https://damianofalcioni.github.io/js-aruco2/">js-aruco2</a> and <a href="https://github.com/mrdoob/three.js">Three.js</a></strong></div>
 
 </body>
