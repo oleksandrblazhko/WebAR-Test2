@@ -268,7 +268,7 @@
                 }
                 
                 if (primitive.animation) {
-                    mesh.userData.animation = primitive.animation;
+                    mesh.userData.animation = config.animation;
                 }
                 
                 mesh.userData.isAlternativeContent = true;
@@ -356,7 +356,7 @@
                     }
 
                     if (textConfig.animation) {
-                        mesh.userData.animation = textConfig.animation;
+                        mesh.userData.animation = config.animation;
                     }
 
                     mesh.userData.isAlternativeContent = true;
@@ -632,6 +632,7 @@
                         let markerControls = new THREEx.ArMarkerControls(arToolkitContext, markerRoots[i], {
                             type: "barcode",
                             barcodeValue: markerConfig.target,
+                            size: markerConfig.matrixSize
                         });
                         barcodesID.push(markerConfig.target);
                         barcodeToMarkerIndex.set(markerConfig.target, i);
@@ -803,7 +804,7 @@
                             if (config.markers[i] && config.markers[i].primitive) {
                                 const primitive = config.markers[i].primitive;
                                 let geometry, material, mesh;
-                                
+
                                 // Створюємо геометрію відповідно до типу
                                 switch(primitive.type) {
                                     case 'BoxGeometry':
@@ -814,54 +815,52 @@
                                         break;
                                     case 'CylinderGeometry':
                                         geometry = new THREE.CylinderGeometry(
-                                            primitive.radiusTop || 0.5, 
-                                            primitive.radiusBottom || 0.5, 
-                                            primitive.height || 1, 
+                                            primitive.radiusTop || 0.5,
+                                            primitive.radiusBottom || 0.5,
+                                            primitive.height || 1,
                                             primitive.radialSegments || 32
                                         );
                                         break;
                                     case 'ConeGeometry':
                                         var coneHeight = primitive.height || 1;
                                         geometry = new THREE.ConeGeometry(
-                                            primitive.radius || 0.5, 
-                                            coneHeight, 
+                                            primitive.radius || 0.5,
+                                            coneHeight,
                                             primitive.radialSegments || 32
                                         );
                                         // Зміщуємо геометрію конуса, щоб його основа була в центрі координат
                                         geometry.translate(0, coneHeight / 2, 0);
-                                        
-                                        // Діагностичний вивід для параметрів конуса (видалено)
                                         break;
                                     case 'TorusGeometry':
                                         geometry = new THREE.TorusGeometry(
-                                            primitive.radius || 1, 
-                                            primitive.tubeRadius || 0.4, 
-                                            primitive.radialSegments || 16, 
+                                            primitive.radius || 1,
+                                            primitive.tubeRadius || 0.4,
+                                            primitive.radialSegments || 16,
                                             primitive.tubularSegments || 32
                                         );
                                         break;
                                     default:
                                         geometry = new THREE.BoxGeometry(1, 1, 1);
                                 }
-                                
+
                                 // Створюємо матеріал з кольором або текстурою
                                 if (primitive.textureFile) {
                                     // Завантажуємо текстуру, якщо вона вказана
                                     let texture = new THREE.TextureLoader().load(primitive.textureFile);
-                                    material = new THREE.MeshBasicMaterial({ 
+                                    material = new THREE.MeshBasicMaterial({
                                         map: texture,
                                         color: new THREE.Color(primitive.color || '#ffffff') // Додаємо базовий колір для випадку, якщо текстура не завантажиться
                                     });
                                 } else {
                                     // Використовуємо колір, якщо текстура не вказана
-                                    material = new THREE.MeshBasicMaterial({ 
-                                        color: new THREE.Color(primitive.color || '#ffffff') 
+                                    material = new THREE.MeshBasicMaterial({
+                                        color: new THREE.Color(primitive.color || '#ffffff')
                                     });
                                 }
-                                
+
                                 // Створюємо меш
                                 mesh = new THREE.Mesh(geometry, material);
-                                
+
                                 // Застосовуємо позицію та обертання
                                 if (primitive.position) {
                                     mesh.position.set(...primitive.position);
@@ -869,15 +868,17 @@
                                 if (primitive.rotation) {
                                     mesh.rotation.set(...primitive.rotation);
                                 }
-                                
+
                                 // Додаємо до контейнера маркера
                                 markerRoots[i].add(mesh);
-                                
+
                                 // Зберігаємо для анімації
                                 if (primitive.animation) {
                                     mesh.userData.animation = primitive.animation;
                                 }
                             }
+                            // Add a resolved promise to contentPromises for primitive content
+                            contentPromises.push(Promise.resolve());
                             break;
                         case 'text':
                             if (config.markers[i] && config.markers[i].text) {
@@ -939,23 +940,24 @@
                         case 'controller':
                             // Create a controller composed of a green body and a red tip (last 10%)
                             const controllerGroup = new THREE.Group();
+                            const controllerConfig = markerConfig.controllerConfig;
 
                             // Long axis along local Z to match tip detection along -Z
-                            const totalLength = 3; // 3x shorter than previous total of 10
-                            const tipFraction = 0.1;
-                            const tipLength = totalLength * tipFraction;  // 10%
-                            const bodyLength = totalLength - tipLength;   // 90%
-                            const crossSection = 0.15;
+                            const totalLength = controllerConfig.totalLength;
+                            const tipFraction = controllerConfig.tipFraction;
+                            const tipLength = totalLength * tipFraction;
+                            const bodyLength = totalLength - tipLength;
+                            const crossSection = controllerConfig.crossSection;
 
                             const controllerBody = new THREE.Mesh(
                                 new THREE.BoxGeometry(crossSection, crossSection, bodyLength),
-                                new THREE.MeshBasicMaterial({ color: 'green' })
+                                new THREE.MeshBasicMaterial({ color: new THREE.Color(controllerConfig.bodyColor) })
                             );
                             controllerBody.userData.isController = true;
 
                             const controllerTip = new THREE.Mesh(
                                 new THREE.BoxGeometry(crossSection, crossSection, tipLength),
-                                new THREE.MeshBasicMaterial({ color: 'red' })
+                                new THREE.MeshBasicMaterial({ color: new THREE.Color(controllerConfig.tipColor) })
                             );
                             controllerTip.userData.isController = true;
 
@@ -968,7 +970,7 @@
                             controllerGroup.add(controllerTip);
 
                             // Position the whole controller as before (no Y-rotation needed now)
-                            controllerGroup.position.y = 0.125;
+                            controllerGroup.position.y = controllerConfig.positionY;
                             controllerGroup.position.z = -(bodyLength / 2);
 
                             markerRoots[i].add(controllerGroup);
@@ -1117,62 +1119,77 @@
                 return box1World.intersectsBox(tipBoxLocal);
             };
 
-                        // Оновлюємо AR контент на кожен кадр
-                        function update() {
-                            if (arToolkitSource.ready !== false) {
-                                arToolkitContext.update(arToolkitSource.domElement);
-            
-                                // --- Розширена діагностика для Тесту 2: Реакція на швидкість руху ---
-                                const currentTime = performance.now();
-                                const timeDelta = currentTime - (lastUpdateTime || currentTime);
-                                lastUpdateTime = currentTime;
-            
-                                const barcodeIdToTrack = 1; // ID маркера, який відстежуємо
-                                const markerIndexToTrack = barcodeToMarkerIndex.get(barcodeIdToTrack);
-            
-                                if (markerIndexToTrack !== undefined) {
-                                    const markerObject = markerRoots[markerIndexToTrack];
-                                    
-                                    if (markerObject.visible) {
-                                        // Ініціалізуємо стан, якщо бачимо маркер вперше
-                                        if (!lastMarkerStates[markerIndexToTrack]) {
-                                            lastMarkerStates[markerIndexToTrack] = {
-                                                position: new THREE.Vector3(),
-                                                quaternion: new THREE.Quaternion()
-                                            };
-                                        }
-            
-                                        const lastState = lastMarkerStates[markerIndexToTrack];
-            
-                                        // Обчислюємо зміну позиції (дельта)
-                                        const positionDelta = markerObject.position.clone().sub(lastState.position).length();
-                                        
-                                        // Розрахунок зміни обертання. Порядок: q_previous_inverse * q_current
-                                        const lastQuaternionClone = lastState.quaternion.clone().conjugate();
-                                        const rotationDelta = lastQuaternionClone.multiply(markerObject.quaternion);
-                                        const vectorLength = Math.sqrt(rotationDelta.x * rotationDelta.x + rotationDelta.y * rotationDelta.y + rotationDelta.z * rotationDelta.z);
-                                        const rotationAngleDelta = 2 * Math.atan2(vectorLength, rotationDelta.w) * (180 / Math.PI);
+            // Функція для діагностики маркерів для Тесту 2
+            function trackMarkerDiagnostics(barcodeIdToTrack, currentTime, timeDelta) {
+                const markerIndexToTrack = barcodeToMarkerIndex.get(barcodeIdToTrack);
 
-                                        // Виводимо структуроване повідомлення
-                                        console.log(`[Тест 2] Маркер ${barcodeIdToTrack}:`, {
-                                            'Timestamp (ms)': currentTime.toFixed(0),
-                                            'Видимість': 'Так',
-                                            'Час кадру (ms)': timeDelta.toFixed(1),
-                                            'Pos Δ (Jitter)': positionDelta.toFixed(4), // Наскільки сильно "стрибнула" позиція
-                                            'Rot Δ (°/кадр)': rotationAngleDelta.toFixed(2)  // Наскільки сильно "стрибнуло" обертання
-                                        });
-            
-                                        // Оновлюємо останній стан
-                                        lastState.position.copy(markerObject.position);
-                                        lastState.quaternion.copy(markerObject.quaternion);
-            
-                                    } else if (lastMarkerStates[markerIndexToTrack]) {
-                                        // Виводимо повідомлення, коли маркер втрачено
-                                        console.log(`[Тест 2] Маркер ${barcodeIdToTrack} втрачено`);
-                                        delete lastMarkerStates[markerIndexToTrack]; // Скидаємо стан
-                                    }
-                                }
-                                // --- КІНЕЦЬ діагностики для Тесту 2 ---
+                if (markerIndexToTrack !== undefined) {
+                    const markerObject = markerRoots[markerIndexToTrack];
+
+                    if (markerObject.visible) {
+                        const isFirstAppearance = !lastMarkerStates[markerIndexToTrack] || !lastMarkerStates[markerIndexToTrack].visible;
+
+                        let positionDelta = 0;
+                        let rotationAngleDelta = 0;
+
+                        if (!isFirstAppearance) {
+                            const lastState = lastMarkerStates[markerIndexToTrack];
+                            // Обчислюємо зміну позиції (дельта)
+                            positionDelta = markerObject.position.clone().sub(lastState.position).length();
+
+                            // Розрахунок зміни обертання. Порядок: q_previous_inverse * q_current
+                            const lastQuaternionClone = lastState.quaternion.clone().conjugate();
+                            const rotationDelta = lastQuaternionClone.multiply(markerObject.quaternion);
+                            const vectorLength = Math.sqrt(rotationDelta.x * rotationDelta.x + rotationDelta.y * rotationDelta.y + rotationDelta.z * rotationDelta.z);
+                            rotationAngleDelta = 2 * Math.atan2(vectorLength, rotationDelta.w) * (180 / Math.PI);
+                        }
+
+                        const euler = new THREE.Euler().setFromQuaternion(markerObject.quaternion, 'XYZ');
+
+                        // Виводимо структуроване повідомлення
+                        console.log(`Marker ${barcodeIdToTrack}:`, {
+                            'Timestamp (ms)': currentTime.toFixed(0),
+                            'Visible': 'yes',
+                            'x': markerObject.position.x.toFixed(3),
+                            'y': markerObject.position.y.toFixed(3),
+                            'z': markerObject.position.z.toFixed(3),
+                            'a_x': (euler.x * 180 / Math.PI).toFixed(1),
+                            'a_y': (euler.y * 180 / Math.PI).toFixed(1),
+                            'a_z': (euler.z * 180 / Math.PI).toFixed(1),
+                            'FrameDelay(ms)': timeDelta.toFixed(1),
+                            'PosΔ(Jitter)': positionDelta.toFixed(4),
+                            'RotΔ(°/frame)': rotationAngleDelta.toFixed(2)
+                        });
+
+                        // Оновлюємо або ініціалізуємо останній стан
+                        if (!lastMarkerStates[markerIndexToTrack]) {
+                            lastMarkerStates[markerIndexToTrack] = {};
+                        }
+                        lastMarkerStates[markerIndexToTrack].position = markerObject.position.clone();
+                        lastMarkerStates[markerIndexToTrack].quaternion = markerObject.quaternion.clone();
+                        lastMarkerStates[markerIndexToTrack].visible = true;
+
+                    } else if (lastMarkerStates[markerIndexToTrack] && lastMarkerStates[markerIndexToTrack].visible) {
+                        // Виводимо повідомлення, коли маркер втрачено
+                        console.log(`[Test 2] Marker ${barcodeIdToTrack} is lost`);
+                        lastMarkerStates[markerIndexToTrack].visible = false; // Скидаємо стан
+                    }
+                }
+            }
+
+            // Оновлюємо AR контент на кожен кадр
+            function update() {
+                if (arToolkitSource.ready !== false) {
+                    arToolkitContext.update(arToolkitSource.domElement);
+
+                    // --- Розширена діагностика для Тесту 2: Реакція на швидкість руху ---
+                    const currentTime = performance.now();
+                    const timeDelta = currentTime - (lastUpdateTime || currentTime);
+                    lastUpdateTime = currentTime;
+
+                    trackMarkerDiagnostics(1, currentTime, timeDelta);
+                    trackMarkerDiagnostics(5, currentTime, timeDelta);
+                    // --- КІНЕЦЬ діагностики для Тесту 2 ---
             
                                 // --- DIAGNOSTIC LOG for Barcode Marker --- (removed for production)                    // Оновлюємо Aruco маркери (детектуємо один раз на кадр для всіх маркерів)
                     if (arucoControls && arucoControls.length > 0) {
@@ -1253,7 +1270,7 @@
 
                                 // For patterns, the sound is stored by marker index, not patternID
                                 let soundData = patternsSound.get(markerIndex);
-                                if (!soundData) continue;
+                                if (!soundData) return;
 
                                 let sound = soundData.sound || soundData; // Support both old format (direct) and new format (object)
                                 let playOnControllerIntersect = soundData.playOnControllerIntersect || false;
@@ -1275,7 +1292,7 @@
                                     }
                                 } else {
                                     if (sound.nodeName === 'VIDEO') {
-                                        if (!sound.paused) sound.pause();
+                                        if (sound.paused) sound.pause();
                                     } else {
                                         if (sound.isPlaying) sound.stop();
                                     }
