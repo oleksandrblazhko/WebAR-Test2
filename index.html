@@ -56,6 +56,10 @@
         // Оголошуємо глобальну змінну для конфігурації
         let config = null; // Configuration loaded from config.json
         
+        // Змінні для діагностики Тесту 2
+        let lastMarkerStates = {};
+        let lastUpdateTime = 0;
+        
         // Функція оновлення привітального тексту з конфігурації
         function updateWelcomeText() {
             if (config && config.settings && config.settings.welcomeText) {
@@ -648,7 +652,7 @@
                             contentPromises.push(alternativeContentPromise.then((alternativeContent) => {
                                 if (alternativeContent) {
                                     markerAlternativeContent.set(i, alternativeContent);
-                                    console.log(`Alternative content for marker ${i} created`);
+                                    // console.log(`Alternative content for marker ${i} created`); // Diagnostic message removed
                                 }
                             }));
                         }
@@ -658,8 +662,7 @@
                     switch (modes[i]) {
                         // Якщо контент під маркер це модель
                         case 'model':
-                            function onProgress(xhr) { console.log((xhr.loaded / xhr.total * 100) + '% loaded'); }
-                            function onError(xhr) { console.log('An error happened'); }
+                                                            function onProgress(xhr) { /* console.log((xhr.loaded / xhr.total * 100) + '% loaded'); */ }                            function onError(xhr) { /* console.log('An error happened'); */ }
 
                             contentPromises.push(new Promise((resolve) => {
                                 const test = new THREE.GLTF2Loader().load(`${modelFiles[i]}`, (response) => {
@@ -716,7 +719,7 @@
                                     resolve(modelFiles[i])
                                 }, onProgress, onError)
                             }).then((file) => {
-                                console.log(`File ${file} loaded`)
+                                // console.log(`File ${file} loaded`) // Diagnostic message removed
                             }))
                             break;
                         // Якщо контент під маркер це зображення
@@ -741,7 +744,7 @@
                                         resolve(imageFiles[i])
                                     });
                                 }).then(image => {
-                                    console.log(`File ${image} loaded`)
+                                    // console.log(`File ${image} loaded`) // Diagnostic message removed
                                 }))
                             }
                             break;
@@ -827,15 +830,7 @@
                                         // Зміщуємо геометрію конуса, щоб його основа була в центрі координат
                                         geometry.translate(0, coneHeight / 2, 0);
                                         
-                                        // Діагностичний вивід для параметрів конуса
-                                        console.log('Створення конуса з параметрами:', {
-                                            radius: primitive.radius || 0.5,
-                                            height: primitive.height || 1,
-                                            radialSegments: primitive.radialSegments || 32,
-                                            color: primitive.color, // Додаємо діагностику кольору
-                                            textureFile: primitive.textureFile, // Додаємо діагностику файлу текстури
-                                            animation: primitive.animation // Додаємо діагностику анімації
-                                        });
+                                        // Діагностичний вивід для параметрів конуса (видалено)
                                         break;
                                     case 'TorusGeometry':
                                         geometry = new THREE.TorusGeometry(
@@ -935,7 +930,7 @@
                                     }
 
                                     markerRoots[i].add(mesh);
-                                    console.log(`Text content for marker ${i} created`);
+                                    // console.log(`Text content for marker ${i} created`); // Diagnostic message removed
                                 }).catch((error) => {
                                     console.error(`Error creating text for marker ${i}:`, error);
                                 }));
@@ -1018,7 +1013,7 @@
                                 resolve(sound)
                             });
                         }).then((sound) => {
-                            console.log(`File ${sound.name} loaded`)
+                            // console.log(`File ${sound.name} loaded`) // Diagnostic message removed
                         }))
                     }
                 }
@@ -1026,7 +1021,7 @@
                 // Ховаємо лоадер після завантаження компонентів
                 Promise.all(contentPromises)
                     .then(() => {
-                        console.log('Most of the content loaded')
+                        // console.log('Most of the content loaded') // Diagnostic message removed
                         contentInitialized = true;
                         loader.style.opacity = '0';
                     });
@@ -1122,36 +1117,62 @@
                 return box1World.intersectsBox(tipBoxLocal);
             };
 
-            // Оновлюємо AR контент на кожен кадр
-            function update() {
-                if (arToolkitSource.ready !== false) {
-                    arToolkitContext.update(arToolkitSource.domElement);
-
-                    // --- DIAGNOSTIC LOG for Barcode Marker ---
-                    const barcodeIdToLog = 1;
-                    const markerIndexToLog = barcodeToMarkerIndex.get(barcodeIdToLog);
-
-                    if (markerIndexToLog !== undefined) {
-                        const markerObject = markerRoots[markerIndexToLog];
-                        if (markerObject.visible) {
-                            markerObject.updateMatrixWorld(); // Ensure matrixWorld is up-to-date
-                            console.log("DIAGNOSTIC: Barcode Marker", {
-                                id: barcodeIdToLog,
-                                visible: markerObject.visible,
-                                position: { x: markerObject.position.x, y: markerObject.position.y, z: markerObject.position.z },
-                                rotation: { 
-                                    x: THREE.Math.radToDeg(markerObject.rotation.x), 
-                                    y: THREE.Math.radToDeg(markerObject.rotation.y), 
-                                    z: THREE.Math.radToDeg(markerObject.rotation.z) 
-                                },
-                                quaternion: { x: markerObject.quaternion.x, y: markerObject.quaternion.y, z: markerObject.quaternion.z, w: markerObject.quaternion.w },
-                                scale: { x: markerObject.scale.x, y: markerObject.scale.y, z: markerObject.scale.z },
-                                matrixWorld: markerObject.matrixWorld.elements
-                            });
-                        }
-                    }
-
-                    // Оновлюємо Aruco маркери (детектуємо один раз на кадр для всіх маркерів)
+                        // Оновлюємо AR контент на кожен кадр
+                        function update() {
+                            if (arToolkitSource.ready !== false) {
+                                arToolkitContext.update(arToolkitSource.domElement);
+            
+                                // --- Розширена діагностика для Тесту 2: Реакція на швидкість руху ---
+                                const currentTime = performance.now();
+                                const timeDelta = currentTime - (lastUpdateTime || currentTime);
+                                lastUpdateTime = currentTime;
+            
+                                const barcodeIdToTrack = 1; // ID маркера, який відстежуємо
+                                const markerIndexToTrack = barcodeToMarkerIndex.get(barcodeIdToTrack);
+            
+                                if (markerIndexToTrack !== undefined) {
+                                    const markerObject = markerRoots[markerIndexToTrack];
+                                    
+                                    if (markerObject.visible) {
+                                        // Ініціалізуємо стан, якщо бачимо маркер вперше
+                                        if (!lastMarkerStates[markerIndexToTrack]) {
+                                            lastMarkerStates[markerIndexToTrack] = {
+                                                position: new THREE.Vector3(),
+                                                quaternion: new THREE.Quaternion()
+                                            };
+                                        }
+            
+                                        const lastState = lastMarkerStates[markerIndexToTrack];
+            
+                                        // Обчислюємо зміну позиції (дельта)
+                                        const positionDelta = markerObject.position.clone().sub(lastState.position).length();
+                                        
+                                                                                                // Обчислюємо зміну обертання (дельта) у градусах
+                                                                                                // Розбиваємо ланцюжок викликів для сумісності зі старою версією Three.js (r86)
+                                                                                                const lastQuaternionClone = lastState.quaternion.clone();
+                                                                                                lastQuaternionClone.invert();
+                                                                                                const rotationDelta = markerObject.quaternion.clone().multiply(lastQuaternionClone);
+                                                                                                const rotationAngleDelta = 2 * Math.atan2(rotationDelta.length(), rotationDelta.w) * (180 / Math.PI);                                        // Виводимо структуроване повідомлення
+                                        console.log(`[Тест 2] Маркер ${barcodeIdToTrack}:`, {
+                                            'Видимість': 'Так',
+                                            'Час кадру (ms)': timeDelta.toFixed(1),
+                                            'Pos Δ (Jitter)': positionDelta.toFixed(4), // Наскільки сильно "стрибнула" позиція
+                                            'Rot Δ (°/кадр)': rotationAngleDelta.toFixed(2)  // Наскільки сильно "стрибнуло" обертання
+                                        });
+            
+                                        // Оновлюємо останній стан
+                                        lastState.position.copy(markerObject.position);
+                                        lastState.quaternion.copy(markerObject.quaternion);
+            
+                                    } else if (lastMarkerStates[markerIndexToTrack]) {
+                                        // Виводимо повідомлення, коли маркер втрачено
+                                        console.log(`[Тест 2] Маркер ${barcodeIdToTrack} втрачено`);
+                                        delete lastMarkerStates[markerIndexToTrack]; // Скидаємо стан
+                                    }
+                                }
+                                // --- КІНЕЦЬ діагностики для Тесту 2 ---
+            
+                                // --- DIAGNOSTIC LOG for Barcode Marker --- (removed for production)                    // Оновлюємо Aruco маркери (детектуємо один раз на кадр для всіх маркерів)
                     if (arucoControls && arucoControls.length > 0) {
                         // Детектуємо маркери один раз на кадр (як у 4x4-3d.html)
                         var arucoMarkers = ArucoMarkerControls.detectMarkers(arToolkitSource);

@@ -1,6 +1,6 @@
 {
   "settings": {
-    "resolution": "high",
+    "resolution": "low",
     "welcomeText": "Press here<br>to start the WebAR-BoardGame"
   },
   "markers": [
