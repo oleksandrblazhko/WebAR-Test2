@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <!--
   Algorithm Description:
   1. Initialization (onLoad):
@@ -8,6 +9,7 @@
      - Set up three.js renderers and scenes:
        - Two scenes (`scene1`, `scene2`) to visualize the two possible poses calculated by POSIT.
        - One main scene (`scene4`) to display the 3D model, overlaid on the video feed (`scene3`).
+       - scene5 to display the 3D model with optim POSIT.
 
   2. Main Loop (tick):
      - On each animation frame, capture a frame from the video and draw it onto the hidden canvas (`snapshot`).
@@ -46,6 +48,8 @@
     var plane1, plane2, model, model5, texture;
     var lastPose = null;
     var lastChoice = "Best"; // For stabilization with bias
+    var lastSmoothPose = null; // For exponential smoothing
+    var lastSmoothQuaternion = null; // For quaternion SLERP smoothing
     
     // A variable for animating the model
     var step = 0.0;
@@ -254,11 +258,11 @@
       // Create a plane to visualize the second pose
       plane2 = createPlane();
       scene2.add(plane2);
-      
+
       // Create a plane with the video as a texture for the background
       texture = createTexture();
       scene3.add(texture);
-    
+
       // Create the 3D model to be augmented
       model = createModel();
       scene4.add(model);
@@ -292,11 +296,16 @@
           // Use a basic material with the video texture. Disable depth testing to ensure it's always in the background.
           material = new THREE.MeshBasicMaterial( {map: texture, depthTest: false, depthWrite: false} ),
           mesh = new THREE.Mesh(geometry, material);
-      
+
+      // Fix texture warning: set filters for non-power-of-two textures
+      texture.minFilter = THREE.LinearFilter;
+      texture.magFilter = THREE.LinearFilter;
+      texture.generateMipmaps = false;
+
       object.position.z = -1;
-      
+
       object.add(mesh);
-      
+
       return object;
     };
     
@@ -337,56 +346,118 @@
         updateObject(plane2, pose.alternativeRotation, pose.alternativeTranslation);
         updateObject(model, pose.bestRotation, pose.bestTranslation);
 
-        // --- Final Stabilization Logic ---
+        // --- Improved Stabilization Logic ---
         var stablePose;
-        var currentChoice = "Best"; // Use a temporary variable for current frame's choice
-        var dotBest = 0, dotAlt = 0; // Initialize for logging, will be updated in else block
+        var currentChoice = "Best";
 
         if (lastPose === null) {
-          // If this is the first frame or marker just re-appeared, use the best pose
-          stablePose = { rotation: pose.bestRotation, translation: pose.bestTranslation };
-          currentChoice = "Best"; // Default to best for the first frame
-        } else {
-          var lastZ = [lastPose.rotation[0][2], lastPose.rotation[1][2], lastPose.rotation[2][2]];
-          var bestZ = [pose.bestRotation[0][2], pose.bestRotation[1][2], pose.bestRotation[2][2]];
-          var altZ = [pose.alternativeRotation[0][2], pose.alternativeRotation[1][2], pose.alternativeRotation[2][2]];
-
-          dotBest = dot(lastZ, bestZ); // Assign here
-          dotAlt = dot(lastZ, altZ);   // Assign here
-          
-          var threshold = 0.01; // A small number to define "close"
-
-          // If the dot products are very close, stick with the last choice to prevent flipping
-          if (Math.abs(dotBest - dotAlt) < threshold) {
-            currentChoice = lastChoice; // Use the last chosen type
-          } else if (dotBest >= dotAlt) {
+          // First frame or marker re-appeared: choose based on error metric
+          if (pose.bestError <= pose.alternativeError) {
+            stablePose = { rotation: pose.bestRotation, translation: pose.bestTranslation };
             currentChoice = "Best";
           } else {
+            stablePose = { rotation: pose.alternativeRotation, translation: pose.alternativeTranslation };
             currentChoice = "Alternative";
+          }
+        } else {
+          // Compare both rotation AND translation to decide which pose to use
+          var bestScore = comparePoses(lastPose, pose.bestRotation, pose.bestTranslation);
+          var altScore = comparePoses(lastPose, pose.alternativeRotation, pose.alternativeTranslation);
+
+          // Add hysteresis: prefer last choice unless the other is significantly better
+          var hysteresis = 0.15; // 15% hysteresis threshold
+
+          if (lastChoice === "Best") {
+            currentChoice = (altScore < bestScore * (1 - hysteresis)) ? "Alternative" : "Best";
+          } else {
+            currentChoice = (bestScore < altScore * (1 - hysteresis)) ? "Best" : "Alternative";
+          }
+
+          stablePose = (currentChoice === "Best")
+            ? { rotation: pose.bestRotation, translation: pose.bestTranslation }
+            : { rotation: pose.alternativeRotation, translation: pose.alternativeTranslation };
+        }
+
+        // Apply exponential smoothing to the final pose using quaternion SLERP
+        if (lastSmoothQuaternion !== null && lastSmoothQuaternion !== undefined && 
+            lastSmoothPose !== null && lastSmoothPose !== undefined) {
+          // Convert current rotation matrix to quaternion
+          var currentQ = rotationToQuaternion(stablePose.rotation);
+          
+          // Check if the angle change is too large (more than 30 degrees)
+          var dot = Math.abs(lastSmoothQuaternion[0]*currentQ[0] + lastSmoothQuaternion[1]*currentQ[1] + 
+                            lastSmoothQuaternion[2]*currentQ[2] + lastSmoothQuaternion[3]*currentQ[3]);
+          var angleChange = Math.acos(Math.min(dot, 1.0)) * 2 * 180 / Math.PI; // in degrees
+          
+          if (angleChange > 30) {
+            // Reject large rotation changes - use previous rotation
+            stablePose.rotation = quaternionToRotation(lastSmoothQuaternion);
+            console.log("Large rotation rejected (change: " + angleChange.toFixed(1) + "°)");
+          } else {
+            // SLERP between quaternions (0.15 = stronger smoothing)
+            var smoothedQ = slerp(lastSmoothQuaternion, currentQ, 0.15);
+            
+            // Convert back to rotation matrix
+            stablePose.rotation = quaternionToRotation(smoothedQ);
+          }
+          
+          // Also smooth translation linearly with limit
+          var transChange = Math.sqrt(
+            Math.pow(stablePose.translation[0] - lastSmoothPose.translation[0], 2) +
+            Math.pow(stablePose.translation[1] - lastSmoothPose.translation[1], 2) +
+            Math.pow(stablePose.translation[2] - lastSmoothPose.translation[2], 2)
+          );
+          
+          if (transChange > 20) {
+            // Limit translation change to 20mm per frame
+            var scale = 20 / transChange;
+            for (var i = 0; i < 3; i++) {
+              stablePose.translation[i] = lastSmoothPose.translation[i] + 
+                (stablePose.translation[i] - lastSmoothPose.translation[i]) * scale * 0.15;
+            }
+          } else {
+            for (var i = 0; i < 3; i++) {
+              stablePose.translation[i] = lastSmoothPose.translation[i] * 0.85 + stablePose.translation[i] * 0.15;
+            }
+          }
+          
+          console.log("Smoothing applied");
+        }
+
+        // Store state for next frame
+        lastPose = stablePose;
+        lastChoice = currentChoice;
+        lastSmoothPose = stablePose;
+        // Store smoothed quaternion for next frame
+        var currentQ = rotationToQuaternion(stablePose.rotation);
+        if (lastSmoothQuaternion === null || lastSmoothQuaternion === undefined) {
+          lastSmoothQuaternion = currentQ;
+        } else {
+          // Check angle change for storage too
+          var dot = Math.abs(lastSmoothQuaternion[0]*currentQ[0] + lastSmoothQuaternion[1]*currentQ[1] + 
+                            lastSmoothQuaternion[2]*currentQ[2] + lastSmoothQuaternion[3]*currentQ[3]);
+          var angleChange = Math.acos(Math.min(dot, 1.0)) * 2 * 180 / Math.PI;
+          
+          if (angleChange > 30) {
+            // Don't update quaternion if change is too large
+            console.log("Quaternion update rejected (change: " + angleChange.toFixed(1) + "°)");
+          } else {
+            lastSmoothQuaternion = slerp(lastSmoothQuaternion, currentQ, 0.15);
           }
         }
 
-        // Assign stablePose based on the determined 'currentChoice'
-        if (currentChoice === "Best"){
-            stablePose = { rotation: pose.bestRotation, translation: pose.bestTranslation };
-        } else {
-            stablePose = { rotation: pose.alternativeRotation, translation: pose.alternativeTranslation };
-        }
-        
-        // Store the state for the next frame
-        lastPose = stablePose;
-        lastChoice = currentChoice; // Update lastChoice for the next frame
-
-        // Log diagnostic data to console
+        // Log diagnostic data
         console.log("--- Debug Log ---");
         console.log("Best Pose Error: " + pose.bestError.toFixed(4));
         console.log("Alt. Pose Error: " + pose.alternativeError.toFixed(4));
-        // Only log dot products if they were calculated (i.e., not on the first frame where lastPose is null)
-        if (lastPose !== null) { 
-            console.log("Dot Product (Best): " + dotBest.toFixed(4));
-            console.log("Dot Product (Alt):  " + dotAlt.toFixed(4));
-        }
         console.log("Chosen Pose: " + currentChoice);
+        console.log("Translation: [" + stablePose.translation[0].toFixed(1) + ", " + stablePose.translation[1].toFixed(1) + ", " + stablePose.translation[2].toFixed(1) + "]");
+        
+        // Log rotation angles for debugging
+        var yaw = -Math.atan2(stablePose.rotation[0][2], stablePose.rotation[2][2]);
+        var pitch = -Math.asin(-stablePose.rotation[1][2]);
+        var roll = Math.atan2(stablePose.rotation[1][0], stablePose.rotation[1][1]);
+        console.log("Rotation [yaw, pitch, roll]: [" + (yaw * 180/Math.PI).toFixed(1) + ", " + (pitch * 180/Math.PI).toFixed(1) + ", " + (roll * 180/Math.PI).toFixed(1) + "]");
 
 
         // Update the stabilized model
@@ -396,14 +467,16 @@
         updatePose("pose1", pose.bestError, pose.bestRotation, pose.bestTranslation);
         updatePose("pose2", pose.alternativeError, pose.alternativeRotation, pose.alternativeTranslation);
         
-        // Add a simple animation to the models
+        // Add a simple animation to the models (only for non-stabilized model)
         step += 0.025;
         model.rotation.y -= step;
-        model5.rotation.y -= step;
+        // model5.rotation.y -= step; // Disabled for stabilized model to show pure POSIT result
 
       } else {
-        // If no markers are found, reset the last pose so stabilization starts fresh
+        // Reset when marker is lost - but keep lastSmoothQuaternion for when marker re-appears
         lastPose = null;
+        lastSmoothPose = null;
+        // Don't reset lastSmoothQuaternion - keep it for smooth transition when marker re-appears
         console.log("--- Debug Log ---\nNo markers detected.");
       }
       
@@ -416,23 +489,151 @@
       return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
     }
 
+    // Convert rotation matrix to quaternion
+    function rotationToQuaternion(rot) {
+      var m00 = rot[0][0], m01 = rot[0][1], m02 = rot[0][2];
+      var m10 = rot[1][0], m11 = rot[1][1], m12 = rot[1][2];
+      var m20 = rot[2][0], m21 = rot[2][1], m22 = rot[2][2];
+      
+      var trace = m00 + m11 + m22;
+      var qw, qx, qy, qz;
+
+      if (trace > 0) {
+        var s = 0.5 / Math.sqrt(trace + 1.0);
+        qw = 0.25 / s;
+        qx = (m21 - m12) * s;
+        qy = (m02 - m20) * s;
+        qz = (m10 - m01) * s;
+      } else if (m00 > m11 && m00 > m22) {
+        var s = 2.0 * Math.sqrt(1.0 + m00 - m11 - m22);
+        qw = (m21 - m12) / s;
+        qx = 0.25 * s;
+        qy = (m01 + m10) / s;
+        qz = (m02 + m20) / s;
+      } else if (m11 > m22) {
+        var s = 2.0 * Math.sqrt(1.0 + m11 - m00 - m22);
+        qw = (m02 - m20) / s;
+        qx = (m01 + m10) / s;
+        qy = 0.25 * s;
+        qz = (m12 + m21) / s;
+      } else {
+        var s = 2.0 * Math.sqrt(1.0 + m22 - m00 - m11);
+        qw = (m10 - m01) / s;
+        qx = (m02 + m20) / s;
+        qy = (m12 + m21) / s;
+        qz = 0.25 * s;
+      }
+
+      // Normalize quaternion
+      var len = Math.sqrt(qw*qw + qx*qx + qy*qy + qz*qz);
+      return [qw/len, qx/len, qy/len, qz/len];
+    }
+
+    // Convert quaternion to rotation matrix
+    function quaternionToRotation(q) {
+      var qw = q[0], qx = q[1], qy = q[2], qz = q[3];
+      var rot = [[0,0,0],[0,0,0],[0,0,0]];
+      
+      var xx = qx*qx, yy = qy*qy, zz = qz*qz;
+      var xy = qx*qy, xz = qx*qz, yz = qy*qz;
+      var xw = qx*qw, yw = qy*qw, zw = qz*qw;
+
+      rot[0][0] = 1 - 2*(yy + zz);
+      rot[0][1] = 2*(xy - zw);
+      rot[0][2] = 2*(xz + yw);
+      rot[1][0] = 2*(xy + zw);
+      rot[1][1] = 1 - 2*(xx + zz);
+      rot[1][2] = 2*(yz - xw);
+      rot[2][0] = 2*(xz - yw);
+      rot[2][1] = 2*(yz + xw);
+      rot[2][2] = 1 - 2*(xx + yy);
+
+      return rot;
+    }
+
+    // Spherical Linear Interpolation (SLERP) for quaternions
+    function slerp(q1, q2, t) {
+      // Dot product
+      var dot = q1[0]*q2[0] + q1[1]*q2[1] + q1[2]*q2[2] + q1[3]*q2[3];
+      
+      // If dot product is negative, negate one quaternion to take shortest path
+      if (dot < 0) {
+        q2 = [-q2[0], -q2[1], -q2[2], -q2[3]];
+        dot = -dot;
+      }
+      
+      // If quaternions are very close, use linear interpolation
+      if (dot > 0.9995) {
+        var result = [
+          q1[0] + t*(q2[0] - q1[0]),
+          q1[1] + t*(q2[1] - q1[1]),
+          q1[2] + t*(q2[2] - q1[2]),
+          q1[3] + t*(q2[3] - q1[3])
+        ];
+        var len = Math.sqrt(result[0]*result[0] + result[1]*result[1] + result[2]*result[2] + result[3]*result[3]);
+        return [result[0]/len, result[1]/len, result[2]/len, result[3]/len];
+      }
+      
+      var theta0 = Math.acos(dot);
+      var theta = theta0 * t;
+      var sinTheta = Math.sin(theta0);
+      var sinThetaNew = Math.sin(theta);
+      
+      var s1 = Math.cos(theta) - dot * sinThetaNew / sinTheta;
+      var s2 = sinThetaNew / sinTheta;
+      
+      return [
+        s1*q1[0] + s2*q2[0],
+        s1*q1[1] + s2*q2[1],
+        s1*q1[2] + s2*q2[2],
+        s1*q1[3] + s2*q2[3]
+      ];
+    }
+
+    // Compare two poses by computing combined rotation + translation distance
+    function comparePoses(lastPose, rotation, translation) {
+      // Rotation difference: sum of squared differences of rotation matrix elements
+      var rotDiff = 0;
+      for (var i = 0; i < 3; i++) {
+        for (var j = 0; j < 3; j++) {
+          var diff = lastPose.rotation[i][j] - rotation[i][j];
+          rotDiff += diff * diff;
+        }
+      }
+
+      // Translation difference
+      var transDiff = 0;
+      for (var i = 0; i < 3; i++) {
+        var diff = lastPose.translation[i] - translation[i];
+        transDiff += diff * diff;
+      }
+
+      // Normalize translation difference (approximate marker distance ~100mm)
+      var normalizedTransDiff = transDiff / 10000;
+
+      // Combined score (lower is better)
+      return rotDiff + normalizedTransDiff;
+    }
+
     // Applies the calculated rotation and translation to a three.js object
     function updateObject(object, rotation, translation){
       // Scale the object to the size of the marker
       object.scale.x = modelSize;
       object.scale.y = modelSize;
       object.scale.z = modelSize;
-      
-      // Decompose the rotation matrix into Euler angles and apply them.
-      // This is a common conversion from a rotation matrix to Euler angles (XYZ order).
-      object.rotation.x = -Math.asin(-rotation[1][2]);
-      object.rotation.y = -Math.atan2(rotation[0][2], rotation[2][2]);
-      object.rotation.z = Math.atan2(rotation[1][0], rotation[1][1]);
+
+      // Convert rotation matrix to quaternion using helper function
+      var q = rotationToQuaternion(rotation);
+      object.quaternion.set(q[0], q[1], q[2], q[3]);
 
       // Apply the translation. Note that the Z axis is inverted.
       object.position.x = translation[0];
       object.position.y = translation[1];
       object.position.z = -translation[2];
+      
+      // Force matrix update for old Three.js version (r70)
+      object.updateMatrix();
+      object.matrixWorldNeedsUpdate = true;
     };
     
     // Displays the pose information as text on the webpage
