@@ -1,0 +1,792 @@
+This page is in Quirks Mode. Page layout may be impacted. For Standards Mode use “<!DOCTYPE html>”. debug-posit.html
+Uncaught TypeError: can't access property "toFixed", dotBest is undefined
+    updateScenes http://127.0.0.1:8080/js-aruco2/samples/debug-posit/debug-posit.html:385
+    tick http://127.0.0.1:8080/js-aruco2/samples/debug-posit/debug-posit.html:131
+13 debug-posit.html:385:50
+Uncaught TypeError: can't access property "toFixed" of undefined
+    updateScenes http://127.0.0.1:8080/js-aruco2/samples/debug-posit/debug-posit.html:385
+    tick http://127.0.0.1:8080/js-aruco2/samples/debug-posit/debug-posit.html:131
+4 debug-posit.html:385:50
+Uncaught TypeError: can't access property "toFixed", dotBest is undefined
+    updateScenes http://127.0.0.1:8080/js-aruco2/samples/debug-posit/debug-posit.html:385
+    tick http://127.0.0.1:8080/js-aruco2/samples/debug-posit/debug-posit.html:131
+2 debug-posit.html:385:50
+Best Pose Error: 7.0000 debug-posit.html:382:17
+Alt. Pose Error: 7.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9979 debug-posit.html:385:21
+Dot Product (Alt):  0.9979 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 7.0000 debug-posit.html:382:17
+Alt. Pose Error: 7.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9951 debug-posit.html:385:21
+Dot Product (Alt):  0.9951 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 7.0000 debug-posit.html:382:17
+Alt. Pose Error: 7.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9987 debug-posit.html:385:21
+Dot Product (Alt):  0.9987 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9967 debug-posit.html:385:21
+Dot Product (Alt):  0.9967 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 7.0000 debug-posit.html:382:17
+Alt. Pose Error: 7.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9957 debug-posit.html:385:21
+Dot Product (Alt):  0.9957 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 7.0000 debug-posit.html:382:17
+Alt. Pose Error: 7.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9981 debug-posit.html:385:21
+Dot Product (Alt):  0.9981 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9966 debug-posit.html:385:21
+Dot Product (Alt):  0.9966 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 4.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7992 debug-posit.html:385:21
+Dot Product (Alt):  0.9982 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 4.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7722 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 7.0000 debug-posit.html:382:17
+Alt. Pose Error: 7.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9850 debug-posit.html:385:21
+Dot Product (Alt):  0.9850 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 7.0000 debug-posit.html:382:17
+Alt. Pose Error: 7.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 7.0000 debug-posit.html:382:17
+Alt. Pose Error: 7.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 7.0000 debug-posit.html:382:17
+Alt. Pose Error: 7.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 7.0000 debug-posit.html:382:17
+Alt. Pose Error: 7.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 7.0000 debug-posit.html:382:17
+Alt. Pose Error: 7.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9993 debug-posit.html:385:21
+Dot Product (Alt):  0.9993 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 7.0000 debug-posit.html:382:17
+Alt. Pose Error: 7.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9992 debug-posit.html:385:21
+Dot Product (Alt):  0.9992 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 7.0000 debug-posit.html:382:17
+Alt. Pose Error: 7.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9984 debug-posit.html:385:21
+Dot Product (Alt):  0.9984 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 7.0000 debug-posit.html:382:17
+Alt. Pose Error: 7.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9963 debug-posit.html:385:21
+Dot Product (Alt):  0.9963 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 7.0000 debug-posit.html:382:17
+Alt. Pose Error: 7.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 7.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7954 debug-posit.html:385:21
+Dot Product (Alt):  0.9992 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 7.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7834 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 9.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9947 debug-posit.html:385:21
+Dot Product (Alt):  0.9946 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 9.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9940 debug-posit.html:385:21
+Dot Product (Alt):  0.9940 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 3.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 0.8227 debug-posit.html:385:21
+Dot Product (Alt):  0.9989 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 3.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 0.8137 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 3.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7829 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 3.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7851 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 7.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 0.6984 debug-posit.html:385:21
+Dot Product (Alt):  0.9917 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 7.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 0.6236 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9768 debug-posit.html:385:21
+Dot Product (Alt):  0.9768 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9983 debug-posit.html:385:21
+Dot Product (Alt):  0.9983 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 3.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 0.8004 debug-posit.html:385:21
+Dot Product (Alt):  0.9987 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 3.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7689 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7803 debug-posit.html:385:21
+Dot Product (Alt):  0.9995 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 0.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7848 debug-posit.html:385:21
+Dot Product (Alt):  0.9876 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 0.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 0.6955 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 0.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7324 debug-posit.html:385:21
+Dot Product (Alt):  0.9818 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 0.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7882 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9994 debug-posit.html:385:21
+Dot Product (Alt):  0.9994 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 0.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7767 debug-posit.html:385:21
+Dot Product (Alt):  0.9850 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 0.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 0.6955 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7224 debug-posit.html:385:21
+Dot Product (Alt):  0.9876 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7973 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 0.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.8016 debug-posit.html:385:21
+Dot Product (Alt):  0.9941 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 0.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7328 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9945 debug-posit.html:385:21
+Dot Product (Alt):  0.9945 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9992 debug-posit.html:385:21
+Dot Product (Alt):  0.9992 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 0.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.8078 debug-posit.html:385:21
+Dot Product (Alt):  0.9940 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 0.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7429 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 0.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7429 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 0.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7429 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 0.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7346 debug-posit.html:385:21
+Dot Product (Alt):  0.9997 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 3.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7392 debug-posit.html:385:21
+Dot Product (Alt):  0.9945 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 3.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7915 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 4.0000 debug-posit.html:382:17
+Alt. Pose Error: 4.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9969 debug-posit.html:385:21
+Dot Product (Alt):  0.9969 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 4.0000 debug-posit.html:382:17
+Alt. Pose Error: 4.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 5.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9943 debug-posit.html:385:21
+Dot Product (Alt):  0.8896 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 5.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  0.8365 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 9.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9892 debug-posit.html:385:21
+Dot Product (Alt):  0.9892 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 9.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 5.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9892 debug-posit.html:385:21
+Dot Product (Alt):  0.8885 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 5.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  0.8365 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 0.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7504 debug-posit.html:385:21
+Dot Product (Alt):  0.9987 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 0.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7402 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9940 debug-posit.html:385:21
+Dot Product (Alt):  0.9940 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 0.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.8053 debug-posit.html:385:21
+Dot Product (Alt):  0.9940 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 0.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7402 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 0.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7402 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 1.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7104 debug-posit.html:385:21
+Dot Product (Alt):  0.9985 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 1.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 0.6874 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9876 debug-posit.html:385:21
+Dot Product (Alt):  0.9876 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 1.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7771 debug-posit.html:385:21
+Dot Product (Alt):  0.9876 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 1.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 0.6874 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log ---
+No markers detected. debug-posit.html:403:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 1.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Uncaught TypeError: can't access property "toFixed" of undefined
+    updateScenes http://127.0.0.1:8080/js-aruco2/samples/debug-posit/debug-posit.html:385
+    tick http://127.0.0.1:8080/js-aruco2/samples/debug-posit/debug-posit.html:131
+debug-posit.html:385:50
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 1.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  0.6874 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 1.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  0.6874 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 1.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  0.6874 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7771 debug-posit.html:385:21
+Dot Product (Alt):  0.7771 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Best debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 0.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.8084 debug-posit.html:385:21
+Dot Product (Alt):  0.9940 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 0.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7437 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9921 debug-posit.html:385:21
+Dot Product (Alt):  0.9921 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 2.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 0.8149 debug-posit.html:385:21
+Dot Product (Alt):  0.9985 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 2.0000 debug-posit.html:382:17
+Alt. Pose Error: 9.0000 debug-posit.html:383:17
+Dot Product (Best): 0.7821 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 0.9943 debug-posit.html:385:21
+Dot Product (Alt):  0.9943 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter is set to THREE.LinearFilter or THREE.NearestFilter. ( undefined ) Three.js:504:207
+--- Debug Log --- debug-posit.html:381:17
+Best Pose Error: 6.0000 debug-posit.html:382:17
+Alt. Pose Error: 6.0000 debug-posit.html:383:17
+Dot Product (Best): 1.0000 debug-posit.html:385:21
+Dot Product (Alt):  1.0000 debug-posit.html:386:21
+Chosen Pose: Alternative debug-posit.html:388:17
+

@@ -1,33 +1,70 @@
+<!--
+  Algorithm Description:
+  1. Initialization (onLoad):
+     - Access the user's camera using `navigator.mediaDevices.getUserMedia`.
+     - Initialize a 2D canvas to process video frames.
+     - Create an `AR.Detector` for finding ArUco markers in the video stream.
+     - Create a `POS.Posit` object to perform 3D pose estimation from the 2D marker corners. The POSIT algorithm requires the real-world size of the marker (modelSize) and the camera's focal length (approximated from canvas width).
+     - Set up three.js renderers and scenes:
+       - Two scenes (`scene1`, `scene2`) to visualize the two possible poses calculated by POSIT.
+       - One main scene (`scene4`) to display the 3D model, overlaid on the video feed (`scene3`).
+
+  2. Main Loop (tick):
+     - On each animation frame, capture a frame from the video and draw it onto the hidden canvas (`snapshot`).
+     - Process the canvas image data to find ArUco markers (`detector.detect`).
+     - For each detected marker, draw its corners on the visible canvas (`drawCorners`).
+     - If a marker is found, use its 2D corner coordinates to calculate the 3D pose (position and orientation) using the POSIT algorithm (`posit.pose`). POSIT returns two possible poses: a "best" one and an "alternative" one.
+     - Update the three.js scenes (`updateScenes`):
+       - The 3D model (`model`) is positioned and oriented using the `bestRotation` and `bestTranslation` from the POSIT result.
+       - Two helper planes (`plane1`, `plane2`) are updated to show both the best and alternative poses separately.
+       - The video stream is updated as a texture in the background of the main scene.
+     - Display the numerical pose data (translation, rotation, error) for both poses on the screen.
+     - Render all three.js scenes (`render`). The main view combines the video background and the 3D model.
+-->
 <html>
 
 <head>
   <title>Augmented Reality</title>
 
+  <!-- Include three.js library for 3D rendering -->
   <script type="text/javascript" src="libs/Three.js"></script> 
 
-  <script type="text/javascript" src="../../src/svd.js"></script> 
-  <script type="text/javascript" src="../../src/posit1.js"></script> 
-  <script type="text/javascript" src="../../src/cv.js"></script> 
-  <script type="text/javascript" src="../../src/aruco.js"></script> 
+  <!-- Include js-aruco2 specific scripts -->
+  <script type="text/javascript" src="../../src/svd.js"></script> <!-- Singular Value Decomposition, a dependency for POSIT -->
+  <script type="text/javascript" src="../../src/posit1.js"></script> <!-- POSIT algorithm for 3D pose estimation -->
+  <script type="text/javascript" src="../../src/cv.js"></script> <!-- Computer Vision utility functions -->
+  <script type="text/javascript" src="../../src/aruco.js"></script> <!-- ArUco marker detector -->
 
   <script>
+    // Global variables for video, canvas, and image processing
     var video, canvas, context, imageData, detector, posit;
-    var renderer1, renderer2, renderer3;
-    var scene1, scene2, scene3, scene4;
-    var camera1, camera2, camera3, camera4;
-    var plane1, plane2, model, texture;
+    
+    // three.js scene components
+    var renderer1, renderer2, renderer3, renderer5;
+    var scene1, scene2, scene3, scene4, scene5;
+    var camera1, camera2, camera3, camera4, camera5;
+    var plane1, plane2, model, model5, texture;
+    var lastPose = null;
+    var lastChoice = "Best"; // For stabilization with bias
+    
+    // A variable for animating the model
     var step = 0.0;
 
+    // The real-world size of the marker in millimeters. This is crucial for correct pose estimation.
     var modelSize = 30.0; //millimeters
 
+    // Function called when the window has finished loading
     function onLoad(){
+      // Get HTML elements
       video = document.getElementById("video");
       canvas = document.getElementById("canvas");
       context = canvas.getContext("2d");
     
+      // Set canvas dimensions based on its CSS style
       canvas.width = parseInt(canvas.style.width);
       canvas.height = parseInt(canvas.style.height);
       
+      // Polyfill for navigator.mediaDevices.getUserMedia for cross-browser compatibility
       if (navigator.mediaDevices === undefined) {
         navigator.mediaDevices = {};
       }
@@ -46,9 +83,11 @@
         }
       }
       
+      // Request access to the user's camera
       navigator.mediaDevices
         .getUserMedia({ video: true })
         .then(function(stream) {
+          // Attach the camera stream to the video element
           if ("srcObject" in video) {
             video.srcObject = stream;
           } else {
@@ -56,46 +95,65 @@
           }
         })
         .catch(function(err) {
+          // Log any errors to the console
           console.log(err.name + ": " + err.message);
         }
       );
       
+      // Initialize the ArUco marker detector
       detector = new AR.Detector();
+      // Initialize the POSIT object for pose estimation, passing the marker size and canvas width (as a proxy for camera focal length)
       posit = new POS.Posit(modelSize, canvas.width);
 
+      // Set up the three.js renderers and scenes
       createRenderers();
       createScenes();
 
+      // Start the main application loop
       requestAnimationFrame(tick);
     };
 
+    // The main loop, called for each animation frame
     function tick(){
+      // Request the next frame
       requestAnimationFrame(tick);
       
+      // Check if the video has a frame ready to be processed
       if (video.readyState === video.HAVE_ENOUGH_DATA){
+        // Capture a snapshot of the current video frame
         snapshot();
 
+        // Detect markers in the snapshot
         var markers = detector.detect(imageData);
+        // Draw the corners of the detected markers on the canvas
         drawCorners(markers);
+        // Update the 3D scenes based on the detected markers
         updateScenes(markers);
         
+        // Render the 3D scenes
         render();
       }
     };
 
+    // Captures a frame from the video element and stores its pixel data
     function snapshot(){
+      // Draw the current video frame onto the 2D canvas
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      // Get the image data from the canvas
       imageData = context.getImageData(0, 0, canvas.width, canvas.height);
     };
     
+    // Draws the corners of detected markers on the canvas
     function drawCorners(markers){
       var corners, corner, i, j;
     
       context.lineWidth = 3;
 
+      // Loop through all detected markers
       for (i = 0; i < markers.length; ++ i){
         corners = markers[i].corners;
         
+        // Draw a red border around the marker
         context.strokeStyle = "red";
         context.beginPath();
         
@@ -109,12 +167,15 @@
         context.stroke();
         context.closePath();
         
+        // Draw a small green square at the first corner to show orientation
         context.strokeStyle = "green";
         context.strokeRect(corners[0].x - 2, corners[0].y - 2, 4, 4);
       }
     };
 
+    // Sets up the three.js WebGL renderers and scenes
     function createRenderers(){
+      // Renderer for the first pose solution
       renderer1 = new THREE.WebGLRenderer();
       renderer1.setClearColor(0xffff00, 1);
       renderer1.setSize(canvas.width, canvas.height);
@@ -123,6 +184,7 @@
       camera1 = new THREE.PerspectiveCamera(40, canvas.width / canvas.height, 1, 1000);
       scene1.add(camera1);
 
+      // Renderer for the second (alternative) pose solution
       renderer2 = new THREE.WebGLRenderer();
       renderer2.setClearColor(0xffff00, 1);
       renderer2.setSize(canvas.width, canvas.height);
@@ -131,53 +193,89 @@
       camera2 = new THREE.PerspectiveCamera(40, canvas.width / canvas.height, 1, 1000);
       scene2.add(camera2);
 
+      // Main renderer for the combined AR view
       renderer3 = new THREE.WebGLRenderer();
       renderer3.setClearColor(0xffffff, 1);
       renderer3.setSize(canvas.width, canvas.height);
       document.getElementById("container").appendChild(renderer3.domElement);
       
+      // Scene for the video background texture
       scene3 = new THREE.Scene();
       camera3 = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5);
       scene3.add(camera3);
       
+      // Scene for the 3D model
       scene4 = new THREE.Scene();
       camera4 = new THREE.PerspectiveCamera(40, canvas.width / canvas.height, 1, 1000);
       scene4.add(camera4);
+
+      // Renderer for the 5th, stabilized view
+      renderer5 = new THREE.WebGLRenderer();
+      renderer5.setClearColor(0xffffff, 1);
+      renderer5.setSize(canvas.width, canvas.height);
+      document.getElementById("container5").appendChild(renderer5.domElement);
+      scene5 = new THREE.Scene();
+      camera5 = new THREE.PerspectiveCamera(40, canvas.width / canvas.height, 1, 1000);
+      scene5.add(camera5);
     };
 
+    // Renders all the scenes
     function render(){
+      // Render scene1 with the first pose
       renderer1.clear();
       renderer1.render(scene1, camera1);
       
+      // Render scene2 with the alternative pose
       renderer2.clear();
       renderer2.render(scene2, camera2);
 
+      // To overlay the 3D model on the video, we render two scenes with the same renderer
+      // without clearing the buffer in between.
       renderer3.autoClear = false;
       renderer3.clear();
+      // Render the video background first
       renderer3.render(scene3, camera3);
+      // Render the 3D model on top
       renderer3.render(scene4, camera4);
+
+      // Render the 5th scene (stabilized)
+      renderer5.autoClear = false;
+      renderer5.clear();
+      renderer5.render(scene3, camera3); // Re-use the video texture scene
+      renderer5.render(scene5, camera5);
     };
 
+    // Creates the 3D objects for the scenes
     function createScenes(){
+      // Create a plane to visualize the first pose
       plane1 = createPlane();
       scene1.add(plane1);
 
+      // Create a plane to visualize the second pose
       plane2 = createPlane();
       scene2.add(plane2);
       
+      // Create a plane with the video as a texture for the background
       texture = createTexture();
       scene3.add(texture);
     
+      // Create the 3D model to be augmented
       model = createModel();
       scene4.add(model);
+
+      // Create the second 3D model for the stabilized view
+      model5 = createModel();
+      scene5.add(model5);
     };
     
+    // Helper function to create a simple plane object
     function createPlane(){
       var object = new THREE.Object3D(),
           geometry = new THREE.PlaneGeometry(1.0, 1.0, 0.0),
-          material = new THREE.MeshNormalMaterial(),
+          material = new THREE.MeshNormalMaterial(), // Material that maps normals to RGB colors
           mesh = new THREE.Mesh(geometry, material);
       
+      // Set the rotation order. Important for avoiding gimbal lock.
       object.eulerOrder = 'YXZ';
       
       object.add(mesh);
@@ -185,10 +283,13 @@
       return object;
     };
     
+    // Creates a plane with the video feed as its texture
     function createTexture(){
+      // Use the video element as a texture
       var texture = new THREE.Texture(video),
           object = new THREE.Object3D(),
           geometry = new THREE.PlaneGeometry(1.0, 1.0, 0.0),
+          // Use a basic material with the video texture. Disable depth testing to ensure it's always in the background.
           material = new THREE.MeshBasicMaterial( {map: texture, depthTest: false, depthWrite: false} ),
           mesh = new THREE.Mesh(geometry, material);
       
@@ -199,10 +300,11 @@
       return object;
     };
     
+    // Creates the 3D sphere model
     function createModel(){
       var object = new THREE.Object3D(),
-          geometry = new THREE.SphereGeometry(0.5, 15, 15, Math.PI),
-          texture = THREE.ImageUtils.loadTexture("textures/earth.jpg"),
+          geometry = new THREE.CylinderGeometry(0, 0.5, 1.0, 16),
+          texture = THREE.ImageUtils.loadTexture("texture_green.jpg"),
           material = new THREE.MeshBasicMaterial( {map: texture} ),
           mesh = new THREE.Mesh(geometry, material);
       
@@ -215,8 +317,11 @@
       var corners, corner, pose, i;
       
       if (markers.length > 0){
+        // Use the corners of the first detected marker
         corners = markers[0].corners;
         
+        // The POSIT algorithm requires points in a coordinate system where the center of the
+        // screen is the origin. Convert the corner coordinates from canvas coordinates.
         for (i = 0; i < corners.length; ++ i){
           corner = corners[i];
           
@@ -224,54 +329,134 @@
           corner.y = (canvas.height / 2) - corner.y;
         }
         
+        // Get the pose estimation from the POSIT algorithm
         pose = posit.pose(corners);
         
+        // Update the original, unstable objects
         updateObject(plane1, pose.bestRotation, pose.bestTranslation);
         updateObject(plane2, pose.alternativeRotation, pose.alternativeTranslation);
         updateObject(model, pose.bestRotation, pose.bestTranslation);
 
+        // --- Final Stabilization Logic ---
+        var stablePose;
+        var currentChoice = "Best"; // Use a temporary variable for current frame's choice
+        var dotBest = 0, dotAlt = 0; // Initialize for logging, will be updated in else block
+
+        if (lastPose === null) {
+          // If this is the first frame or marker just re-appeared, use the best pose
+          stablePose = { rotation: pose.bestRotation, translation: pose.bestTranslation };
+          currentChoice = "Best"; // Default to best for the first frame
+        } else {
+          var lastZ = [lastPose.rotation[0][2], lastPose.rotation[1][2], lastPose.rotation[2][2]];
+          var bestZ = [pose.bestRotation[0][2], pose.bestRotation[1][2], pose.bestRotation[2][2]];
+          var altZ = [pose.alternativeRotation[0][2], pose.alternativeRotation[1][2], pose.alternativeRotation[2][2]];
+
+          dotBest = dot(lastZ, bestZ); // Assign here
+          dotAlt = dot(lastZ, altZ);   // Assign here
+          
+          var threshold = 0.01; // A small number to define "close"
+
+          // If the dot products are very close, stick with the last choice to prevent flipping
+          if (Math.abs(dotBest - dotAlt) < threshold) {
+            currentChoice = lastChoice; // Use the last chosen type
+          } else if (dotBest >= dotAlt) {
+            currentChoice = "Best";
+          } else {
+            currentChoice = "Alternative";
+          }
+        }
+
+        // Assign stablePose based on the determined 'currentChoice'
+        if (currentChoice === "Best"){
+            stablePose = { rotation: pose.bestRotation, translation: pose.bestTranslation };
+        } else {
+            stablePose = { rotation: pose.alternativeRotation, translation: pose.alternativeTranslation };
+        }
+        
+        // Store the state for the next frame
+        lastPose = stablePose;
+        lastChoice = currentChoice; // Update lastChoice for the next frame
+
+        // Log diagnostic data to console
+        console.log("--- Debug Log ---");
+        console.log("Best Pose Error: " + pose.bestError.toFixed(4));
+        console.log("Alt. Pose Error: " + pose.alternativeError.toFixed(4));
+        // Only log dot products if they were calculated (i.e., not on the first frame where lastPose is null)
+        if (lastPose !== null) { 
+            console.log("Dot Product (Best): " + dotBest.toFixed(4));
+            console.log("Dot Product (Alt):  " + dotAlt.toFixed(4));
+        }
+        console.log("Chosen Pose: " + currentChoice);
+
+
+        // Update the stabilized model
+        updateObject(model5, stablePose.rotation, stablePose.translation);
+
+        // Display the numerical data for each pose
         updatePose("pose1", pose.bestError, pose.bestRotation, pose.bestTranslation);
         updatePose("pose2", pose.alternativeError, pose.alternativeRotation, pose.alternativeTranslation);
         
+        // Add a simple animation to the models
         step += 0.025;
-        
-        model.rotation.z -= step;
+        model.rotation.y -= step;
+        model5.rotation.y -= step;
+
+      } else {
+        // If no markers are found, reset the last pose so stabilization starts fresh
+        lastPose = null;
+        console.log("--- Debug Log ---\nNo markers detected.");
       }
       
+      // This is crucial! It tells three.js to update the video texture on the next render.
       texture.children[0].material.map.needsUpdate = true;
     };
     
+    // Helper function to calculate the dot product of two 3D vectors
+    function dot(v1, v2) {
+      return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
+    }
+
+    // Applies the calculated rotation and translation to a three.js object
     function updateObject(object, rotation, translation){
+      // Scale the object to the size of the marker
       object.scale.x = modelSize;
       object.scale.y = modelSize;
       object.scale.z = modelSize;
       
+      // Decompose the rotation matrix into Euler angles and apply them.
+      // This is a common conversion from a rotation matrix to Euler angles (XYZ order).
       object.rotation.x = -Math.asin(-rotation[1][2]);
       object.rotation.y = -Math.atan2(rotation[0][2], rotation[2][2]);
       object.rotation.z = Math.atan2(rotation[1][0], rotation[1][1]);
 
+      // Apply the translation. Note that the Z axis is inverted.
       object.position.x = translation[0];
       object.position.y = translation[1];
       object.position.z = -translation[2];
     };
     
+    // Displays the pose information as text on the webpage
     function updatePose(id, error, rotation, translation){
+      // Convert rotation matrix to yaw, pitch, and roll
       var yaw = -Math.atan2(rotation[0][2], rotation[2][2]);
       var pitch = -Math.asin(-rotation[1][2]);
       var roll = Math.atan2(rotation[1][0], rotation[1][1]);
       
+      // Update the innerHTML of the specified element with the pose data
       var d = document.getElementById(id);
       d.innerHTML = " error: " + error
                   + "<br/>"
-                  + " x: " + (translation[0] | 0)
+                  + " x: " + (translation[0] | 0) // Bitwise OR 0 to truncate to integer
                   + " y: " + (translation[1] | 0)
                   + " z: " + (translation[2] | 0)
                   + "<br/>"
+                  // Convert radians to degrees for display
                   + " yaw: " + Math.round(-yaw * 180.0/Math.PI)
                   + " pitch: " + Math.round(-pitch * 180.0/Math.PI)
                   + " roll: " + Math.round(roll * 180.0/Math.PI);
     };
 
+    // Set the onLoad function to be executed when the window loads
     window.onload = onLoad;
   </script>
 
@@ -279,25 +464,51 @@
 
 <body style="text-align: center; font-family: monospace;">
 
+  <!-- The video element will stream the camera feed, but it's not displayed directly. -->
   <video id="video" width=320 height=240 autoplay="true" style="display:none;"></video>
   
   <div style="margin: 10px;"><strong>-= Augmented Reality =-</strong></div>
   <div style="width: 100%;">
-    <div style="width: 650px; margin-left:auto; margin-right:auto;">
-      <canvas id="canvas" style="width: 320px; height: 240px; float: left; border: solid 1px black;"></canvas>
-      <div id="container" style="width: 320px; height: 240px; float: left; border: solid 1px black; background: green;"></div>
-      <div style="clear: both;"></div>
-      <div style="float: left; border: solid 1px black;">
-        <div id="container1" style="width: 320px; height: 240px; background: red;"></div>
-        <div id="pose1"></div>
+    <div style="width: 670px; margin-left:auto; margin-right:auto;">
+
+      <!-- Row 1 -->
+      <div style="float: left; margin-right: 10px;">
+        <div>1. Video Feed with Detected Markers</div>
+        <canvas id="canvas" style="width: 320px; height: 240px; border: solid 1px black;"></canvas>
       </div>
-      <div style="float: left; border: solid 1px black;">
-        <div id="container2" style="width: 320px; height: 240px; background: blue;"></div>
-        <div id="pose2"></div>
+      
+      <div style="float: left;">
+        <div>2. Main AR View (Video + 3D Model)</div>
+        <div id="container" style="width: 320px; height: 240px; border: solid 1px black; background: green;"></div>
+      </div>
+
+      <!-- Row 2 -->
+      <div style="float: left; margin-right: 10px;">
+        <div style="border: solid 1px black; padding: 2px;">
+          <div>3. Best Pose Visualization</div>
+          <div id="container1" style="width: 320px; height: 240px; background: red;"></div>
+          <div id="pose1"></div>
+        </div>
+      </div>
+      
+      <div style="float: left;">
+        <div style="border: solid 1px black; padding: 2px;">
+          <div>4. Alternative Pose Visualization</div>
+          <div id="container2" style="width: 320px; height: 240px; background: blue;"></div>
+          <div id="pose2"></div>
+        </div>
+      </div>
+
+      <div style="clear: both; margin-bottom: 10px;"></div>
+
+      <!-- Centered 5th frame -->
+      <div style="float: left; width: 100%; text-align: center; margin-top: 10px;">
+        <div style="border: solid 1px black; padding: 2px; display: inline-block;">
+            <div>5. Stabilized AR View</div>
+            <div id="container5" style="width: 320px; height: 240px; background: purple;"></div>
+        </div>
       </div>
     </div>
-  </div>
-  <div style="clear: both;"></div>
   <div style="margin: 15px;"><strong>Powered by <a href="https://damianofalcioni.github.io/js-aruco2/">js-aruco2</a> and <a href="https://github.com/mrdoob/three.js">Three.js</a></strong></div>
 
 </body>
