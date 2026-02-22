@@ -912,26 +912,15 @@
          * Малює сітку warped маркерів на сцені 3
          */
         function drawWarpedMarkersGrid(markerCandidates, normalizedSize) {
-            // Визначаємо кількість колонок залежно від кількості маркерів
-            // Намагаємося зберегти пропорції як на сцені 2
-            let cols, rows;
-            if (markerCandidates.length === 1) {
-                cols = 1;
-                rows = 1;
-            } else if (markerCandidates.length <= 4) {
-                cols = markerCandidates.length;
-                rows = 1;
-            } else {
-                // Для 12 маркерів: 4 колонки × 3 рядки (як на сцені 2)
-                cols = 4;
-                rows = Math.ceil(markerCandidates.length / cols);
-            }
-            
-            // Розмір комінки залежить від кількості маркерів
-            let cellSize;
-            if (markerCandidates.length === 1) {
-                // Для одного маркера використовуємо розмір та позицію, як на сцені 2
-                let pts = markerCandidates[0].pts;
+            // Очищаємо canvas
+            ctx3.fillStyle = '#1a1a2e';
+            ctx3.fillRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+
+            // Малюємо кожен маркер на тих же координатах, що й на сцені 2
+            markerCandidates.forEach((candidate, index) => {
+                let pts = candidate.pts;
+                
+                // Обчислюємо розміри та позицію маркера
                 let minX = Math.min(...pts.map(p => p.x));
                 let maxX = Math.max(...pts.map(p => p.x));
                 let minY = Math.min(...pts.map(p => p.y));
@@ -939,43 +928,13 @@
                 let markerWidth = maxX - minX;
                 let markerHeight = maxY - minY;
                 
-                // Масштабуємо: розмір на сцені 3 = розміру на сцені 2
-                cellSize = Math.min(markerWidth, markerHeight, VIDEO_WIDTH - 40);
-            } else {
-                cellSize = Math.min(80, Math.floor(VIDEO_WIDTH / cols));
-            }
-            
-            const scale = cellSize / normalizedSize;
-            const totalWidth = cols * cellSize;
-            const totalHeight = rows * cellSize + 60; // +60 для заголовків
-            const startX = (VIDEO_WIDTH - totalWidth) / 2; // Центрування
-            const startY = (VIDEO_HEIGHT - totalHeight) / 2 + 30;
-
-            // Очищаємо canvas
-            ctx3.fillStyle = '#1a1a2e';
-            ctx3.fillRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
-
-            markerCandidates.forEach((candidate, index) => {
-                let col = index % cols;
-                let row = Math.floor(index / cols);
+                // Визначаємо розмір для warped зображення (80% від оригіналу)
+                let displaySize = Math.min(markerWidth * 0.8, markerHeight * 0.8);
+                let scale = displaySize / normalizedSize;
                 
-                // Для одного маркера використовуємо оригінальні координати з сцени 2
-                let x, y;
-                if (markerCandidates.length === 1) {
-                    // Беремо координати з pts і малюємо на тому ж місці
-                    let pts = candidate.pts;
-                    let minX = Math.min(...pts.map(p => p.x));
-                    let minY = Math.min(...pts.map(p => p.y));
-                    let markerWidth = Math.max(...pts.map(p => p.x)) - minX;
-                    let markerHeight = Math.max(...pts.map(p => p.y)) - minY;
-                    
-                    // Обчислюємо нові координати з центруванням
-                    x = minX + (markerWidth - cellSize) / 2;
-                    y = minY + (markerHeight - cellSize) / 2;
-                } else {
-                    x = startX + col * cellSize + (cellSize - normalizedSize * scale) / 2;
-                    y = startY + row * cellSize + 30; // +30 для заголовка
-                }
+                // Обчислюємо позицію з центруванням відносно оригінального маркера
+                let x = minX + (markerWidth - displaySize) / 2;
+                let y = minY + (markerHeight - displaySize) / 2;
 
                 // Малюємо warped зображення
                 let tempCanvas = document.createElement('canvas');
@@ -984,13 +943,13 @@
                 let tempCtx = tempCanvas.getContext('2d');
                 cv.imshow(tempCanvas, candidate.warped);
                 
-                ctx3.drawImage(tempCanvas, x, y, normalizedSize * scale, normalizedSize * scale);
+                ctx3.drawImage(tempCanvas, x, y, displaySize, displaySize);
 
                 // Заголовок маркера
                 ctx3.fillStyle = '#00d4ff';
                 ctx3.font = 'bold 14px Arial';
                 ctx3.textAlign = 'center';
-                ctx3.fillText(`Маркер #${candidate.markerIndex}`, x + (normalizedSize * scale) / 2, y - 10);
+                ctx3.fillText(`M${index + 1}`, x + displaySize / 2, y - 10);
 
                 tempCanvas.remove();
             });
@@ -1096,27 +1055,15 @@
          * Малює сітку декодованих маркерів на сцені 4
          */
         function drawDecodedMarkersGrid(markerCandidates, gridSize, cellSize) {
-            // Визначаємо кількість колонок залежно від кількості маркерів
-            // Намагаємося зберегти пропорції як на сцені 2
-            let cols, rows;
-            if (markerCandidates.length === 1) {
-                cols = 1;
-                rows = 1;
-            } else if (markerCandidates.length <= 4) {
-                cols = markerCandidates.length;
-                rows = 1;
-            } else {
-                // Для 12 маркерів: 4 колонки × 3 рядки (як на сцені 2)
-                cols = 4;
-                rows = Math.ceil(markerCandidates.length / cols);
-            }
-            
-            // Розмір маркера залежить від кількості маркерів
-            let markerDisplaySize;
-            let infoHeight;
-            if (markerCandidates.length === 1) {
-                // Для одного маркера використовуємо розмір та позицію, як на сцені 2
-                let pts = markerCandidates[0].pts;
+            // Очищаємо canvas
+            ctx4.fillStyle = '#1a1a2e';
+            ctx4.fillRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+
+            // Малюємо кожен маркер на тих же координатах, що й на сцені 2
+            markerCandidates.forEach((candidate, index) => {
+                let pts = candidate.pts;
+                
+                // Обчислюємо розміри та позицію маркера
                 let minX = Math.min(...pts.map(p => p.x));
                 let maxX = Math.max(...pts.map(p => p.x));
                 let minY = Math.min(...pts.map(p => p.y));
@@ -1124,50 +1071,12 @@
                 let markerWidth = maxX - minX;
                 let markerHeight = maxY - minY;
                 
-                // Масштабуємо: розмір на сцені 4 = розміру на сцені 2
-                markerDisplaySize = Math.min(markerWidth, markerHeight, VIDEO_WIDTH - 40);
-                infoHeight = 100; // Більше місця для інформації
-            } else {
-                markerDisplaySize = 120;
-                infoHeight = 80;
-            }
-            
-            const gap = 10; // Відступ між маркерами
-            const totalWidth = cols * markerDisplaySize + (cols - 1) * gap;
-            const totalHeight = rows * (markerDisplaySize + infoHeight) + (rows - 1) * gap;
-            const startX = (VIDEO_WIDTH - totalWidth) / 2; // Центрування
-            const startY = (VIDEO_HEIGHT - totalHeight) / 2;
-
-            // Очищаємо canvas
-            ctx4.fillStyle = '#1a1a2e';
-            ctx4.fillRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
-
-            markerCandidates.forEach((candidate, index) => {
-                let col = index % cols;
-                let row = Math.floor(index / cols);
+                // Визначаємо розмір для відображення (80% від оригіналу)
+                let displaySize = Math.min(markerWidth * 0.8, markerHeight * 0.8);
                 
-                // Для одного маркера використовуємо оригінальні координати з сцени 2
-                let baseX, baseY;
-                if (markerCandidates.length === 1) {
-                    // Беремо координати з pts і малюємо на тому ж місці
-                    let pts = candidate.pts;
-                    let minX = Math.min(...pts.map(p => p.x));
-                    let minY = Math.min(...pts.map(p => p.y));
-                    let markerWidth = Math.max(...pts.map(p => p.x)) - minX;
-                    let markerHeight = Math.max(...pts.map(p => p.y)) - minY;
-                    
-                    // Масштабуємо до markerDisplaySize
-                    let scaleX = markerDisplaySize / markerWidth;
-                    let scaleY = markerDisplaySize / markerHeight;
-                    let scale = Math.min(scaleX, scaleY);
-                    
-                    // Обчислюємо нові координати з центруванням
-                    baseX = minX + (markerWidth - markerDisplaySize) / 2;
-                    baseY = minY + (markerHeight - markerDisplaySize) / 2;
-                } else {
-                    baseX = startX + col * (markerDisplaySize + gap);
-                    baseY = startY + row * (markerDisplaySize + infoHeight + gap);
-                }
+                // Обчислюємо позицію з центруванням відносно оригінального маркера
+                let baseX = minX + (markerWidth - displaySize) / 2;
+                let baseY = minY + (markerHeight - displaySize) / 2;
 
                 // Малюємо warped зображення (кольорове)
                 let tempCanvas = document.createElement('canvas');
@@ -1175,32 +1084,32 @@
                 tempCanvas.height = 200;
                 let tempCtx = tempCanvas.getContext('2d');
                 cv.imshow(tempCanvas, candidate.warpedColor);
-                
-                // Масштабуємо до markerDisplaySize
-                ctx4.drawImage(tempCanvas, baseX, baseY, markerDisplaySize, markerDisplaySize);
+
+                // Масштабуємо до displaySize
+                ctx4.drawImage(tempCanvas, baseX, baseY, displaySize, displaySize);
 
                 // Заголовок маркера
                 ctx4.fillStyle = '#00d4ff';
                 ctx4.font = 'bold 14px Arial';
                 ctx4.textAlign = 'center';
-                ctx4.fillText(`Маркер #${candidate.markerIndex}`, baseX + markerDisplaySize / 2, baseY - 10);
+                ctx4.fillText(`M${index + 1}`, baseX + displaySize / 2, baseY - 10);
 
                 // Малюємо сітку 3x3 поверх зображення
                 ctx4.strokeStyle = '#00ff00';
                 ctx4.lineWidth = 1;
-                let displayCellSize = markerDisplaySize / gridSize;
+                let displayCellSize = displaySize / gridSize;
 
                 for (let i = 0; i <= gridSize; i++) {
                     // Вертикальні лінії
                     ctx4.beginPath();
                     ctx4.moveTo(baseX + i * displayCellSize, baseY);
-                    ctx4.lineTo(baseX + i * displayCellSize, baseY + markerDisplaySize);
+                    ctx4.lineTo(baseX + i * displayCellSize, baseY + displaySize);
                     ctx4.stroke();
 
                     // Горизонтальні лінії
                     ctx4.beginPath();
                     ctx4.moveTo(baseX, baseY + i * displayCellSize);
-                    ctx4.lineTo(baseX + markerDisplaySize, baseY + i * displayCellSize);
+                    ctx4.lineTo(baseX + displaySize, baseY + i * displayCellSize);
                     ctx4.stroke();
                 }
 
@@ -1212,7 +1121,7 @@
                             // 0 на чорному фоні = жовтий, 1 на білому фоні = синій
                             ctx4.fillStyle = binaryValue === 1 ? '#0066ff' : '#ffcc00';
                             // Збільшений розмір шрифту (3x)
-                            ctx4.font = gridSize === 3 && markerCandidates.length === 1 ? 'bold 42px Arial' : 'bold 30px Arial';
+                            ctx4.font = 'bold 30px Arial';
                             ctx4.textAlign = 'center';
                             ctx4.textBaseline = 'middle';
                             ctx4.fillText(binaryValue.toString(),
@@ -1233,14 +1142,14 @@
 
                 // Інформація про маркер
                 ctx4.fillStyle = '#ffffff';
-                ctx4.font = markerCandidates.length === 1 ? 'bold 14px Arial' : '11px Arial';
+                ctx4.font = '11px Arial';
                 ctx4.textAlign = 'center';
-                ctx4.fillText(`ID: ${markerId}`, baseX + markerDisplaySize / 2, baseY + markerDisplaySize + 20);
+                ctx4.fillText(`ID: ${markerId}`, baseX + displaySize / 2, baseY + displaySize + 20);
                 
                 let binaryString = candidate.binary ? candidate.binary.join('') : '';
                 ctx4.fillStyle = '#888888';
-                ctx4.font = markerCandidates.length === 1 ? '12px Arial' : '9px Arial';
-                ctx4.fillText(`Bin: ${binaryString}`, baseX + markerDisplaySize / 2, baseY + markerDisplaySize + 45);
+                ctx4.font = '9px Arial';
+                ctx4.fillText(`Bin: ${binaryString}`, baseX + displaySize / 2, baseY + displaySize + 35);
 
                 tempCanvas.remove();
             });
