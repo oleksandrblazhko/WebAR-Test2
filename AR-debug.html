@@ -571,8 +571,6 @@
 
                             // Перевірка співвідношення сторін (близько до 1 для квадратів)
                             if (aspectRatio > 0.7 && aspectRatio < 1.3 && isConvex) {
-                                quadCount++;
-                                
                                 // Зберігаємо координати точок ПЕРЕД видаленням approx
                                 let pts = [];
                                 for (let j = 0; j < 4; j++) {
@@ -581,6 +579,21 @@
                                         y: approx.data32S[j * 2 + 1]
                                     });
                                 }
+                                
+                                // Перевіряємо, чи маркер знаходиться в межах кадру
+                                let minX = Math.min(...pts.map(p => p.x));
+                                let maxX = Math.max(...pts.map(p => p.x));
+                                let minY = Math.min(...pts.map(p => p.y));
+                                let maxY = Math.max(...pts.map(p => p.y));
+                                
+                                // Фільтр: маркер повинен бути повністю в межах кадру (з відступом 20px)
+                                if (minX < -20 || maxX > VIDEO_WIDTH + 20 || 
+                                    minY < -20 || maxY > VIDEO_HEIGHT + 20) {
+                                    approx.delete();
+                                    continue; // Пропускаємо маркер, який вийшов за межі
+                                }
+                                
+                                quadCount++;
                                 
                                 validQuads.push({
                                     pts: pts // Зберігаємо тільки копії точок
@@ -669,6 +682,18 @@
                 contours.forEach(quad => {
                     // Використовуємо збережені точки з pts
                     let pts = quad.pts;
+
+                    // Перевіряємо, чи маркер знаходиться в межах кадру
+                    let minX = Math.min(...pts.map(p => p.x));
+                    let maxX = Math.max(...pts.map(p => p.x));
+                    let minY = Math.min(...pts.map(p => p.y));
+                    let maxY = Math.max(...pts.map(p => p.y));
+                    
+                    // Фільтр: маркер повинен бути повністю в межах кадру (з відступом 20px)
+                    if (minX < -20 || maxX > VIDEO_WIDTH + 20 || 
+                        minY < -20 || maxY > VIDEO_HEIGHT + 20) {
+                        return; // Пропускаємо маркер, який вийшов за межі
+                    }
 
                     // Впорядковуємо точки: topLeft, topRight, bottomRight, bottomLeft
                     let ordered = orderPoints(pts);
