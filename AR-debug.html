@@ -882,8 +882,7 @@
             // Розмір комінки залежить від кількості маркерів
             let cellSize;
             if (markerCandidates.length === 1) {
-                // Для одного маркера використовуємо розмір, пропорційний до сцени 2
-                // Беремо перший маркер і обчислюємо його розмір
+                // Для одного маркера використовуємо розмір та позицію, як на сцені 2
                 let pts = markerCandidates[0].pts;
                 let minX = Math.min(...pts.map(p => p.x));
                 let maxX = Math.max(...pts.map(p => p.x));
@@ -893,7 +892,7 @@
                 let markerHeight = maxY - minY;
                 
                 // Масштабуємо: розмір на сцені 3 = розміру на сцені 2
-                cellSize = Math.min(markerWidth * 1.0, markerHeight * 1.0, VIDEO_WIDTH - 40);
+                cellSize = Math.min(markerWidth, markerHeight, VIDEO_WIDTH - 40);
             } else {
                 cellSize = Math.min(100, Math.floor(VIDEO_WIDTH / cols));
             }
@@ -911,8 +910,24 @@
             markerCandidates.forEach((candidate, index) => {
                 let col = index % cols;
                 let row = Math.floor(index / cols);
-                let x = startX + col * cellSize + (cellSize - normalizedSize * scale) / 2;
-                let y = startY + row * cellSize + 30; // +30 для заголовка
+                
+                // Для одного маркера використовуємо оригінальні координати з сцени 2
+                let x, y;
+                if (markerCandidates.length === 1) {
+                    // Беремо координати з pts і малюємо на тому ж місці
+                    let pts = candidate.pts;
+                    let minX = Math.min(...pts.map(p => p.x));
+                    let minY = Math.min(...pts.map(p => p.y));
+                    let markerWidth = Math.max(...pts.map(p => p.x)) - minX;
+                    let markerHeight = Math.max(...pts.map(p => p.y)) - minY;
+                    
+                    // Обчислюємо нові координати з центруванням
+                    x = minX + (markerWidth - cellSize) / 2;
+                    y = minY + (markerHeight - cellSize) / 2;
+                } else {
+                    x = startX + col * cellSize + (cellSize - normalizedSize * scale) / 2;
+                    y = startY + row * cellSize + 30; // +30 для заголовка
+                }
 
                 // Малюємо warped зображення
                 let tempCanvas = document.createElement('canvas');
@@ -1035,7 +1050,7 @@
             let markerDisplaySize;
             let infoHeight;
             if (markerCandidates.length === 1) {
-                // Для одного маркера використовуємо розмір, пропорційний до сцени 2
+                // Для одного маркера використовуємо розмір та позицію, як на сцені 2
                 let pts = markerCandidates[0].pts;
                 let minX = Math.min(...pts.map(p => p.x));
                 let maxX = Math.max(...pts.map(p => p.x));
@@ -1045,7 +1060,7 @@
                 let markerHeight = maxY - minY;
                 
                 // Масштабуємо: розмір на сцені 4 = розміру на сцені 2
-                markerDisplaySize = Math.min(markerWidth * 1.0, markerHeight * 1.0, VIDEO_WIDTH - 40);
+                markerDisplaySize = Math.min(markerWidth, markerHeight, VIDEO_WIDTH - 40);
                 infoHeight = 100; // Більше місця для інформації
             } else {
                 markerDisplaySize = 120;
@@ -1065,8 +1080,29 @@
             markerCandidates.forEach((candidate, index) => {
                 let col = index % cols;
                 let row = Math.floor(index / cols);
-                let baseX = startX + col * (markerDisplaySize + gap);
-                let baseY = startY + row * (markerDisplaySize + infoHeight + gap);
+                
+                // Для одного маркера використовуємо оригінальні координати з сцени 2
+                let baseX, baseY;
+                if (markerCandidates.length === 1) {
+                    // Беремо координати з pts і малюємо на тому ж місці
+                    let pts = candidate.pts;
+                    let minX = Math.min(...pts.map(p => p.x));
+                    let minY = Math.min(...pts.map(p => p.y));
+                    let markerWidth = Math.max(...pts.map(p => p.x)) - minX;
+                    let markerHeight = Math.max(...pts.map(p => p.y)) - minY;
+                    
+                    // Масштабуємо до markerDisplaySize
+                    let scaleX = markerDisplaySize / markerWidth;
+                    let scaleY = markerDisplaySize / markerHeight;
+                    let scale = Math.min(scaleX, scaleY);
+                    
+                    // Обчислюємо нові координати з центруванням
+                    baseX = minX + (markerWidth - markerDisplaySize) / 2;
+                    baseY = minY + (markerHeight - markerDisplaySize) / 2;
+                } else {
+                    baseX = startX + col * (markerDisplaySize + gap);
+                    baseY = startY + row * (markerDisplaySize + infoHeight + gap);
+                }
 
                 // Малюємо warped зображення
                 let tempCanvas = document.createElement('canvas');
