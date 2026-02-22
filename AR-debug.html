@@ -288,6 +288,9 @@
     <!-- OpenCV.js -->
     <script async src="https://docs.opencv.org/4.8.0/opencv.js" onload="onOpenCvReady()" type="text/javascript"></script>
 
+    <!-- Three.js для AR.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
     <!-- AR.js для розпізнавання barcode-маркерів -->
     <script src="js/ar.js"></script>
     <script src="threex/threex-artoolkitcontext.js"></script>
@@ -1075,7 +1078,6 @@
                 // Перевіряємо, чи є реальний ID з AR.js
                 // Шукаємо маркер за координатами кутів
                 let realMarkerId = null;
-                let ordered = orderPoints(candidate.pts);
                 
                 // Порівнюємо координати з тими, що знайшов AR.js
                 for (let arIndex in arRealMarkerIds) {
@@ -1095,7 +1097,7 @@
                 candidate.binaryString = binaryString;
                 candidate.id = markerId;
                 candidate.idSource = idSource; // Джерело ID
-                candidate.corners = ordered;
+                candidate.corners = ordered; // Впорядковані точки з початку функції
 
                 // Видаляємо копії після використання
                 warpedColor.delete();
