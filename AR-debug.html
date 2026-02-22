@@ -308,7 +308,7 @@
         
         // Змінні для AR.js
         let arToolkitContext = null;
-        let arRealMarkerIds = {}; // Реальні ID маркерів з AR.js: {index: idMatrix}
+        let arRealMarkerIds = []; // Масив реальних ID маркерів з AR.js
 
         // Canvas для сцен
         const canvas1 = document.getElementById('scene1');
@@ -369,10 +369,13 @@
             arController.addEventListener('getMarker', function(event) {
                 if (event.data.type === artoolkit.BARCODE_MARKER) {
                     // Зберігаємо реальний ID маркера
-                    let markerIndex = event.data.index;
                     let realId = event.data.marker.idMatrix;
-                    arRealMarkerIds[markerIndex] = realId;
-                    console.log(`🎯 Маркер #${markerIndex}: ID = ${realId}`);
+                    
+                    // Додаємо ID в масив, якщо його ще немає
+                    if (!arRealMarkerIds.includes(realId)) {
+                        arRealMarkerIds.push(realId);
+                        console.log(`🎯 Знайдено маркер: ID = ${realId}, всього маркерів: ${arRealMarkerIds.length}`);
+                    }
                 }
             });
             
@@ -442,7 +445,10 @@
             // Очищаємо сцену 6
             ctx6.fillStyle = '#1a1a2e';
             ctx6.fillRect(0, 0, canvas6.width, canvas6.height);
-            
+
+            // Очищаємо AR.js ID
+            arRealMarkerIds = [];
+
             updateStatus('Зупинено', 'ready');
             markerDetected = false;
             currentMarkerPose = null;
@@ -1075,17 +1081,11 @@
                 }
                 let simpleMarkerId = idBits.length > 0 ? parseInt(idBits.join(''), 2) : 0;
                 
-                // Перевіряємо, чи є реальний ID з AR.js
-                // Шукаємо маркер за координатами кутів
+                // Використовуємо реальний ID з AR.js якщо доступний
+                // Співставляємо маркери за індексом (відсортовані за позицією)
                 let realMarkerId = null;
-                
-                // Порівнюємо координати з тими, що знайшов AR.js
-                for (let arIndex in arRealMarkerIds) {
-                    // Для простоти використовуємо спрощений підхід:
-                    // Якщо AR.js знайшов маркер, використовуємо його ID
-                    // В реальній реалізації потрібно порівнювати координати
-                    realMarkerId = arRealMarkerIds[arIndex];
-                    break;
+                if (arRealMarkerIds.length > 0 && index < arRealMarkerIds.length) {
+                    realMarkerId = arRealMarkerIds[index];
                 }
                 
                 // Використовуємо реальний ID якщо є, інакше спрощений
