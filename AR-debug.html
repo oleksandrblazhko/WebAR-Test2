@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Debug - Візуалізація кроків AR-технології</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #00d4ff;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .subtitle {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .scenes-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .scene {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .scene:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .scene-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .scene-number {
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            color: #000;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        .scene-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .scene-description {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .scene canvas, .scene video {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            background: #000;
+            display: block;
+        }
+
+        .scene-info {
+            margin-top: 10px;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            font-size: 11px;
+            color: #00d4ff;
+        }
+
+        .scene-info span {
+            display: block;
+            margin: 3px 0;
+        }
+
+        .controls {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .controls button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            color: #000;
+        }
+
+        .btn-start:hover {
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, #ff4757, #cc3344);
+            color: #fff;
+        }
+
+        .btn-stop:hover {
+            box-shadow: 0 0 20px rgba(255, 71, 87, 0.5);
+        }
+
+        .status {
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .status-ready {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
+        .status-running {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
+
+        .status-error {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+
+        /* Приховуємо початкове відео */
+        #sourceVideo {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 AR Debug - Візуалізація кроків AR-технології</h1>
+    <p class="subtitle">Демонстрація основних етапів розпізнавання barcode-маркерів та 3D-візуалізації</p>
+
+    <!-- Контроли -->
+    <div class="controls">
+        <button class="btn-start" id="btnStart">▶ Запустити камеру</button>
+        <button class="btn-stop" id="btnStop">⏹ Зупинити</button>
+        <div class="status status-ready" id="statusStatus">Готовий до запуску</div>
+    </div>
+
+    <!-- Вихідне відео (приховане) -->
+    <video id="sourceVideo" autoplay playsinline muted crossorigin="anonymous"></video>
+
+    <!-- Контейнер для 6 сцен -->
+    <div class="scenes-container">
+        <!-- Сцена 1: Попередня обробка зображення -->
+        <div class="scene">
+            <div class="scene-header">
+                <div class="scene-number">1</div>
+                <div class="scene-title">Попередня обробка</div>
+            </div>
+            <p class="scene-description">
+                RGB → Grayscale → Gaussian Blur → Adaptive Threshold
+            </p>
+            <canvas id="scene1"></canvas>
+            <div class="scene-info" id="scene1Info">
+                <span>Очікування...</span>
+            </div>
+        </div>
+
+        <!-- Сцена 2: Пошук контурів -->
+        <div class="scene">
+            <div class="scene-header">
+                <div class="scene-number">2</div>
+                <div class="scene-title">Пошук контурів</div>
+            </div>
+            <p class="scene-description">
+                Чотирикутники, опуклість, співвідношення сторін
+            </p>
+            <canvas id="scene2"></canvas>
+            <div class="scene-info" id="scene2Info">
+                <span>Очікування...</span>
+            </div>
+        </div>
+
+        <!-- Сцена 3: Перспективне вирівнювання -->
+        <div class="scene">
+            <div class="scene-header">
+                <div class="scene-number">3</div>
+                <div class="scene-title">Homography</div>
+            </div>
+            <p class="scene-description">
+                Warp Perspective → нормалізований квадрат
+            </p>
+            <canvas id="scene3"></canvas>
+            <div class="scene-info" id="scene3Info">
+                <span>Очікування...</span>
+            </div>
+        </div>
+
+        <!-- Сцена 4: Декодування маркерів -->
+        <div class="scene">
+            <div class="scene-header">
+                <div class="scene-number">4</div>
+                <div class="scene-title">Декодування</div>
+            </div>
+            <p class="scene-description">
+                Сітка 3×3, бінарні значення, ID маркера
+            </p>
+            <canvas id="scene4"></canvas>
+            <div class="scene-info" id="scene4Info">
+                <span>Очікування...</span>
+            </div>
+        </div>
+
+        <!-- Сцена 5: Pose Estimation -->
+        <div class="scene">
+            <div class="scene-header">
+                <div class="scene-number">5</div>
+                <div class="scene-title">Pose Estimation</div>
+            </div>
+            <p class="scene-description">
+                Rotation Vector (R), Translation Vector (t)
+            </p>
+            <canvas id="scene5"></canvas>
+            <div class="scene-info" id="scene5Info">
+                <span>Очікування...</span>
+            </div>
+        </div>
+
+        <!-- Сцена 6: 3D візуалізація -->
+        <div class="scene">
+            <div class="scene-header">
+                <div class="scene-number">6</div>
+                <div class="scene-title">3D Конус</div>
+            </div>
+            <p class="scene-description">
+                Прив'язка 3D-примітива до маркера
+            </p>
+            <canvas id="scene6"></canvas>
+            <div class="scene-info" id="scene6Info">
+                <span>Очікування...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- OpenCV.js -->
+    <script async src="https://docs.opencv.org/4.8.0/opencv.js" onload="onOpenCvReady()" type="text/javascript"></script>
+
+    <script>
+        // ============================================
+        // ГЛОБАЛЬНІ ЗМІННІ
+        // ============================================
+        let cvReady = false;
+        let video = document.getElementById('sourceVideo');
+        let stream = null;
+        let animationId = null;
+        let markerDetected = false;
+        let currentMarkerPose = null;
+
+        // Canvas для сцен
+        const canvas1 = document.getElementById('scene1');
+        const canvas2 = document.getElementById('scene2');
+        const canvas3 = document.getElementById('scene3');
+        const canvas4 = document.getElementById('scene4');
+        const canvas5 = document.getElementById('scene5');
+        const canvas6 = document.getElementById('scene6');
+
+        // Contexts для сцен
+        const ctx1 = canvas1.getContext('2d');
+        const ctx2 = canvas2.getContext('2d');
+        const ctx3 = canvas3.getContext('2d');
+        const ctx4 = document.getElementById('scene4').getContext('2d');
+        const ctx5 = document.getElementById('scene5').getContext('2d');
+        const ctx6 = canvas6.getContext('2d');
+
+        // Розміри
+        const VIDEO_WIDTH = 640;
+        const VIDEO_HEIGHT = 480;
+        const MARKER_SIZE = 80; // Розмір маркера для відображення
+
+        // ============================================
+        // ІНІЦІАЛІЗАЦІЯ OPENCV
+        // ============================================
+        function onOpenCvReady() {
+            cvReady = true;
+            updateStatus('OpenCV готовий. Натисніть "Запустити камеру"', 'ready');
+            console.log('✅ OpenCV.js готовий до роботи');
+        }
+
+        // ============================================
+        // ФУНКЦІЇ УПРАВЛІННЯ
+        // ============================================
+        document.getElementById('btnStart').addEventListener('click', startCamera);
+        document.getElementById('btnStop').addEventListener('click', stopCamera);
+
+        async function startCamera() {
+            if (!cvReady) {
+                updateStatus('OpenCV ще не завантажився...', 'error');
+                return;
+            }
+
+            try {
+                // Запитуємо доступ до камери
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        width: { ideal: VIDEO_WIDTH },
+                        height: { ideal: VIDEO_HEIGHT },
+                        facingMode: 'environment' // Задня камера для мобільних
+                    }
+                });
+
+                video.srcObject = stream;
+                // Встановлюємо crossOrigin для відео
+                video.crossOrigin = 'anonymous';
+                
+                await new Promise(resolve => {
+                    video.onloadedmetadata = () => {
+                        video.play();
+                        resolve();
+                    };
+                });
+
+                // Чекаємо поки відео дійсно почне гратися
+                await new Promise(resolve => {
+                    video.onplay = resolve;
+                });
+
+                // Встановлюємо розміри canvas
+                setupCanvasSizes();
+
+                // Запускаємо цикл обробки
+                updateStatus('🎥 Камера активна. Обробка...', 'running');
+                processFrame();
+
+            } catch (err) {
+                console.error('Помилка запуску камери:', err);
+                updateStatus('Помилка: ' + err.message, 'error');
+            }
+        }
+
+        function stopCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+            // Очищаємо сцену 6
+            ctx6.fillStyle = '#1a1a2e';
+            ctx6.fillRect(0, 0, canvas6.width, canvas6.height);
+            
+            updateStatus('Зупинено', 'ready');
+            markerDetected = false;
+            currentMarkerPose = null;
+        }
+
+        function setupCanvasSizes() {
+            // Встановлюємо однакові розміри для всіх canvas
+            [canvas1, canvas2, canvas3, canvas4, canvas5, canvas6].forEach(canvas => {
+                canvas.width = VIDEO_WIDTH;
+                canvas.height = VIDEO_HEIGHT;
+            });
+        }
+
+        function updateStatus(message, type) {
+            const statusEl = document.getElementById('statusStatus');
+            statusEl.textContent = message;
+            statusEl.className = 'status status-' + type;
+        }
+
+        // ============================================
+        // ГОЛОВНИЙ ЦИКЛ ОБРОБКИ КАДРІВ
+        // ============================================
+        function processFrame() {
+            if (!stream || video.paused || video.ended || !video.videoWidth) return;
+
+            try {
+                // Сцена 1: Попередня обробка
+                processScene1();
+
+                // Сцена 2: Пошук контурів
+                const contours = processScene2();
+
+                // Сцена 3: Перспективне вирівнювання
+                const markerCandidates = processScene3(contours);
+
+                // Сцена 4: Декодування маркерів
+                const decodedMarkers = processScene4(markerCandidates);
+
+                // Очищаємо warped після використання
+                markerCandidates.forEach(c => c.warped.delete());
+
+                // Сцена 5: Pose Estimation
+                const poses = processScene5(decodedMarkers);
+
+                // Сцена 6: 3D візуалізація
+                processScene6(poses);
+
+            } catch (err) {
+                console.error('Помилка обробки кадру:', err);
+            }
+
+            animationId = requestAnimationFrame(processFrame);
+        }
+
+        // ============================================
+        // СЦЕНА 1: ПОПЕРЕДНЯ ОБРОБКА ЗОБРАЖЕННЯ
+        // ============================================
+        function processScene1() {
+            // Малюємо відео на canvas
+            ctx1.drawImage(video, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+
+            // Створюємо тимчасовий canvas для OpenCV
+            let tempCanvas = document.createElement('canvas');
+            tempCanvas.width = VIDEO_WIDTH;
+            tempCanvas.height = VIDEO_HEIGHT;
+            let tempCtx = tempCanvas.getContext('2d');
+            tempCtx.drawImage(video, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+            
+            // Отримуємо ImageData для обробки OpenCV
+            let imageData = tempCtx.getImageData(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+            let src = cv.matFromImageData(imageData);
+            let dst = new cv.Mat();
+            let gray = new cv.Mat();
+            let blurred = new cv.Mat();
+            let thresholded = new cv.Mat();
+
+            try {
+                // Крок 1: RGB → Grayscale (перетворення у відтінки сірого)
+                cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
+
+                // Крок 2: Gaussian Blur (зменшення шуму, ядро 5x5)
+                cv.GaussianBlur(gray, blurred, new cv.Size(5, 5), 0, 0, cv.BORDER_DEFAULT);
+
+                // Крок 3: Adaptive Threshold (бінаризація)
+                cv.adaptiveThreshold(blurred, thresholded, 255,
+                    cv.ADAPTIVE_THRESH_GAUSSIAN_C,
+                    cv.THRESH_BINARY_INV,
+                    11, // Розмір блоку
+                    2   // Константа C
+                );
+
+                // Показуємо результат (thresholded)
+                cv.imshow('scene1', thresholded);
+
+                // Оновлюємо інформацію
+                document.getElementById('scene1Info').innerHTML = `
+                    <span>📊 Розмір: ${VIDEO_WIDTH}x${VIDEO_HEIGHT}</span>
+                    <span>⚙️ Gaussian: ядро 5×5</span>
+                    <span>🔲 Adaptive: блок 11×11, C=2</span>
+                `;
+
+            } catch (err) {
+                console.error('Помилка Scene 1:', err);
+            } finally {
+                src.delete();
+                dst.delete();
+                gray.delete();
+                blurred.delete();
+                thresholded.delete();
+            }
+        }
+
+        // ============================================
+        // СЦЕНА 2: ПОШУК КОНТУРІВ
+        // ============================================
+        function processScene2() {
+            // Створюємо тимчасовий canvas для OpenCV
+            let tempCanvas = document.createElement('canvas');
+            tempCanvas.width = VIDEO_WIDTH;
+            tempCanvas.height = VIDEO_HEIGHT;
+            let tempCtx = tempCanvas.getContext('2d');
+            tempCtx.drawImage(video, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+            
+            let imageData = tempCtx.getImageData(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+            let src = cv.matFromImageData(imageData);
+            let gray = new cv.Mat();
+            let blurred = new cv.Mat();
+            let thresholded = new cv.Mat();
+            let contours = new cv.MatVector();
+            let hierarchy = new cv.Mat();
+
+            try {
+                // Попередня обробка (як у сцені 1)
+                cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
+                cv.GaussianBlur(gray, blurred, new cv.Size(5, 5), 0, 0, cv.BORDER_DEFAULT);
+                cv.adaptiveThreshold(blurred, thresholded, 255,
+                    cv.ADAPTIVE_THRESH_GAUSSIAN_C,
+                    cv.THRESH_BINARY_INV,
+                    11, 2
+                );
+
+                // Пошук контурів
+                cv.findContours(thresholded, contours, hierarchy,
+                    cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE);
+
+                // Малюємо вихідне зображення
+                ctx2.drawImage(video, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+
+                let quadCount = 0;
+                let validQuads = [];
+
+                // Створюємо Mat для малювання контурів
+                let imgMat = cv.matFromImageData(
+                    ctx2.getImageData(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT)
+                );
+
+                // Аналізуємо кожен контур
+                for (let i = 0; i < contours.size(); i++) {
+                    let contour = contours.get(i);
+                    let approx = new cv.Mat();
+
+                    // Апроксимація полігону
+                    let epsilon = 0.02 * cv.arcLength(contour, true);
+                    cv.approxPolyDP(contour, approx, epsilon, true);
+
+                    // Перевіряємо чи це чотирикутник
+                    if (approx.rows === 4) {
+                        let area = cv.contourArea(contour);
+                        let isConvex = cv.isContourConvex(approx);
+
+                        // Фільтр за розміром (мінімальна площа)
+                        if (area > 1000 && area < (VIDEO_WIDTH * VIDEO_HEIGHT) / 4) {
+                            // Співвідношення сторін
+                            let rect = cv.boundingRect(contour);
+                            let aspectRatio = rect.width / rect.height;
+
+                            // Перевірка співвідношення сторін (близько до 1 для квадратів)
+                            if (aspectRatio > 0.7 && aspectRatio < 1.3 && isConvex) {
+                                quadCount++;
+                                
+                                // Зберігаємо координати точок ПЕРЕД видаленням approx
+                                let pts = [];
+                                for (let j = 0; j < 4; j++) {
+                                    pts.push({
+                                        x: approx.data32S[j * 2],
+                                        y: approx.data32S[j * 2 + 1]
+                                    });
+                                }
+                                
+                                validQuads.push({
+                                    pts: pts // Зберігаємо тільки копії точок
+                                });
+
+                                // Малюємо контур (зелений для валідних)
+                                let color = new cv.Scalar(0, 255, 0, 255);
+                                cv.drawContours(imgMat, contours, i, color, 2,
+                                    cv.LINE_8, hierarchy, 100);
+
+                                // Малюємо червоні точки на кутах з pts
+                                for (let pt of pts) {
+                                    ctx2.beginPath();
+                                    ctx2.arc(pt.x, pt.y, 5, 0, 2 * Math.PI);
+                                    ctx2.fillStyle = '#ff0000';
+                                    ctx2.fill();
+                                }
+                            }
+                        }
+                    }
+                    approx.delete();
+                }
+
+                // Повертаємо результат з контурами назад на canvas
+                ctx2.putImageData(cvImageDataFromMat(imgMat), 0, 0);
+                imgMat.delete();
+
+                // Оновлюємо інформацію
+                document.getElementById('scene2Info').innerHTML = `
+                    <span>🔍 Знайдено контурів: ${contours.size()}</span>
+                    <span>🔲 Чотирикутників: ${quadCount}</span>
+                    <span>✅ Фільтр: опуклість + aspect ratio</span>
+                `;
+
+                // Повертаємо валідні чотирикутники для наступних сцен
+                return validQuads;
+
+            } catch (err) {
+                console.error('Помилка Scene 2:', err);
+                return [];
+            } finally {
+                src.delete();
+                gray.delete();
+                blurred.delete();
+                thresholded.delete();
+                contours.delete();
+                hierarchy.delete();
+            }
+        }
+
+        // ============================================
+        // СЦЕНА 3: ПЕРСПЕКТИВНЕ ВИРІВНЮВАННЯ (HOMOGRAPHY)
+        // ============================================
+        function processScene3(contours) {
+            // Створюємо тимчасовий canvas для OpenCV
+            let tempCanvas = document.createElement('canvas');
+            tempCanvas.width = VIDEO_WIDTH;
+            tempCanvas.height = VIDEO_HEIGHT;
+            let tempCtx = tempCanvas.getContext('2d');
+            tempCtx.drawImage(video, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+            
+            let imageData = tempCtx.getImageData(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+            let src = cv.matFromImageData(imageData);
+            let gray = new cv.Mat();
+            let blurred = new cv.Mat();
+            let thresholded = new cv.Mat();
+
+            try {
+                // Попередня обробка
+                cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
+                cv.GaussianBlur(gray, blurred, new cv.Size(5, 5), 0, 0, cv.BORDER_DEFAULT);
+                cv.adaptiveThreshold(blurred, thresholded, 255,
+                    cv.ADAPTIVE_THRESH_GAUSSIAN_C,
+                    cv.THRESH_BINARY_INV,
+                    11, 2
+                );
+
+                // Малюємо вихідне зображення
+                ctx3.drawImage(video, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+
+                let markerCandidates = [];
+                const normalizedSize = 200; // Розмір нормалізованого квадрату
+
+                // Для кожного чотирикутника виконуємо warp perspective
+                contours.forEach(quad => {
+                    // Використовуємо збережені точки з pts
+                    let pts = quad.pts;
+
+                    // Впорядковуємо точки: topLeft, topRight, bottomRight, bottomLeft
+                    let ordered = orderPoints(pts);
+
+                    // Створюємо матриці для warpPerspective
+                    let srcTri = cv.matFromArray(4, 1, cv.CV_32FC2, [
+                        ordered[0].x, ordered[0].y,
+                        ordered[1].x, ordered[1].y,
+                        ordered[2].x, ordered[2].y,
+                        ordered[3].x, ordered[3].y
+                    ]);
+
+                    let dstTri = cv.matFromArray(4, 1, cv.CV_32FC2, [
+                        0, 0,
+                        normalizedSize, 0,
+                        normalizedSize, normalizedSize,
+                        0, normalizedSize
+                    ]);
+
+                    // Обчислюємо матрицю гомографії
+                    let M = cv.getPerspectiveTransform(srcTri, dstTri);
+
+                    // Створюємо матрицю для результату
+                    let warped = new cv.Mat();
+
+                    // Виконуємо warp perspective
+                    cv.warpPerspective(thresholded, warped, M,
+                        new cv.Size(normalizedSize, normalizedSize),
+                        cv.INTER_LINEAR,
+                        cv.BORDER_CONSTANT,
+                        new cv.Scalar(0, 0, 0, 0)
+                    );
+
+                    // Малюємо прямокутник навколо маркера на основному зображенні
+                    // Використовуємо 2D canvas API замість cv.line
+                    ctx3.strokeStyle = '#ffa500'; // Помаранчевий
+                    ctx3.lineWidth = 3;
+                    ctx3.beginPath();
+                    ctx3.moveTo(ordered[0].x, ordered[0].y);
+                    ctx3.lineTo(ordered[1].x, ordered[1].y);
+                    ctx3.lineTo(ordered[2].x, ordered[2].y);
+                    ctx3.lineTo(ordered[3].x, ordered[3].y);
+                    ctx3.closePath();
+                    ctx3.stroke();
+
+                    // Зберігаємо кандидата маркера (warped НЕ видаляємо тут)
+                    markerCandidates.push({
+                        pts: pts, // Зберігаємо точки
+                        warped: warped, // Не видаляємо warped, він знадобиться в processScene4
+                        homography: M
+                    });
+
+                    srcTri.delete();
+                    dstTri.delete();
+                    M.delete();
+                    // warped НЕ видаляємо - він знадобиться в processScene4
+                });
+
+                // Якщо маркерів не знайдено, показуємо thresholded
+                if (markerCandidates.length === 0) {
+                    cv.imshow('scene3', thresholded);
+                } else if (markerCandidates.length > 0) {
+                    // Показуємо перший warped для сцени 3
+                    cv.imshow('scene3', markerCandidates[0].warped);
+                }
+
+                // Оновлюємо інформацію
+                document.getElementById('scene3Info').innerHTML = `
+                    <span>🎯 Кандидатів: ${markerCandidates.length}</span>
+                    <span>📐 Нормалізація: ${normalizedSize}x${normalizedSize}</span>
+                    <span>🔄 Homography матриця 3×3</span>
+                `;
+
+                return markerCandidates;
+
+            } catch (err) {
+                console.error('Помилка Scene 3:', err);
+                return [];
+            } finally {
+                src.delete();
+                gray.delete();
+                blurred.delete();
+                thresholded.delete();
+            }
+        }
+
+        // ============================================
+        // СЦЕНА 4: ДЕКОДУВАННЯ МАРКЕРІВ
+        // ============================================
+        function processScene4(markerCandidates) {
+            const decodedMarkers = [];
+            const gridSize = 3; // Сітка 3x3 для barcode-маркера
+            const cellSize = Math.floor(200 / gridSize); // 66.67 пікселів на клітинку
+
+            markerCandidates.forEach((candidate, index) => {
+                // Створюємо копію warped для обробки
+                let warped = candidate.warped.clone();
+                let ordered = orderPoints(candidate.pts); // Впорядковуємо точки
+
+                // Створюємо canvas для відображення
+                if (index === 0) {
+                    // Малюємо warped зображення
+                    cv.imshow('scene4', warped);
+
+                    // Малюємо сітку 3x3 поверх зображення
+                    ctx4.strokeStyle = '#00ff00';
+                    ctx4.lineWidth = 1;
+
+                    for (let i = 0; i <= gridSize; i++) {
+                        // Вертикальні лінії
+                        ctx4.beginPath();
+                        ctx4.moveTo(i * cellSize, 0);
+                        ctx4.lineTo(i * cellSize, 200);
+                        ctx4.stroke();
+
+                        // Горизонтальні лінії
+                        ctx4.beginPath();
+                        ctx4.moveTo(0, i * cellSize);
+                        ctx4.lineTo(200, i * cellSize);
+                        ctx4.stroke();
+                    }
+
+                    // Зчитуємо бінарні значення клітин
+                    let binaryGrid = [];
+                    let binaryString = '';
+
+                    for (let row = 0; row < gridSize; row++) {
+                        for (let col = 0; col < gridSize; col++) {
+                            // Визначаємо центр клітинки
+                            let centerX = Math.floor((col + 0.5) * cellSize);
+                            let centerY = Math.floor((row + 0.5) * cellSize);
+
+                            // Зчитуємо піксель з центру
+                            let pixel = warped.ucharAt(centerY, centerX);
+
+                            // Бінарне значення (255 = 1, 0 = 0)
+                            let binaryValue = pixel > 127 ? 1 : 0;
+                            binaryGrid.push(binaryValue);
+                            binaryString += binaryValue.toString();
+
+                            // Малюємо значення на сітці
+                            ctx4.fillStyle = pixel > 127 ? '#00ff00' : '#ff0000';
+                            ctx4.font = 'bold 16px Arial';
+                            ctx4.textAlign = 'center';
+                            ctx4.textBaseline = 'middle';
+                            ctx4.fillText(binaryValue.toString(),
+                                col * cellSize + cellSize / 2,
+                                row * cellSize + cellSize / 2);
+                        }
+                    }
+
+                    // Обчислюємо ID маркера (спрощено)
+                    // Для 3x3 маркера: внутрішні 5 бітів кодують ID
+                    // Ігноруємо кутові маркери орієнтації
+                    let idBits = [
+                        binaryGrid[1], // row 0, col 1
+                        binaryGrid[3], // row 1, col 0
+                        binaryGrid[4], // row 1, col 1 (центр)
+                        binaryGrid[5], // row 1, col 2
+                        binaryGrid[7]  // row 2, col 1
+                    ];
+
+                    let markerId = parseInt(idBits.join(''), 2);
+
+                    // Оновлюємо інформацію
+                    document.getElementById('scene4Info').innerHTML = `
+                        <span>🔢 Binary: ${binaryString}</span>
+                        <span>🎯 ID маркера: ${markerId}</span>
+                        <span>📊 Сітка: ${gridSize}×${gridSize}</span>
+                    `;
+
+                    decodedMarkers.push({
+                        id: markerId,
+                        corners: candidate.pts, // Використовуємо збережені pts
+                        binary: binaryGrid
+                    });
+
+                    // Видаляємо копію warped після використання
+                    warped.delete();
+                } else {
+                    // Видаляємо копії для інших маркерів
+                    warped.delete();
+                }
+            });
+
+            if (decodedMarkers.length === 0) {
+                document.getElementById('scene4Info').innerHTML = `
+                    <span>⏳ Очікування маркера...</span>
+                `;
+            }
+
+            return decodedMarkers;
+        }
+
+        // ============================================
+        // СЦЕНА 5: POSE ESTIMATION
+        // ============================================
+        function processScene5(decodedMarkers) {
+            const poses = [];
+
+            // Малюємо вихідне зображення
+            ctx5.drawImage(video, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+
+            decodedMarkers.forEach((marker, index) => {
+                let corners = marker.corners; // Це pts з processScene2
+
+                // Відомий розмір маркера (у віртуальних одиницях)
+                const markerSize = 1.0;
+
+                // 3D координати кутів маркера (у просторі об'єкта)
+                let objectPoints = cv.matFromArray(4, 1, cv.CV_32FC3, [
+                    -markerSize / 2, markerSize / 2, 0,   // topLeft
+                    markerSize / 2, markerSize / 2, 0,    // topRight
+                    markerSize / 2, -markerSize / 2, 0,   // bottomRight
+                    -markerSize / 2, -markerSize / 2, 0   // bottomLeft
+                ]);
+
+                // 2D координати кутів (у просторі зображення)
+                let imagePoints = cv.matFromArray(4, 1, cv.CV_32FC2, [
+                    corners[0].x, corners[0].y,
+                    corners[1].x, corners[1].y,
+                    corners[2].x, corners[2].y,
+                    corners[3].x, corners[3].y
+                ]);
+
+                // Матриця камери (приблизні значення для 640x480)
+                let cameraMatrix = cv.matFromArray(3, 3, cv.CV_32FC1, [
+                    VIDEO_WIDTH, 0, VIDEO_WIDTH / 2,
+                    0, VIDEO_WIDTH, VIDEO_HEIGHT / 2,
+                    0, 0, 1
+                ]);
+
+                // Коефіцієнти дисторсії (приймаємо нульовими)
+                let distCoeffs = cv.matFromArray(5, 1, cv.CV_32FC1, [0, 0, 0, 0, 0]);
+
+                // Вектори для результату
+                let rvec = cv.matFromArray(3, 1, cv.CV_32FC1, [0, 0, 0]);
+                let tvec = cv.matFromArray(3, 1, cv.CV_32FC1, [0, 0, 0]);
+
+                try {
+                    // SolvePnP: знаходимо rotation vector та translation vector
+                    let success = cv.solvePnP(objectPoints, imagePoints,
+                        cameraMatrix, distCoeffs, rvec, tvec);
+
+                    if (success) {
+                        // Малюємо осі координат на маркері
+                        drawAxis(ctx5, corners[0], rvec, tvec, cameraMatrix, distCoeffs);
+
+                        // Зберігаємо позу для сцени 6
+                        poses.push({
+                            rvec: [rvec.data32F[0], rvec.data32F[1], rvec.data32F[2]],
+                            tvec: [tvec.data32F[0], tvec.data32F[1], tvec.data32F[2]],
+                            corners: corners // Це впорядковані pts
+                        });
+
+                        // Оновлюємо інформацію для першого маркера
+                        if (index === 0) {
+                            document.getElementById('scene5Info').innerHTML = `
+                                <span>🔄 R: [${rvec.data32F[0].toFixed(2)}, ${rvec.data32F[1].toFixed(2)}, ${rvec.data32F[2].toFixed(2)}]</span>
+                                <span>📍 t: [${tvec.data32F[0].toFixed(2)}, ${tvec.data32F[1].toFixed(2)}, ${tvec.data32F[2].toFixed(2)}]</span>
+                                <span>🎯 Маркер ID: ${marker.id}</span>
+                            `;
+
+                            // Зберігаємо поточну позу
+                            currentMarkerPose = poses[0];
+                            markerDetected = true;
+                        }
+                    }
+                } catch (err) {
+                    console.error('Помилка SolvePnP:', err);
+                } finally {
+                    objectPoints.delete();
+                    imagePoints.delete();
+                    cameraMatrix.delete();
+                    distCoeffs.delete();
+                    rvec.delete();
+                    tvec.delete();
+                }
+            });
+
+            if (poses.length === 0) {
+                document.getElementById('scene5Info').innerHTML = `
+                    <span>⏳ Очікування маркера...</span>
+                `;
+                markerDetected = false;
+                currentMarkerPose = null;
+            }
+
+            return poses;
+        }
+
+        // ============================================
+        // СЦЕНА 6: 3D ВІЗУАЛІЗАЦІЯ (КОНУС)
+        // ============================================
+        function processScene6(poses) {
+            // Малюємо відео-потік на фоні
+            ctx6.drawImage(video, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+
+            // Оновлюємо інформацію
+            if (markerDetected && currentMarkerPose) {
+                // Малюємо 3D конус за допомогою 2D canvas
+                drawCone2D(
+                    ctx6,
+                    currentMarkerPose.corners,
+                    currentMarkerPose.tvec
+                );
+
+                document.getElementById('scene6Info').innerHTML = `
+                    <span>🔺 Конус прив'язаний</span>
+                    <span>📍 t: [${currentMarkerPose.tvec[0].toFixed(2)}, ${currentMarkerPose.tvec[1].toFixed(2)}, ${currentMarkerPose.tvec[2].toFixed(2)}]</span>
+                    <span>🎯 Маркер ID: detected</span>
+                `;
+            } else {
+                document.getElementById('scene6Info').innerHTML = `
+                    <span>⏳ Очікування маркера...</span>
+                    <span>🔺 Конус прихований</span>
+                `;
+            }
+        }
+
+        /**
+         * Малює 3D конус на 2D canvas
+         * @param {CanvasRenderingContext2D} ctx
+         * @param {Array} corners - 4 кути маркера
+         * @param {Array} tvec - вектор позиції
+         */
+        function drawCone2D(ctx, corners, tvec) {
+            // Впорядковуємо кути
+            let ordered = orderPoints(corners);
+
+            // Знаходимо центр маркера
+            let centerX = (ordered[0].x + ordered[1].x + ordered[2].x + ordered[3].x) / 4;
+            let centerY = (ordered[0].y + ordered[1].y + ordered[2].y + ordered[3].y) / 4;
+
+            // Розмір конуса залежить від відстані (tvec[2])
+            let coneHeight = Math.min(80, 150 / (Math.abs(tvec[2]) + 0.5));
+            let coneRadius = coneHeight * 0.4;
+
+            // Вершина конуса (з урахуванням позиції)
+            let apexX = centerX - tvec[0] * 50;
+            let apexY = centerY - coneHeight - tvec[1] * 50;
+
+            // Малюємо конус як трикутник з еліпсом в основі
+            ctx.save();
+
+            // Тінь конуса
+            ctx.beginPath();
+            ctx.ellipse(centerX, centerY + 5, coneRadius, coneRadius * 0.3, 0, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+            ctx.fill();
+
+            // Основа конуса (еліпс)
+            ctx.beginPath();
+            ctx.ellipse(centerX, centerY, coneRadius, coneRadius * 0.5, 0, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(0, 212, 255, 0.3)';
+            ctx.fill();
+            ctx.strokeStyle = '#00d4ff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Бічні сторони конуса (трикутник)
+            ctx.beginPath();
+            ctx.moveTo(apexX, apexY);
+            ctx.lineTo(centerX - coneRadius, centerY);
+            ctx.lineTo(centerX + coneRadius, centerY);
+            ctx.closePath();
+
+            // Градієнт для конуса
+            let gradient = ctx.createLinearGradient(apexX, apexY, centerX, centerY);
+            gradient.addColorStop(0, 'rgba(0, 212, 255, 0.9)');
+            gradient.addColorStop(1, 'rgba(0, 153, 204, 0.7)');
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            ctx.strokeStyle = '#00d4ff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Вершина
+            ctx.beginPath();
+            ctx.arc(apexX, apexY, 3, 0, Math.PI * 2);
+            ctx.fillStyle = '#ffffff';
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        // ============================================
+        // ДОПОМІЖНІ ФУНКЦІЇ
+        // ============================================
+
+        /**
+         * Конвертує cv.Mat у ImageData для putImageData
+         */
+        function cvImageDataFromMat(mat) {
+            let imageData = new ImageData(mat.cols, mat.rows);
+            let data = imageData.data;
+            
+            // Перевіряємо кількість каналів
+            let channels = mat.channels();
+            
+            for (let i = 0; i < mat.rows; i++) {
+                for (let j = 0; j < mat.cols; j++) {
+                    let idx = (i * mat.cols + j) * 4;
+                    if (channels === 1) {
+                        // Відтінки сірого
+                        let pixel = mat.ucharAt(i, j);
+                        data[idx] = pixel;     // R
+                        data[idx + 1] = pixel; // G
+                        data[idx + 2] = pixel; // B
+                        data[idx + 3] = 255;   // A
+                    } else if (channels === 4) {
+                        // RGBA
+                        let ptr = mat.ptr(i, j);
+                        data[idx] = ptr[0];     // B (OpenCV використовує BGR)
+                        data[idx + 1] = ptr[1]; // G
+                        data[idx + 2] = ptr[2]; // R
+                        data[idx + 3] = ptr[3]; // A
+                    }
+                }
+            }
+            return imageData;
+        }
+
+        /**
+         * Впорядковує точки чотирикутника: topLeft, topRight, bottomRight, bottomLeft
+         */
+        function orderPoints(pts) {
+            // Сума координат: topLeft має найменшу, bottomRight - найбільшу
+            let sum = pts.map(p => p.x + p.y);
+            let diff = pts.map(p => p.x - p.y);
+
+            let topLeft = pts[sum.indexOf(Math.min(...sum))];
+            let bottomRight = pts[sum.indexOf(Math.max(...sum))];
+            let topRight = pts[diff.indexOf(Math.max(...diff))];
+            let bottomLeft = pts[diff.indexOf(Math.min(...diff))];
+
+            return [topLeft, topRight, bottomRight, bottomLeft];
+        }
+
+        /**
+         * Малює 3D осі координат на маркері
+         */
+        function drawAxis(ctx, origin, rvec, tvec, cameraMatrix, distCoeffs) {
+            // Проста візуалізація осей за допомогою 2D canvas
+            // Оси: X - червоний, Y - зелений, Z - синій
+            
+            // Малюємо вісь X (червоний)
+            ctx.beginPath();
+            ctx.moveTo(origin.x, origin.y);
+            ctx.lineTo(origin.x + 50, origin.y);
+            ctx.strokeStyle = '#ff0000';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            ctx.fillStyle = '#ff0000';
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('X', origin.x + 55, origin.y);
+            
+            // Малюємо вісь Y (зелений)
+            ctx.beginPath();
+            ctx.moveTo(origin.x, origin.y);
+            ctx.lineTo(origin.x, origin.y + 50);
+            ctx.strokeStyle = '#00ff00';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            ctx.fillStyle = '#00ff00';
+            ctx.fillText('Y', origin.x, origin.y + 55);
+            
+            // Малюємо вісь Z (синій) - діагональна
+            ctx.beginPath();
+            ctx.moveTo(origin.x, origin.y);
+            ctx.lineTo(origin.x - 30, origin.y - 30);
+            ctx.strokeStyle = '#0000ff';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            ctx.fillStyle = '#0000ff';
+            ctx.fillText('Z', origin.x - 45, origin.y - 35);
+        }
+    </script>
+</body>
+</html>
