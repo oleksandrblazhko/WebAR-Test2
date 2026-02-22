@@ -362,24 +362,33 @@
                 maxDetectionRate: 60
             });
             
-            // Отримуємо arController
-            let arController = arToolkitContext.arController;
-            
-            // Слухаємо події виявлення маркерів
-            arController.addEventListener('getMarker', function(event) {
-                if (event.data.type === artoolkit.BARCODE_MARKER) {
-                    // Зберігаємо реальний ID маркера
-                    let realId = event.data.marker.idMatrix;
-                    
-                    // Додаємо ID в масив, якщо його ще немає
-                    if (!arRealMarkerIds.includes(realId)) {
-                        arRealMarkerIds.push(realId);
-                        console.log(`🎯 Знайдено маркер: ID = ${realId}, всього маркерів: ${arRealMarkerIds.length}`);
-                    }
+            // Чекаємо ініціалізації arController
+            let initInterval = setInterval(function() {
+                let arController = arToolkitContext.arController;
+                if (!arController) {
+                    console.log('⏳ Очікування ініціалізації arController...');
+                    return;
                 }
-            });
-            
-            console.log('✅ AR.js ініціалізовано');
+                
+                clearInterval(initInterval);
+                console.log('✅ arController готовий');
+                
+                // Слухаємо події виявлення маркерів
+                arController.addEventListener('getMarker', function(event) {
+                    if (event.data.type === artoolkit.BARCODE_MARKER) {
+                        // Зберігаємо реальний ID маркера
+                        let realId = event.data.marker.idMatrix;
+                        
+                        // Додаємо ID в масив, якщо його ще немає
+                        if (!arRealMarkerIds.includes(realId)) {
+                            arRealMarkerIds.push(realId);
+                            console.log(`🎯 Знайдено маркер: ID = ${realId}, всього маркерів: ${arRealMarkerIds.length}`);
+                        }
+                    }
+                });
+                
+                console.log('✅ AR.js ініціалізовано');
+            }, 100);
         }
 
         // ============================================
