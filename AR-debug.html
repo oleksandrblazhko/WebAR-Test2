@@ -986,9 +986,7 @@
                 return decodedMarkers;
             }
 
-            // Малюємо сітку декодованих маркерів
-            drawDecodedMarkersGrid(markerCandidates, gridSize, cellSize);
-
+            // Спочатку зчитуємо бінарні значення для всіх маркерів
             markerCandidates.forEach((candidate, index) => {
                 // Створюємо копію warpedColor для обробки (кольорове зображення)
                 let warpedColor = candidate.warpedColor.clone();
@@ -1031,17 +1029,29 @@
 
                 let markerId = parseInt(idBits.join(''), 2);
 
-                decodedMarkers.push({
-                    id: markerId,
-                    corners: ordered,
-                    binary: binaryGrid,
-                    binaryString: binaryString,
-                    markerIndex: candidate.markerIndex
-                });
+                // Зберігаємо binary у candidate для використання у drawDecodedMarkersGrid
+                candidate.binary = binaryGrid;
+                candidate.binaryString = binaryString;
+                candidate.id = markerId;
+                candidate.corners = ordered;
 
                 // Видаляємо копії після використання
                 warpedColor.delete();
                 warpedGray.delete();
+            });
+
+            // Тепер малюємо сітку декодованих маркерів
+            drawDecodedMarkersGrid(markerCandidates, gridSize, cellSize);
+
+            // Формуємо decodedMarkers для сцени 5
+            markerCandidates.forEach(candidate => {
+                decodedMarkers.push({
+                    id: candidate.id,
+                    corners: candidate.corners,
+                    binary: candidate.binary,
+                    binaryString: candidate.binaryString,
+                    markerIndex: candidate.markerIndex
+                });
             });
 
             return decodedMarkers;
@@ -1158,24 +1168,29 @@
                 }
 
                 // Малюємо бінарні значення на сітці
-                for (let row = 0; row < gridSize; row++) {
-                    for (let col = 0; col < gridSize; col++) {
-                        let binaryValue = candidate.binary[row * gridSize + col];
-                        ctx4.fillStyle = binaryValue === 1 ? '#00ff00' : '#ff0000';
-                        ctx4.font = gridSize === 3 && markerCandidates.length === 1 ? 'bold 14px Arial' : 'bold 10px Arial';
-                        ctx4.textAlign = 'center';
-                        ctx4.textBaseline = 'middle';
-                        ctx4.fillText(binaryValue.toString(),
-                            baseX + col * displayCellSize + displayCellSize / 2,
-                            baseY + row * displayCellSize + displayCellSize / 2);
+                if (candidate.binary) {
+                    for (let row = 0; row < gridSize; row++) {
+                        for (let col = 0; col < gridSize; col++) {
+                            let binaryValue = candidate.binary[row * gridSize + col];
+                            ctx4.fillStyle = binaryValue === 1 ? '#00ff00' : '#ff0000';
+                            ctx4.font = gridSize === 3 && markerCandidates.length === 1 ? 'bold 14px Arial' : 'bold 10px Arial';
+                            ctx4.textAlign = 'center';
+                            ctx4.textBaseline = 'middle';
+                            ctx4.fillText(binaryValue.toString(),
+                                baseX + col * displayCellSize + displayCellSize / 2,
+                                baseY + row * displayCellSize + displayCellSize / 2);
+                        }
                     }
                 }
 
                 // Обчислюємо ID маркера
-                let idBits = [
-                    candidate.binary[1], candidate.binary[3], candidate.binary[4], candidate.binary[5], candidate.binary[7]
-                ];
-                let markerId = parseInt(idBits.join(''), 2);
+                let idBits = [];
+                if (candidate.binary) {
+                    idBits = [
+                        candidate.binary[1], candidate.binary[3], candidate.binary[4], candidate.binary[5], candidate.binary[7]
+                    ];
+                }
+                let markerId = idBits.length > 0 ? parseInt(idBits.join(''), 2) : 0;
 
                 // Інформація про маркер
                 ctx4.fillStyle = '#ffffff';
@@ -1183,7 +1198,7 @@
                 ctx4.textAlign = 'center';
                 ctx4.fillText(`ID: ${markerId}`, baseX + markerDisplaySize / 2, baseY + markerDisplaySize + 20);
                 
-                let binaryString = binaryGrid.join('');
+                let binaryString = candidate.binary ? candidate.binary.join('') : '';
                 ctx4.fillStyle = '#888888';
                 ctx4.font = markerCandidates.length === 1 ? '12px Arial' : '9px Arial';
                 ctx4.fillText(`Bin: ${binaryString}`, baseX + markerDisplaySize / 2, baseY + markerDisplaySize + 45);
