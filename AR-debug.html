@@ -638,8 +638,11 @@
                     <span>✅ Фільтр: опуклість + aspect ratio</span>
                 `;
 
+                // Фільтруємо дублікати маркерів за відстанню між центрами
+                let filteredQuads = removeDuplicateQuads(validQuads);
+
                 // Повертаємо валідні чотирикутники для наступних сцен
-                return validQuads;
+                return filteredQuads;
 
             } catch (err) {
                 console.error('Помилка Scene 2:', err);
@@ -652,6 +655,59 @@
                 contours.delete();
                 hierarchy.delete();
             }
+        }
+
+        /**
+         * Видаляє дублікати маркерів за відстанню між центрами
+         * @param {Array} quads - масив чотирикутників
+         * @returns {Array} - відфільтрований масив
+         */
+        function removeDuplicateQuads(quads) {
+            if (quads.length <= 1) return quads;
+
+            let filtered = [];
+            const minDistance = 30; // Мінімальна відстань між центрами (пікселі)
+
+            for (let i = 0; i < quads.length; i++) {
+                let quad1 = quads[i];
+                let pts1 = quad1.pts;
+                
+                // Обчислюємо центр маркера
+                let center1 = {
+                    x: (pts1[0].x + pts1[1].x + pts1[2].x + pts1[3].x) / 4,
+                    y: (pts1[0].y + pts1[1].y + pts1[2].y + pts1[3].y) / 4
+                };
+
+                let isDuplicate = false;
+
+                // Перевіряємо відстань до вже відфільтрованих маркерів
+                for (let j = 0; j < filtered.length; j++) {
+                    let quad2 = filtered[j];
+                    let pts2 = quad2.pts;
+                    
+                    let center2 = {
+                        x: (pts2[0].x + pts2[1].x + pts2[2].x + pts2[3].x) / 4,
+                        y: (pts2[0].y + pts2[1].y + pts2[2].y + pts2[3].y) / 4
+                    };
+
+                    // Обчислюємо відстань між центрами
+                    let distance = Math.sqrt(
+                        Math.pow(center1.x - center2.x, 2) +
+                        Math.pow(center1.y - center2.y, 2)
+                    );
+
+                    if (distance < minDistance) {
+                        isDuplicate = true;
+                        break;
+                    }
+                }
+
+                if (!isDuplicate) {
+                    filtered.push(quad1);
+                }
+            }
+
+            return filtered;
         }
 
         // ============================================
