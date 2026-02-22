@@ -663,6 +663,7 @@
 
                 let markerCandidates = [];
                 const normalizedSize = 200; // Розмір нормалізованого квадрату
+                let markerIndex = 0;
 
                 // Для кожного чотирикутника виконуємо warp perspective
                 contours.forEach(quad => {
@@ -713,11 +714,18 @@
                     ctx3.closePath();
                     ctx3.stroke();
 
+                    // Малюємо номер маркера
+                    markerIndex++;
+                    ctx3.fillStyle = '#00ff00';
+                    ctx3.font = 'bold 16px Arial';
+                    ctx3.fillText(`M${markerIndex}`, ordered[0].x + 5, ordered[0].y + 20);
+
                     // Зберігаємо кандидата маркера (warped НЕ видаляємо тут)
                     markerCandidates.push({
                         pts: pts, // Зберігаємо точки
                         warped: warped, // Не видаляємо warped, він знадобиться в processScene4
-                        homography: M
+                        homography: M,
+                        markerIndex: markerIndex
                     });
 
                     srcTri.delete();
@@ -729,9 +737,9 @@
                 // Якщо маркерів не знайдено, показуємо thresholded
                 if (markerCandidates.length === 0) {
                     cv.imshow('scene3', thresholded);
-                } else if (markerCandidates.length > 0) {
-                    // Показуємо перший warped для сцени 3
-                    cv.imshow('scene3', markerCandidates[0].warped);
+                } else {
+                    // Малюємо всі warped маркери у вигляді сітки
+                    drawWarpedMarkersGrid(markerCandidates, normalizedSize);
                 }
 
                 // Оновлюємо інформацію
@@ -754,6 +762,44 @@
             }
         }
 
+        /**
+         * Малює сітку warped маркерів на сцені 3
+         */
+        function drawWarpedMarkersGrid(markerCandidates, normalizedSize) {
+            const cols = 3; // Кількість колонок у сітці
+            const rows = Math.ceil(markerCandidates.length / cols);
+            const cellSize = Math.min(100, Math.floor(VIDEO_WIDTH / cols));
+            const scale = cellSize / normalizedSize;
+
+            // Очищаємо canvas
+            ctx3.fillStyle = '#1a1a2e';
+            ctx3.fillRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+
+            markerCandidates.forEach((candidate, index) => {
+                let col = index % cols;
+                let row = Math.floor(index / cols);
+                let x = col * cellSize + (cellSize - normalizedSize * scale) / 2;
+                let y = row * cellSize + 30; // +30 для заголовка
+
+                // Малюємо warped зображення
+                let tempCanvas = document.createElement('canvas');
+                tempCanvas.width = normalizedSize;
+                tempCanvas.height = normalizedSize;
+                let tempCtx = tempCanvas.getContext('2d');
+                cv.imshow(tempCanvas, candidate.warped);
+                
+                ctx3.drawImage(tempCanvas, x, y, normalizedSize * scale, normalizedSize * scale);
+
+                // Заголовок маркера
+                ctx3.fillStyle = '#00d4ff';
+                ctx3.font = 'bold 12px Arial';
+                ctx3.textAlign = 'center';
+                ctx3.fillText(`Маркер #${candidate.markerIndex}`, x + (normalizedSize * scale) / 2, y - 10);
+
+                tempCanvas.remove();
+            });
+        }
+
         // ============================================
         // СЦЕНА 4: ДЕКОДУВАННЯ МАРКЕРІВ
         // ============================================
@@ -762,104 +808,174 @@
             const gridSize = 3; // Сітка 3x3 для barcode-маркера
             const cellSize = Math.floor(200 / gridSize); // 66.67 пікселів на клітинку
 
+            // Якщо маркерів немає, показуємо повідомлення
+            if (markerCandidates.length === 0) {
+                document.getElementById('scene4Info').innerHTML = `
+                    <span>⏳ Очікування маркера...</span>
+                `;
+                // Очищаємо сцену
+                ctx4.fillStyle = '#1a1a2e';
+                ctx4.fillRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+                return decodedMarkers;
+            }
+
+            // Малюємо сітку декодованих маркерів
+            drawDecodedMarkersGrid(markerCandidates, gridSize, cellSize);
+
             markerCandidates.forEach((candidate, index) => {
                 // Створюємо копію warped для обробки
                 let warped = candidate.warped.clone();
                 let ordered = orderPoints(candidate.pts); // Впорядковуємо точки
 
-                // Створюємо canvas для відображення
-                if (index === 0) {
-                    // Малюємо warped зображення
-                    cv.imshow('scene4', warped);
+                // Зчитуємо бінарні значення клітин
+                let binaryGrid = [];
+                let binaryString = '';
 
-                    // Малюємо сітку 3x3 поверх зображення
-                    ctx4.strokeStyle = '#00ff00';
-                    ctx4.lineWidth = 1;
+                for (let row = 0; row < gridSize; row++) {
+                    for (let col = 0; col < gridSize; col++) {
+                        // Визначаємо центр клітинки
+                        let centerX = Math.floor((col + 0.5) * cellSize);
+                        let centerY = Math.floor((row + 0.5) * cellSize);
 
-                    for (let i = 0; i <= gridSize; i++) {
-                        // Вертикальні лінії
-                        ctx4.beginPath();
-                        ctx4.moveTo(i * cellSize, 0);
-                        ctx4.lineTo(i * cellSize, 200);
-                        ctx4.stroke();
+                        // Зчитуємо піксель з центру
+                        let pixel = warped.ucharAt(centerY, centerX);
 
-                        // Горизонтальні лінії
-                        ctx4.beginPath();
-                        ctx4.moveTo(0, i * cellSize);
-                        ctx4.lineTo(200, i * cellSize);
-                        ctx4.stroke();
+                        // Бінарне значення (255 = 1, 0 = 0)
+                        let binaryValue = pixel > 127 ? 1 : 0;
+                        binaryGrid.push(binaryValue);
+                        binaryString += binaryValue.toString();
                     }
-
-                    // Зчитуємо бінарні значення клітин
-                    let binaryGrid = [];
-                    let binaryString = '';
-
-                    for (let row = 0; row < gridSize; row++) {
-                        for (let col = 0; col < gridSize; col++) {
-                            // Визначаємо центр клітинки
-                            let centerX = Math.floor((col + 0.5) * cellSize);
-                            let centerY = Math.floor((row + 0.5) * cellSize);
-
-                            // Зчитуємо піксель з центру
-                            let pixel = warped.ucharAt(centerY, centerX);
-
-                            // Бінарне значення (255 = 1, 0 = 0)
-                            let binaryValue = pixel > 127 ? 1 : 0;
-                            binaryGrid.push(binaryValue);
-                            binaryString += binaryValue.toString();
-
-                            // Малюємо значення на сітці
-                            ctx4.fillStyle = pixel > 127 ? '#00ff00' : '#ff0000';
-                            ctx4.font = 'bold 16px Arial';
-                            ctx4.textAlign = 'center';
-                            ctx4.textBaseline = 'middle';
-                            ctx4.fillText(binaryValue.toString(),
-                                col * cellSize + cellSize / 2,
-                                row * cellSize + cellSize / 2);
-                        }
-                    }
-
-                    // Обчислюємо ID маркера (спрощено)
-                    // Для 3x3 маркера: внутрішні 5 бітів кодують ID
-                    // Ігноруємо кутові маркери орієнтації
-                    let idBits = [
-                        binaryGrid[1], // row 0, col 1
-                        binaryGrid[3], // row 1, col 0
-                        binaryGrid[4], // row 1, col 1 (центр)
-                        binaryGrid[5], // row 1, col 2
-                        binaryGrid[7]  // row 2, col 1
-                    ];
-
-                    let markerId = parseInt(idBits.join(''), 2);
-
-                    // Оновлюємо інформацію
-                    document.getElementById('scene4Info').innerHTML = `
-                        <span>🔢 Binary: ${binaryString}</span>
-                        <span>🎯 ID маркера: ${markerId}</span>
-                        <span>📊 Сітка: ${gridSize}×${gridSize}</span>
-                    `;
-
-                    decodedMarkers.push({
-                        id: markerId,
-                        corners: candidate.pts, // Використовуємо збережені pts
-                        binary: binaryGrid
-                    });
-
-                    // Видаляємо копію warped після використання
-                    warped.delete();
-                } else {
-                    // Видаляємо копії для інших маркерів
-                    warped.delete();
                 }
+
+                // Обчислюємо ID маркера (спрощено)
+                // Для 3x3 маркера: внутрішні 5 бітів кодують ID
+                // Ігноруємо кутові маркери орієнтації
+                let idBits = [
+                    binaryGrid[1], // row 0, col 1
+                    binaryGrid[3], // row 1, col 0
+                    binaryGrid[4], // row 1, col 1 (центр)
+                    binaryGrid[5], // row 1, col 2
+                    binaryGrid[7]  // row 2, col 1
+                ];
+
+                let markerId = parseInt(idBits.join(''), 2);
+
+                decodedMarkers.push({
+                    id: markerId,
+                    corners: ordered,
+                    binary: binaryGrid,
+                    binaryString: binaryString,
+                    markerIndex: candidate.markerIndex
+                });
+
+                // Видаляємо копію warped після використання
+                warped.delete();
             });
 
-            if (decodedMarkers.length === 0) {
-                document.getElementById('scene4Info').innerHTML = `
-                    <span>⏳ Очікування маркера...</span>
-                `;
-            }
-
             return decodedMarkers;
+        }
+
+        /**
+         * Малює сітку декодованих маркерів на сцені 4
+         */
+        function drawDecodedMarkersGrid(markerCandidates, gridSize, cellSize) {
+            const cols = 3; // Кількість колонок у сітці
+            const markerDisplaySize = 120; // Розмір відображення маркера
+            const gap = 10; // Відступ між маркерами
+
+            // Очищаємо canvas
+            ctx4.fillStyle = '#1a1a2e';
+            ctx4.fillRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+
+            markerCandidates.forEach((candidate, index) => {
+                let col = index % cols;
+                let row = Math.floor(index / cols);
+                let baseX = col * (markerDisplaySize + gap) + gap;
+                let baseY = row * (markerDisplaySize + gap + 80) + gap; // +80 для інформації
+
+                // Малюємо warped зображення
+                let tempCanvas = document.createElement('canvas');
+                tempCanvas.width = 200;
+                tempCanvas.height = 200;
+                let tempCtx = tempCanvas.getContext('2d');
+                cv.imshow(tempCanvas, candidate.warped);
+                
+                // Масштабуємо до markerDisplaySize
+                ctx4.drawImage(tempCanvas, baseX, baseY, markerDisplaySize, markerDisplaySize);
+
+                // Заголовок маркера
+                ctx4.fillStyle = '#00d4ff';
+                ctx4.font = 'bold 12px Arial';
+                ctx4.textAlign = 'center';
+                ctx4.fillText(`Маркер #${candidate.markerIndex}`, baseX + markerDisplaySize / 2, baseY - 10);
+
+                // Малюємо сітку 3x3 поверх зображення
+                ctx4.strokeStyle = '#00ff00';
+                ctx4.lineWidth = 1;
+                let displayCellSize = markerDisplaySize / gridSize;
+
+                for (let i = 0; i <= gridSize; i++) {
+                    // Вертикальні лінії
+                    ctx4.beginPath();
+                    ctx4.moveTo(baseX + i * displayCellSize, baseY);
+                    ctx4.lineTo(baseX + i * displayCellSize, baseY + markerDisplaySize);
+                    ctx4.stroke();
+
+                    // Горизонтальні лінії
+                    ctx4.beginPath();
+                    ctx4.moveTo(baseX, baseY + i * displayCellSize);
+                    ctx4.lineTo(baseX + markerDisplaySize, baseY + i * displayCellSize);
+                    ctx4.stroke();
+                }
+
+                // Зчитуємо та малюємо бінарні значення
+                let warped = candidate.warped;
+                let binaryGrid = [];
+                for (let row = 0; row < gridSize; row++) {
+                    for (let col = 0; col < gridSize; col++) {
+                        let centerX = Math.floor((col + 0.5) * (200 / gridSize));
+                        let centerY = Math.floor((row + 0.5) * (200 / gridSize));
+                        let pixel = warped.ucharAt(centerY, centerX);
+                        let binaryValue = pixel > 127 ? 1 : 0;
+                        binaryGrid.push(binaryValue);
+
+                        // Малюємо значення на сітці (масштабоване)
+                        ctx4.fillStyle = pixel > 127 ? '#00ff00' : '#ff0000';
+                        ctx4.font = 'bold 10px Arial';
+                        ctx4.textAlign = 'center';
+                        ctx4.textBaseline = 'middle';
+                        ctx4.fillText(binaryValue.toString(),
+                            baseX + col * displayCellSize + displayCellSize / 2,
+                            baseY + row * displayCellSize + displayCellSize / 2);
+                    }
+                }
+
+                // Обчислюємо ID маркера
+                let idBits = [
+                    binaryGrid[1], binaryGrid[3], binaryGrid[4], binaryGrid[5], binaryGrid[7]
+                ];
+                let markerId = parseInt(idBits.join(''), 2);
+
+                // Інформація про маркер
+                ctx4.fillStyle = '#ffffff';
+                ctx4.font = '11px Arial';
+                ctx4.textAlign = 'center';
+                ctx4.fillText(`ID: ${markerId}`, baseX + markerDisplaySize / 2, baseY + markerDisplaySize + 15);
+                
+                let binaryString = binaryGrid.join('');
+                ctx4.fillStyle = '#888888';
+                ctx4.font = '9px Arial';
+                ctx4.fillText(`Bin: ${binaryString.substring(0, 9)}`, baseX + markerDisplaySize / 2, baseY + markerDisplaySize + 30);
+
+                tempCanvas.remove();
+            });
+
+            // Оновлюємо загальну інформацію
+            document.getElementById('scene4Info').innerHTML = `
+                <span>🎯 Знайдено маркерів: ${markerCandidates.length}</span>
+                <span>📊 Сітка: ${gridSize}×${gridSize}</span>
+                <span>🔢 Бінарне декодування</span>
+            `;
         }
 
         // ============================================
@@ -870,6 +986,18 @@
 
             // Малюємо вихідне зображення
             ctx5.drawImage(video, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+
+            // Якщо маркерів немає
+            if (decodedMarkers.length === 0) {
+                document.getElementById('scene5Info').innerHTML = `
+                    <span>⏳ Очікування маркера...</span>
+                `;
+                markerDetected = false;
+                currentMarkerPose = null;
+                return poses;
+            }
+
+            let markerIndex = 0;
 
             decodedMarkers.forEach((marker, index) => {
                 let corners = marker.corners; // Це pts з processScene2
@@ -913,14 +1041,29 @@
                         cameraMatrix, distCoeffs, rvec, tvec);
 
                     if (success) {
+                        markerIndex++;
+
                         // Малюємо осі координат на маркері
                         drawAxis(ctx5, corners[0], rvec, tvec, cameraMatrix, distCoeffs);
+
+                        // Малюємо номер та інформацію про маркер
+                        ctx5.fillStyle = '#00ff00';
+                        ctx5.font = 'bold 14px Arial';
+                        ctx5.fillText(`M${markerIndex}`, corners[0].x + 10, corners[0].y + 10);
+
+                        // Інформація про позу
+                        let infoY = corners[2].y + 25;
+                        ctx5.fillStyle = '#00d4ff';
+                        ctx5.font = '11px Arial';
+                        ctx5.fillText(`R: [${rvec.data32F[0].toFixed(1)}, ${rvec.data32F[1].toFixed(1)}, ${rvec.data32F[2].toFixed(1)}]`, corners[0].x + 10, infoY);
+                        ctx5.fillText(`t: [${tvec.data32F[0].toFixed(1)}, ${tvec.data32F[1].toFixed(1)}, ${tvec.data32F[2].toFixed(1)}]`, corners[0].x + 10, infoY + 15);
 
                         // Зберігаємо позу для сцени 6
                         poses.push({
                             rvec: [rvec.data32F[0], rvec.data32F[1], rvec.data32F[2]],
                             tvec: [tvec.data32F[0], tvec.data32F[1], tvec.data32F[2]],
-                            corners: corners // Це впорядковані pts
+                            corners: corners,
+                            markerIndex: markerIndex
                         });
 
                         // Оновлюємо інформацію для першого маркера
@@ -928,7 +1071,7 @@
                             document.getElementById('scene5Info').innerHTML = `
                                 <span>🔄 R: [${rvec.data32F[0].toFixed(2)}, ${rvec.data32F[1].toFixed(2)}, ${rvec.data32F[2].toFixed(2)}]</span>
                                 <span>📍 t: [${tvec.data32F[0].toFixed(2)}, ${tvec.data32F[1].toFixed(2)}, ${tvec.data32F[2].toFixed(2)}]</span>
-                                <span>🎯 Маркер ID: ${marker.id}</span>
+                                <span>🎯 Маркерів: ${decodedMarkers.length}</span>
                             `;
 
                             // Зберігаємо поточну позу
@@ -948,12 +1091,13 @@
                 }
             });
 
-            if (poses.length === 0) {
+            // Оновлюємо загальну інформацію
+            if (poses.length > 0) {
                 document.getElementById('scene5Info').innerHTML = `
-                    <span>⏳ Очікування маркера...</span>
+                    <span>🎯 Знайдено маркерів: ${poses.length}</span>
+                    <span>🔄 Pose Estimation (POSIT)</span>
+                    <span>📍 R & t вектори</span>
                 `;
-                markerDetected = false;
-                currentMarkerPose = null;
             }
 
             return poses;
@@ -966,26 +1110,31 @@
             // Малюємо відео-потік на фоні
             ctx6.drawImage(video, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
 
-            // Оновлюємо інформацію
-            if (markerDetected && currentMarkerPose) {
-                // Малюємо 3D конус за допомогою 2D canvas
-                drawCone2D(
-                    ctx6,
-                    currentMarkerPose.corners,
-                    currentMarkerPose.tvec
-                );
-
-                document.getElementById('scene6Info').innerHTML = `
-                    <span>🔺 Конус прив'язаний</span>
-                    <span>📍 t: [${currentMarkerPose.tvec[0].toFixed(2)}, ${currentMarkerPose.tvec[1].toFixed(2)}, ${currentMarkerPose.tvec[2].toFixed(2)}]</span>
-                    <span>🎯 Маркер ID: detected</span>
-                `;
-            } else {
+            // Якщо маркерів немає
+            if (poses.length === 0) {
                 document.getElementById('scene6Info').innerHTML = `
                     <span>⏳ Очікування маркера...</span>
                     <span>🔺 Конус прихований</span>
                 `;
+                return;
             }
+
+            // Малюємо конус для кожного маркера
+            poses.forEach(pose => {
+                drawCone2D(
+                    ctx6,
+                    pose.corners,
+                    pose.tvec,
+                    pose.markerIndex
+                );
+            });
+
+            // Оновлюємо інформацію
+            document.getElementById('scene6Info').innerHTML = `
+                <span>🔺 Конусів: ${poses.length}</span>
+                <span>🎯 Маркерів: ${poses.length}</span>
+                <span>📍 3D прив'язка</span>
+            `;
         }
 
         /**
@@ -993,8 +1142,9 @@
          * @param {CanvasRenderingContext2D} ctx
          * @param {Array} corners - 4 кути маркера
          * @param {Array} tvec - вектор позиції
+         * @param {number} markerIndex - номер маркера
          */
-        function drawCone2D(ctx, corners, tvec) {
+        function drawCone2D(ctx, corners, tvec, markerIndex) {
             // Впорядковуємо кути
             let ordered = orderPoints(corners);
 
@@ -1050,6 +1200,11 @@
             ctx.arc(apexX, apexY, 3, 0, Math.PI * 2);
             ctx.fillStyle = '#ffffff';
             ctx.fill();
+
+            // Номер маркера
+            ctx.fillStyle = '#00ff00';
+            ctx.font = 'bold 12px Arial';
+            ctx.fillText(`M${markerIndex}`, apexX + 10, apexY - 10);
 
             ctx.restore();
         }
