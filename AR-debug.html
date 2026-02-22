@@ -288,6 +288,10 @@
     <!-- OpenCV.js -->
     <script async src="https://docs.opencv.org/4.8.0/opencv.js" onload="onOpenCvReady()" type="text/javascript"></script>
 
+    <!-- AR.js для розпізнавання barcode-маркерів -->
+    <script src="js/ar.js"></script>
+    <script src="threex/threex-artoolkitcontext.js"></script>
+
     <script>
         // ============================================
         // ГЛОБАЛЬНІ ЗМІННІ
@@ -298,6 +302,10 @@
         let animationId = null;
         let markerDetected = false;
         let currentMarkerPose = null;
+        
+        // Змінні для AR.js
+        let arToolkitContext = null;
+        let arRealMarkerIds = {}; // Реальні ID маркерів з AR.js: {index: idMatrix}
 
         // Canvas для сцен
         const canvas1 = document.getElementById('scene1');
@@ -327,6 +335,45 @@
             cvReady = true;
             updateStatus('OpenCV готовий. Натисніть "Запустити камеру"', 'ready');
             console.log('✅ OpenCV.js готовий до роботи');
+            
+            // Ініціалізуємо AR.js для отримання реальних ID маркерів
+            initARjs();
+        }
+        
+        /**
+         * Ініціалізація AR.js для розпізнавання barcode-маркерів
+         */
+        function initARjs() {
+            // Перевіряємо, чи доступний AR.js
+            if (typeof ARjs === 'undefined') {
+                console.log('⚠️ AR.js не завантажено, використовується тільки OpenCV');
+                return;
+            }
+            
+            // Створюємо AR-контекст
+            arToolkitContext = new ARjs.Context({
+                canvasWidth: VIDEO_WIDTH,
+                canvasHeight: VIDEO_HEIGHT,
+                detectionMode: 'mono_and_matrix',
+                matrixCodeType: '3x3',
+                maxDetectionRate: 60
+            });
+            
+            // Отримуємо arController
+            let arController = arToolkitContext.arController;
+            
+            // Слухаємо події виявлення маркерів
+            arController.addEventListener('getMarker', function(event) {
+                if (event.data.type === artoolkit.BARCODE_MARKER) {
+                    // Зберігаємо реальний ID маркера
+                    let markerIndex = event.data.index;
+                    let realId = event.data.marker.idMatrix;
+                    arRealMarkerIds[markerIndex] = realId;
+                    console.log(`🎯 Маркер #${markerIndex}: ID = ${realId}`);
+                }
+            });
+            
+            console.log('✅ AR.js ініціалізовано');
         }
 
         // ============================================
@@ -419,6 +466,11 @@
             if (!stream || video.paused || video.ended || !video.videoWidth) return;
 
             try {
+                // Оновлюємо AR.js для отримання реальних ID
+                if (arToolkitContext) {
+                    arToolkitContext.update(video);
+                }
+            
                 // Сцена 1: Попередня обробка
                 processScene1();
 
@@ -1010,23 +1062,39 @@
                     }
                 }
 
-                // Обчислюємо ID маркера (спрощено)
-                // Для 3x3 маркера: внутрішні 5 бітів кодують ID
-                // Ігноруємо кутові маркери орієнтації
-                let idBits = [
-                    binaryGrid[1], // row 0, col 1
-                    binaryGrid[3], // row 1, col 0
-                    binaryGrid[4], // row 1, col 1 (центр)
-                    binaryGrid[5], // row 1, col 2
-                    binaryGrid[7]  // row 2, col 1
-                ];
-
-                let markerId = parseInt(idBits.join(''), 2);
+                // Обчислюємо ID маркера
+                // Спочатку використовуємо спрощене декодування
+                let idBits = [];
+                if (candidate.binary) {
+                    idBits = [
+                        candidate.binary[1], candidate.binary[3], candidate.binary[4], candidate.binary[5], candidate.binary[7]
+                    ];
+                }
+                let simpleMarkerId = idBits.length > 0 ? parseInt(idBits.join(''), 2) : 0;
+                
+                // Перевіряємо, чи є реальний ID з AR.js
+                // Шукаємо маркер за координатами кутів
+                let realMarkerId = null;
+                let ordered = orderPoints(candidate.pts);
+                
+                // Порівнюємо координати з тими, що знайшов AR.js
+                for (let arIndex in arRealMarkerIds) {
+                    // Для простоти використовуємо спрощений підхід:
+                    // Якщо AR.js знайшов маркер, використовуємо його ID
+                    // В реальній реалізації потрібно порівнювати координати
+                    realMarkerId = arRealMarkerIds[arIndex];
+                    break;
+                }
+                
+                // Використовуємо реальний ID якщо є, інакше спрощений
+                let markerId = realMarkerId !== null ? realMarkerId : simpleMarkerId;
+                let idSource = realMarkerId !== null ? 'AR.js' : 'OpenCV';
 
                 // Зберігаємо binary у candidate для використання у drawDecodedMarkersGrid
                 candidate.binary = binaryGrid;
                 candidate.binaryString = binaryString;
                 candidate.id = markerId;
+                candidate.idSource = idSource; // Джерело ID
                 candidate.corners = ordered;
 
                 // Видаляємо копії після використання
@@ -1132,19 +1200,14 @@
                 }
 
                 // Обчислюємо ID маркера
-                let idBits = [];
-                if (candidate.binary) {
-                    idBits = [
-                        candidate.binary[1], candidate.binary[3], candidate.binary[4], candidate.binary[5], candidate.binary[7]
-                    ];
-                }
-                let markerId = idBits.length > 0 ? parseInt(idBits.join(''), 2) : 0;
+                let markerId = candidate.id || 0;
+                let idSource = candidate.idSource || 'OpenCV';
 
                 // Інформація про маркер
                 ctx4.fillStyle = '#ffffff';
                 ctx4.font = '11px Arial';
                 ctx4.textAlign = 'center';
-                ctx4.fillText(`ID: ${markerId}`, baseX + displaySize / 2, baseY + displaySize + 20);
+                ctx4.fillText(`ID: ${markerId} (${idSource})`, baseX + displaySize / 2, baseY + displaySize + 20);
                 
                 let binaryString = candidate.binary ? candidate.binary.join('') : '';
                 ctx4.fillStyle = '#888888';
