@@ -643,6 +643,9 @@
 
                 // Фільтруємо дублікати маркерів за відстанню між центрами
                 let filteredQuads = removeDuplicateQuads(validQuads);
+                
+                // Впорядковуємо маркери: зліва направо, зверху вниз
+                filteredQuads = sortMarkersByPosition(filteredQuads);
 
                 // Повертаємо валідні чотирикутники для наступних сцен
                 return filteredQuads;
@@ -713,6 +716,38 @@
             return filtered;
         }
 
+        /**
+         * Впорядковує маркери за позицією: зліва направо, зверху вниз
+         * @param {Array} quads - масив чотирикутників
+         * @returns {Array} - впорядкований масив
+         */
+        function sortMarkersByPosition(quads) {
+            if (quads.length <= 1) return quads;
+
+            // Обчислюємо центри всіх маркерів
+            let markersWithCenter = quads.map(quad => {
+                let pts = quad.pts;
+                let centerX = (pts[0].x + pts[1].x + pts[2].x + pts[3].x) / 4;
+                let centerY = (pts[0].y + pts[1].y + pts[2].y + pts[3].y) / 4;
+                return { quad, centerX, centerY };
+            });
+
+            // Визначаємо кількість рядків за Y-координатою
+            const rowThreshold = 50; // Якщо різниця Y > 50px, то інший рядок
+            markersWithCenter.sort((a, b) => {
+                // Спочатку сортуємо за Y (рядки)
+                let rowDiff = Math.abs(a.centerY - b.centerY);
+                if (rowDiff > rowThreshold) {
+                    return a.centerY - b.centerY; // Вищі маркери перші
+                }
+                // В межах одного рядка сортуємо за X (зліва направо)
+                return a.centerX - b.centerX;
+            });
+
+            // Повертаємо впорядковані квади
+            return markersWithCenter.map(m => m.quad);
+        }
+
         // ============================================
         // СЦЕНА 3: ПЕРСПЕКТИВНЕ ВИРІВНЮВАННЯ (HOMOGRAPHY)
         // ============================================
@@ -745,10 +780,9 @@
 
                 let markerCandidates = [];
                 const normalizedSize = 200; // Розмір нормалізованого квадрату
-                let markerIndex = 0;
 
                 // Для кожного чотирикутника виконуємо warp perspective
-                contours.forEach(quad => {
+                contours.forEach((quad, index) => {
                     // Використовуємо збережені точки з pts
                     let pts = quad.pts;
 
@@ -826,11 +860,10 @@
                     ctx3.closePath();
                     ctx3.stroke();
 
-                    // Малюємо номер маркера
-                    markerIndex++;
+                    // Малюємо номер маркера (index+1 для нумерації з 1)
                     ctx3.fillStyle = '#00ff00';
                     ctx3.font = 'bold 16px Arial';
-                    ctx3.fillText(`M${markerIndex}`, ordered[0].x + 5, ordered[0].y + 20);
+                    ctx3.fillText(`M${index + 1}`, ordered[0].x + 5, ordered[0].y + 20);
 
                     // Зберігаємо кандидата маркера
                     markerCandidates.push({
@@ -838,7 +871,7 @@
                         warped: warped, // Бінаризоване для сцени 3
                         warpedColor: warpedColor, // Кольорове для сцени 4
                         homography: M,
-                        markerIndex: markerIndex
+                        markerIndex: index + 1 // Нумерація з 1
                     });
 
                     srcTri.delete();
