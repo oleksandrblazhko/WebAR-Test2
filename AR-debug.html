@@ -586,11 +586,21 @@
                                 let minY = Math.min(...pts.map(p => p.y));
                                 let maxY = Math.max(...pts.map(p => p.y));
                                 
-                                // Фільтр: маркер повинен бути повністю в межах кадру (з відступом 20px)
-                                if (minX < -20 || maxX > VIDEO_WIDTH + 20 || 
-                                    minY < -20 || maxY > VIDEO_HEIGHT + 20) {
+                                // Обчислюємо розмір маркера
+                                let markerWidth = maxX - minX;
+                                let markerHeight = maxY - minY;
+                                
+                                // Фільтр 1: маркер повинен бути повністю в межах кадру (з відступом 10px)
+                                if (minX < -10 || maxX > VIDEO_WIDTH + 10 || 
+                                    minY < -10 || maxY > VIDEO_HEIGHT + 10) {
                                     approx.delete();
                                     continue; // Пропускаємо маркер, який вийшов за межі
+                                }
+                                
+                                // Фільтр 2: маркер не повинен бути занадто великим (>80% екрану)
+                                if (markerWidth > VIDEO_WIDTH * 0.85 || markerHeight > VIDEO_HEIGHT * 0.85) {
+                                    approx.delete();
+                                    continue; // Пропускаємо занадто великі маркери
                                 }
                                 
                                 quadCount++;
@@ -689,10 +699,19 @@
                     let minY = Math.min(...pts.map(p => p.y));
                     let maxY = Math.max(...pts.map(p => p.y));
                     
-                    // Фільтр: маркер повинен бути повністю в межах кадру (з відступом 20px)
-                    if (minX < -20 || maxX > VIDEO_WIDTH + 20 || 
-                        minY < -20 || maxY > VIDEO_HEIGHT + 20) {
+                    // Обчислюємо розмір маркера
+                    let markerWidth = maxX - minX;
+                    let markerHeight = maxY - minY;
+                    
+                    // Фільтр 1: маркер повинен бути повністю в межах кадру (з відступом 10px)
+                    if (minX < -10 || maxX > VIDEO_WIDTH + 10 || 
+                        minY < -10 || maxY > VIDEO_HEIGHT + 10) {
                         return; // Пропускаємо маркер, який вийшов за межі
+                    }
+                    
+                    // Фільтр 2: маркер не повинен бути занадто великим (>80% екрану)
+                    if (markerWidth > VIDEO_WIDTH * 0.85 || markerHeight > VIDEO_HEIGHT * 0.85) {
+                        return; // Пропускаємо занадто великі маркери (це можуть бути внутрішні контури)
                     }
 
                     // Впорядковуємо точки: topLeft, topRight, bottomRight, bottomLeft
