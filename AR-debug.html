@@ -1157,18 +1157,10 @@
                     ctx4.stroke();
                 }
 
-                // Зчитуємо та малюємо бінарні значення
-                // Використовуємо thresholded зображення для зчитування
-                let binaryGrid = [];
+                // Малюємо бінарні значення на сітці
                 for (let row = 0; row < gridSize; row++) {
                     for (let col = 0; col < gridSize; col++) {
-                        let centerX = Math.floor((col + 0.5) * (200 / gridSize));
-                        let centerY = Math.floor((row + 0.5) * (200 / gridSize));
-                        let pixel = warped.ucharAt(centerY, centerX);
-                        let binaryValue = pixel > 127 ? 1 : 0;
-                        binaryGrid.push(binaryValue);
-
-                        // Малюємо значення на сітці (масштабоване)
+                        let binaryValue = candidate.binary[row * gridSize + col];
                         ctx4.fillStyle = binaryValue === 1 ? '#00ff00' : '#ff0000';
                         ctx4.font = gridSize === 3 && markerCandidates.length === 1 ? 'bold 14px Arial' : 'bold 10px Arial';
                         ctx4.textAlign = 'center';
@@ -1181,7 +1173,7 @@
 
                 // Обчислюємо ID маркера
                 let idBits = [
-                    binaryGrid[1], binaryGrid[3], binaryGrid[4], binaryGrid[5], binaryGrid[7]
+                    candidate.binary[1], candidate.binary[3], candidate.binary[4], candidate.binary[5], candidate.binary[7]
                 ];
                 let markerId = parseInt(idBits.join(''), 2);
 
