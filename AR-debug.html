@@ -431,8 +431,11 @@
                 // Сцена 4: Декодування маркерів
                 const decodedMarkers = processScene4(markerCandidates);
 
-                // Очищаємо warped після використання
-                markerCandidates.forEach(c => c.warped.delete());
+                // Очищаємо warped та warpedColor після використання
+                markerCandidates.forEach(c => {
+                    c.warped.delete();
+                    c.warpedColor.delete();
+                });
 
                 // Сцена 5: Pose Estimation
                 const poses = processScene5(decodedMarkers);
@@ -793,9 +796,18 @@
 
                     // Створюємо матрицю для результату
                     let warped = new cv.Mat();
+                    let warpedColor = new cv.Mat(); // Кольорове warped для сцени 4
 
-                    // Виконуємо warp perspective
+                    // Виконуємо warp perspective для thresholded (для сцени 3)
                     cv.warpPerspective(thresholded, warped, M,
+                        new cv.Size(normalizedSize, normalizedSize),
+                        cv.INTER_LINEAR,
+                        cv.BORDER_CONSTANT,
+                        new cv.Scalar(0, 0, 0, 0)
+                    );
+                    
+                    // Виконуємо warp perspective для кольорового зображення (для сцени 4)
+                    cv.warpPerspective(src, warpedColor, M,
                         new cv.Size(normalizedSize, normalizedSize),
                         cv.INTER_LINEAR,
                         cv.BORDER_CONSTANT,
@@ -820,10 +832,11 @@
                     ctx3.font = 'bold 16px Arial';
                     ctx3.fillText(`M${markerIndex}`, ordered[0].x + 5, ordered[0].y + 20);
 
-                    // Зберігаємо кандидата маркера (warped НЕ видаляємо тут)
+                    // Зберігаємо кандидата маркера
                     markerCandidates.push({
                         pts: pts, // Зберігаємо точки
-                        warped: warped, // Не видаляємо warped, він знадобиться в processScene4
+                        warped: warped, // Бінаризоване для сцени 3
+                        warpedColor: warpedColor, // Кольорове для сцени 4
                         homography: M,
                         markerIndex: markerIndex
                     });
@@ -977,9 +990,13 @@
             drawDecodedMarkersGrid(markerCandidates, gridSize, cellSize);
 
             markerCandidates.forEach((candidate, index) => {
-                // Створюємо копію warped для обробки
-                let warped = candidate.warped.clone();
+                // Створюємо копію warpedColor для обробки (кольорове зображення)
+                let warpedColor = candidate.warpedColor.clone();
                 let ordered = orderPoints(candidate.pts); // Впорядковуємо точки
+
+                // Конвертуємо у відтінки сірого для зчитування
+                let warpedGray = new cv.Mat();
+                cv.cvtColor(warpedColor, warpedGray, cv.COLOR_RGBA2GRAY, 0);
 
                 // Зчитуємо бінарні значення клітин
                 let binaryGrid = [];
@@ -991,8 +1008,8 @@
                         let centerX = Math.floor((col + 0.5) * cellSize);
                         let centerY = Math.floor((row + 0.5) * cellSize);
 
-                        // Зчитуємо піксель з центру
-                        let pixel = warped.ucharAt(centerY, centerX);
+                        // Зчитуємо піксель з центру (сіре зображення)
+                        let pixel = warpedGray.ucharAt(centerY, centerX);
 
                         // Бінарне значення (255 = 1, 0 = 0)
                         let binaryValue = pixel > 127 ? 1 : 0;
@@ -1022,8 +1039,9 @@
                     markerIndex: candidate.markerIndex
                 });
 
-                // Видаляємо копію warped після використання
-                warped.delete();
+                // Видаляємо копії після використання
+                warpedColor.delete();
+                warpedGray.delete();
             });
 
             return decodedMarkers;
@@ -1104,12 +1122,12 @@
                     baseY = startY + row * (markerDisplaySize + infoHeight + gap);
                 }
 
-                // Малюємо warped зображення
+                // Малюємо warped зображення (кольорове)
                 let tempCanvas = document.createElement('canvas');
                 tempCanvas.width = 200;
                 tempCanvas.height = 200;
                 let tempCtx = tempCanvas.getContext('2d');
-                cv.imshow(tempCanvas, candidate.warped);
+                cv.imshow(tempCanvas, candidate.warpedColor);
                 
                 // Масштабуємо до markerDisplaySize
                 ctx4.drawImage(tempCanvas, baseX, baseY, markerDisplaySize, markerDisplaySize);
@@ -1140,7 +1158,7 @@
                 }
 
                 // Зчитуємо та малюємо бінарні значення
-                let warped = candidate.warped;
+                // Використовуємо thresholded зображення для зчитування
                 let binaryGrid = [];
                 for (let row = 0; row < gridSize; row++) {
                     for (let col = 0; col < gridSize; col++) {
@@ -1151,7 +1169,7 @@
                         binaryGrid.push(binaryValue);
 
                         // Малюємо значення на сітці (масштабоване)
-                        ctx4.fillStyle = pixel > 127 ? '#00ff00' : '#ff0000';
+                        ctx4.fillStyle = binaryValue === 1 ? '#00ff00' : '#ff0000';
                         ctx4.font = gridSize === 3 && markerCandidates.length === 1 ? 'bold 14px Arial' : 'bold 10px Arial';
                         ctx4.textAlign = 'center';
                         ctx4.textBaseline = 'middle';
