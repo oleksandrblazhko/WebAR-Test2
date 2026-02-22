@@ -882,7 +882,18 @@
             // Розмір комінки залежить від кількості маркерів
             let cellSize;
             if (markerCandidates.length === 1) {
-                cellSize = Math.min(VIDEO_WIDTH, VIDEO_HEIGHT - 60); // Більший розмір для одного маркера
+                // Для одного маркера використовуємо розмір, пропорційний до сцени 2
+                // Беремо перший маркер і обчислюємо його розмір
+                let pts = markerCandidates[0].pts;
+                let minX = Math.min(...pts.map(p => p.x));
+                let maxX = Math.max(...pts.map(p => p.x));
+                let minY = Math.min(...pts.map(p => p.y));
+                let maxY = Math.max(...pts.map(p => p.y));
+                let markerWidth = maxX - minX;
+                let markerHeight = maxY - minY;
+                
+                // Масштабуємо: розмір на сцені 3 = 80% від розміру на сцені 2
+                cellSize = Math.min(markerWidth * 0.8, markerHeight * 0.8, VIDEO_WIDTH - 40);
             } else {
                 cellSize = Math.min(100, Math.floor(VIDEO_WIDTH / cols));
             }
@@ -1024,7 +1035,17 @@
             let markerDisplaySize;
             let infoHeight;
             if (markerCandidates.length === 1) {
-                markerDisplaySize = Math.min(200, VIDEO_WIDTH - 40, VIDEO_HEIGHT - 120);
+                // Для одного маркера використовуємо розмір, пропорційний до сцени 2
+                let pts = markerCandidates[0].pts;
+                let minX = Math.min(...pts.map(p => p.x));
+                let maxX = Math.max(...pts.map(p => p.x));
+                let minY = Math.min(...pts.map(p => p.y));
+                let maxY = Math.max(...pts.map(p => p.y));
+                let markerWidth = maxX - minX;
+                let markerHeight = maxY - minY;
+                
+                // Масштабуємо: розмір на сцені 4 = 80% від розміру на сцені 2
+                markerDisplaySize = Math.min(markerWidth * 0.8, markerHeight * 0.8, VIDEO_WIDTH - 40);
                 infoHeight = 100; // Більше місця для інформації
             } else {
                 markerDisplaySize = 120;
