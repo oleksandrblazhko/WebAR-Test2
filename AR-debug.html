@@ -892,8 +892,8 @@
                 let markerWidth = maxX - minX;
                 let markerHeight = maxY - minY;
                 
-                // Масштабуємо: розмір на сцені 3 = 80% від розміру на сцені 2
-                cellSize = Math.min(markerWidth * 0.8, markerHeight * 0.8, VIDEO_WIDTH - 40);
+                // Масштабуємо: розмір на сцені 3 = розміру на сцені 2
+                cellSize = Math.min(markerWidth * 1.0, markerHeight * 1.0, VIDEO_WIDTH - 40);
             } else {
                 cellSize = Math.min(100, Math.floor(VIDEO_WIDTH / cols));
             }
@@ -1044,8 +1044,8 @@
                 let markerWidth = maxX - minX;
                 let markerHeight = maxY - minY;
                 
-                // Масштабуємо: розмір на сцені 4 = 80% від розміру на сцені 2
-                markerDisplaySize = Math.min(markerWidth * 0.8, markerHeight * 0.8, VIDEO_WIDTH - 40);
+                // Масштабуємо: розмір на сцені 4 = розміру на сцені 2
+                markerDisplaySize = Math.min(markerWidth * 1.0, markerHeight * 1.0, VIDEO_WIDTH - 40);
                 infoHeight = 100; // Більше місця для інформації
             } else {
                 markerDisplaySize = 120;
