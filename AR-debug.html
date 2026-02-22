@@ -1173,7 +1173,8 @@
                         for (let col = 0; col < gridSize; col++) {
                             let binaryValue = candidate.binary[row * gridSize + col];
                             ctx4.fillStyle = binaryValue === 1 ? '#00ff00' : '#ff0000';
-                            ctx4.font = gridSize === 3 && markerCandidates.length === 1 ? 'bold 14px Arial' : 'bold 10px Arial';
+                            // Збільшений розмір шрифту (3x)
+                            ctx4.font = gridSize === 3 && markerCandidates.length === 1 ? 'bold 42px Arial' : 'bold 30px Arial';
                             ctx4.textAlign = 'center';
                             ctx4.textBaseline = 'middle';
                             ctx4.fillText(binaryValue.toString(),
