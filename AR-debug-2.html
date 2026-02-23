@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Debug - Візуалізація кроків AR-технології (AR.js)</title>
+    <!-- Додаємо Three.js -->
+    <script src="js/three.js"></script>
+    <!-- Додаємо jsartoolkit5 -->
+    <script src="jsartoolkit5/artoolkit.min.js"></script>
+    <script src="jsartoolkit5/artoolkit.api.js"></script>
+    <!-- Додаємо threex.artoolkit -->
+    <script src="threex/threex-artoolkitcontext.js"></script>
+    <script src="threex/threex-arbasecontrols.js"></script>
+    <script src="threex/threex-armarkercontrols.js"></script>
+    <!-- Додаємо OpenCV.js для попередньої обробки (Сцена 1) -->
+    <script async src="https://docs.opencv.org/4.8.0/opencv.js" onload="onOpenCvReady()" type="text/javascript"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #00d4ff;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .subtitle {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .scenes-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .scene {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .scene:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .scene-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .scene-number {
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            color: #000;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        .scene-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .scene-description {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .scene canvas, .scene video {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            background: #000;
+            display: block;
+        }
+
+        .scene-info {
+            margin-top: 10px;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            font-size: 11px;
+            color: #00d4ff;
+        }
+
+        .scene-info span {
+            display: block;
+            margin: 3px 0;
+        }
+
+        .controls {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .controls button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            color: #000;
+        }
+
+        .btn-start:hover {
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, #ff4757, #cc3344);
+            color: #fff;
+        }
+
+        .btn-stop:hover {
+            box-shadow: 0 0 20px rgba(255, 71, 87, 0.5);
+        }
+
+        .status {
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .status-ready {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
+        .status-running {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
+
+        .status-error {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+
+        /* Приховуємо відео елемент */
+        #arVideo {
+            display: none !important;
+            position: absolute !important;
+            left: -9999px !important;
+            top: -9999px !important;
+            width: 1px !important;
+            height: 1px !important;
+        }
+        
+        /* Приховуємо canvas створені AR.js */
+        canvas.arjs-canvas {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 AR Debug - Візуалізація кроків AR-технології (AR.js)</h1>
+    <p class="subtitle">Демонстрація роботи AR.js для розпізнавання barcode-маркерів</p>
+
+    <!-- Контроли -->
+    <div class="controls">
+        <button class="btn-start" id="btnStart">▶ Запустити камеру</button>
+        <button class="btn-stop" id="btnStop">⏹ Зупинити</button>
+        <div class="status status-ready" id="statusStatus">Готовий до запуску</div>
+    </div>
+
+    <!-- Відео для AR.js -->
+    <video id="arVideo" autoplay playsinline muted crossorigin="anonymous"></video>
+
+    <!-- Контейнер для 6 сцен -->
+    <div class="scenes-container">
+        <!-- Сцена 1: Вихідне відео -->
+        <div class="scene">
+            <div class="scene-header">
+                <div class="scene-number">1</div>
+                <div class="scene-title">Вихідне відео</div>
+            </div>
+            <p class="scene-description">
+                Потік з камери для обробки AR.js
+            </p>
+            <canvas id="scene1"></canvas>
+            <div class="scene-info" id="scene1Info">
+                <span>Очікування...</span>
+            </div>
+        </div>
+
+        <!-- Сцена 2: Детектування маркерів -->
+        <div class="scene">
+            <div class="scene-header">
+                <div class="scene-number">2</div>
+                <div class="scene-title">Детектування (AR.js)</div>
+            </div>
+            <p class="scene-description">
+                Barcode-маркери, розпізнані AR.js (artoolkit)
+            </p>
+            <canvas id="scene2"></canvas>
+            <div class="scene-info" id="scene2Info">
+                <span>Очікування...</span>
+            </div>
+        </div>
+
+        <!-- Сцена 3: Позиції маркерів -->
+        <div class="scene">
+            <div class="scene-header">
+                <div class="scene-number">3</div>
+                <div class="scene-title">Позиції маркерів</div>
+            </div>
+            <p class="scene-description">
+                3D позиції та орієнтація маркерів
+            </p>
+            <canvas id="scene3"></canvas>
+            <div class="scene-info" id="scene3Info">
+                <span>Очікування...</span>
+            </div>
+        </div>
+
+        <!-- Сцена 4: Стан маркерів -->
+        <div class="scene">
+            <div class="scene-header">
+                <div class="scene-number">4</div>
+                <div class="scene-title">Стан маркерів</div>
+            </div>
+            <p class="scene-description">
+                inCurrent, inPrevious - стан детектування
+            </p>
+            <canvas id="scene4"></canvas>
+            <div class="scene-info" id="scene4Info">
+                <span>Очікування...</span>
+            </div>
+        </div>
+
+        <!-- Сцена 5: Pose Estimation -->
+        <div class="scene">
+            <div class="scene-header">
+                <div class="scene-number">5</div>
+                <div class="scene-title">Pose Estimation</div>
+            </div>
+            <p class="scene-description">
+                Rotation & Translation з AR.js
+            </p>
+            <canvas id="scene5"></canvas>
+            <div class="scene-info" id="scene5Info">
+                <span>Очікування...</span>
+            </div>
+        </div>
+
+        <!-- Сцена 6: 3D візуалізація -->
+        <div class="scene">
+            <div class="scene-header">
+                <div class="scene-number">6</div>
+                <div class="scene-title">3D Конус</div>
+            </div>
+            <p class="scene-description">
+                Прив'язка 3D-примітива до маркера (Three.js)
+            </p>
+            <canvas id="scene6"></canvas>
+            <div class="scene-info" id="scene6Info">
+                <span>Очікування...</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // ГЛОБАЛЬНІ ЗМІННІ
+        // ============================================
+        let arToolkitReady = false;
+        let video = document.getElementById('arVideo');
+        let stream = null;
+        let animationId = null;
+        
+        // AR.js змінні
+        let arToolkitContext = null;
+        let scene, camera;
+        
+        // OpenCV змінна
+        let cvReady = false;
+        
+        function onOpenCvReady() {
+            cvReady = true;
+            console.log('✅ OpenCV.js готовий до роботи');
+        }
+        
+        // Конфігурація barcode-маркерів
+        let config = null;
+        let barcodeMarkerValues = [];
+        
+        // Змінні для відстеження стану маркерів
+        let lastMarkerStates = {};
+        let lastUpdateTime = 0;
+        let markerDiagnostics = {};
+
+        // Canvas для сцен
+        const canvas1 = document.getElementById('scene1');
+        const canvas2 = document.getElementById('scene2');
+        const canvas3 = document.getElementById('scene3');
+        const canvas4 = document.getElementById('scene4');
+        const canvas5 = document.getElementById('scene5');
+        const canvas6 = document.getElementById('scene6');
+
+        // Contexts для сцен
+        const ctx1 = canvas1.getContext('2d');
+        const ctx2 = canvas2.getContext('2d');
+        const ctx3 = canvas3.getContext('2d');
+        const ctx4 = canvas4.getContext('2d');
+        const ctx5 = canvas5.getContext('2d');
+        const ctx6 = canvas6.getContext('2d');
+
+        // Розміри
+        const VIDEO_WIDTH = 640;
+        const VIDEO_HEIGHT = 480;
+
+        // ============================================
+        // ІНІЦІАЛІЗАЦІЯ AR.JS
+        // ============================================
+        let markerRoots = {}; // Зберігаємо markerRoot для кожного barcode
+        
+        function initARjs() {
+            console.log('initARjs: video.readyState =', video.readyState);
+            
+            // Чекаємо поки відео буде готове
+            if (video.readyState < 2) {
+                console.log('initARjs: відео не готове, чекаємо...');
+                video.onloadeddata = function() {
+                    console.log('initARjs: відео завантажено, readyState =', video.readyState);
+                    initARjsInternal();
+                };
+            } else {
+                initARjsInternal();
+            }
+        }
+        
+        function initARjsInternal() {
+            // Створюємо Three.js сцену для візуалізації
+            scene = new THREE.Scene();
+            camera = new THREE.Camera();
+            scene.add(camera);
+
+            // Створюємо AR.js контекст без ArToolkitSource
+            arToolkitContext = new THREEx.ArToolkitContext({
+                cameraParametersUrl: 'data/camera_para.dat',
+                detectionMode: 'mono_and_matrix',
+                matrixCodeType: '3x3',
+                maxDetectionRate: -1,
+                canvasWidth: VIDEO_WIDTH,
+                canvasHeight: VIDEO_HEIGHT
+            });
+
+            // Ініціалізуємо контекст з нашим video елементом
+            arToolkitContext.init(function onCompleted() {
+                console.log('arToolkitContext.init завершено');
+                camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
+                arToolkitReady = true;
+                updateStatus('🎥 AR.js готовий. Обробка...', 'running');
+                console.log('✅ AR.js готовий до роботи');
+                
+                // Запускаємо цикл обробки
+                processFrame();
+                
+                // Створюємо markerRoot для кожного barcode-маркера з конфігурації
+                if (barcodeMarkerValues.length > 0) {
+                    barcodeMarkerValues.forEach((barcodeValue) => {
+                        // Створюємо групу для маркера
+                        const markerRoot = new THREE.Group();
+                        scene.add(markerRoot);
+                        markerRoots[barcodeValue] = markerRoot;
+                        
+                        // Створюємо контролер для маркера
+                        const markerControls = new THREEx.ArMarkerControls(
+                            arToolkitContext,
+                            markerRoot,
+                            {
+                                type: 'barcode',
+                                barcodeValue: barcodeValue,
+                                size: 35 // matrixSize з config.json
+                            }
+                        );
+                        
+                        console.log(`✅ Створено контролер для barcode ${barcodeValue}`);
+                    });
+                }
+            });
+        }
+
+        // ============================================
+        // ЗАВАНТАЖЕННЯ КОНФІГУРАЦІЇ
+        // ============================================
+        fetch('config.json')
+            .then(response => response.json())
+            .then(data => {
+                config = data;
+                if (config && config.markers) {
+                    barcodeMarkerValues = config.markers
+                        .filter(m => m.type === 'barcode')
+                        .map(m => m.target);
+                    console.log('✅ Barcode-маркери з config.json:', barcodeMarkerValues);
+                }
+            })
+            .catch(error => {
+                console.error('⚠️ Помилка завантаження config.json:', error);
+            });
+
+        // ============================================
+        // ФУНКЦІЇ УПРАВЛІННЯ
+        // ============================================
+        document.getElementById('btnStart').addEventListener('click', startCamera);
+        document.getElementById('btnStop').addEventListener('click', stopCamera);
+
+        async function startCamera() {
+            try {
+                // Запитуємо доступ до камери
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        width: { ideal: VIDEO_WIDTH },
+                        height: { ideal: VIDEO_HEIGHT },
+                        facingMode: 'environment'
+                    }
+                });
+
+                // Встановлюємо відео потік
+                video.srcObject = stream;
+
+                // Чекаємо поки відео завантажиться
+                await new Promise(resolve => {
+                    video.onloadeddata = resolve;
+                    video.play();
+                });
+
+                // Встановлюємо розміри canvas
+                setupCanvasSizes();
+
+                // Ініціалізуємо AR.js
+                initARjs();
+
+            } catch (err) {
+                console.error('Помилка запуску камери:', err);
+                updateStatus('Помилка: ' + err.message, 'error');
+            }
+        }
+
+        function stopCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+            if (arToolkitContext) {
+                arToolkitContext = null;
+            }
+            
+            // Очищаємо сцени
+            [ctx1, ctx2, ctx3, ctx4, ctx5, ctx6].forEach(ctx => {
+                ctx.fillStyle = '#1a1a2e';
+                ctx.fillRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+            });
+
+            updateStatus('Зупинено', 'ready');
+            arToolkitReady = false;
+        }
+
+        function setupCanvasSizes() {
+            [canvas1, canvas2, canvas3, canvas4, canvas5, canvas6].forEach(canvas => {
+                canvas.width = VIDEO_WIDTH;
+                canvas.height = VIDEO_HEIGHT;
+            });
+        }
+
+        function updateStatus(message, type) {
+            const statusEl = document.getElementById('statusStatus');
+            statusEl.textContent = message;
+            statusEl.className = 'status status-' + type;
+        }
+
+        // ============================================
+        // ГОЛОВНИЙ ЦИКЛ ОБРОБКИ КАДРІВ
+        // ============================================
+        let frameCount = 0;
+        
+        function processFrame() {
+            console.log(`processFrame: stream=${!!stream}, paused=${video.paused}, ended=${video.ended}, ready=${arToolkitReady}, readyState=${video.readyState}`);
+            
+            if (!stream || video.paused || video.ended || !arToolkitReady) {
+                animationId = requestAnimationFrame(processFrame);
+                return;
+            }
+
+            try {
+                // Оновлюємо AR.js контекст з нашим video елементом
+                // Використовуємо arController.process() для детектування
+                const arController = arToolkitContext.arController;
+                arController.process(video);
+
+                // Отримуємо дані про barcode-маркери з AR.js
+                const barcodeMarkers = arToolkitContext.arController.barcodeMarkers;
+                
+                // Оновлюємо видимість markerRoot на основі даних AR.js
+                barcodeMarkerValues.forEach((barcodeValue) => {
+                    const markerRoot = markerRoots[barcodeValue];
+                    const marker = barcodeMarkers[barcodeValue];
+                    
+                    if (markerRoot && marker) {
+                        // Встановлюємо видимість на основі inCurrent
+                        markerRoot.visible = (marker.inCurrent === true);
+                    }
+                });
+                
+                // Сцена 1: Вихідне відео
+                processScene1();
+                
+                // Сцена 2: Детектування маркерів (основна сцена з відео)
+                processScene2(barcodeMarkers);
+                
+                // Сцена 3: Позиції маркерів
+                processScene3(barcodeMarkers);
+                
+                // Сцена 4: Стан маркерів
+                processScene4(barcodeMarkers);
+                
+                // Сцена 5: Pose Estimation
+                processScene5(barcodeMarkers);
+                
+                // Сцена 6: 3D візуалізація
+                processScene6(barcodeMarkers);
+                
+                frameCount++;
+            } catch (err) {
+                console.error('Помилка обробки кадру:', err);
+            }
+
+            animationId = requestAnimationFrame(processFrame);
+        }
+
+        // ============================================
+        // СЦЕНА 1: ПОПЕРЕДНЯ ОБРОБКА (OpenCV)
+        // ============================================
+        function processScene1() {
+            // Створюємо тимчасовий canvas для OpenCV
+            let tempCanvas = document.createElement('canvas');
+            tempCanvas.width = VIDEO_WIDTH;
+            tempCanvas.height = VIDEO_HEIGHT;
+            let tempCtx = tempCanvas.getContext('2d');
+            tempCtx.drawImage(video, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+
+            // Отримуємо ImageData для обробки OpenCV
+            let imageData = tempCtx.getImageData(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+            
+            if (cvReady && typeof cv !== 'undefined') {
+                let src = cv.matFromImageData(imageData);
+                let gray = new cv.Mat();
+                let blurred = new cv.Mat();
+                let thresholded = new cv.Mat();
+
+                try {
+                    // Крок 1: RGB → Grayscale (перетворення у відтінки сірого)
+                    cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
+
+                    // Крок 2: Gaussian Blur (зменшення шуму, ядро 5x5)
+                    cv.GaussianBlur(gray, blurred, new cv.Size(5, 5), 0, 0, cv.BORDER_DEFAULT);
+
+                    // Крок 3: Adaptive Threshold (бінаризація)
+                    cv.adaptiveThreshold(blurred, thresholded, 255,
+                        cv.ADAPTIVE_THRESH_GAUSSIAN_C,
+                        cv.THRESH_BINARY_INV,
+                        11, // Розмір блоку
+                        2   // Константа C
+                    );
+
+                    // Показуємо результат (thresholded)
+                    cv.imshow('scene1', thresholded);
+
+                    // Оновлюємо інформацію
+                    document.getElementById('scene1Info').innerHTML = `
+                        <span>📊 Розмір: ${VIDEO_WIDTH}x${VIDEO_HEIGHT}</span>
+                        <span>⚙️ Gaussian: ядро 5×5</span>
+                        <span>🔲 Adaptive: блок 11×11, C=2</span>
+                        <span>🟤 RGB → Grayscale → Blur → Threshold</span>
+                    `;
+
+                } catch (err) {
+                    console.error('Помилка Scene 1:', err);
+                    //fallback - малюємо відео
+                    ctx1.drawImage(video, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+                } finally {
+                    src.delete();
+                    gray.delete();
+                    blurred.delete();
+                    thresholded.delete();
+                }
+            } else {
+                // OpenCV ще не готовий - малюємо відео
+                ctx1.drawImage(video, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+                document.getElementById('scene1Info').innerHTML = `
+                    <span>📊 Розмір: ${VIDEO_WIDTH}x${VIDEO_HEIGHT}</span>
+                    <span>⏳ OpenCV завантажується...</span>
+                `;
+            }
+        }
+
+        // ============================================
+        // СЦЕНА 2: ДЕТЕКТУВАННЯ МАРКЕРІВ (AR.JS)
+        // ============================================
+        function processScene2(barcodeMarkers) {
+            console.log('processScene2: barcodeMarkers =', barcodeMarkers);
+            console.log('processScene2: arToolkitContext =', arToolkitContext);
+            
+            // Перевіряємо чи відео готове
+            if (video.readyState >= 2) {
+                // Малюємо вихідне відео на canvas сцени 2
+                ctx2.drawImage(video, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+            } else {
+                // Показуємо повідомлення про очікування
+                ctx2.fillStyle = '#1a1a2e';
+                ctx2.fillRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+                ctx2.fillStyle = '#ffffff';
+                ctx2.font = 'bold 20px Arial';
+                ctx2.textAlign = 'center';
+                ctx2.fillText('Очікування відео...', VIDEO_WIDTH / 2, VIDEO_HEIGHT / 2);
+                return;
+            }
+
+            let detectedCount = 0;
+            const currentTime = performance.now();
+            const timeDelta = currentTime - (lastUpdateTime || currentTime);
+            lastUpdateTime = currentTime;
+
+            // Отримуємо доступ до arController для отримання 2D координат
+            const arController = arToolkitContext.arController;
+            
+            console.log('processScene2: arController =', arController);
+
+            // Отримуємо кількість детектованих маркерів
+            const markerNum = arController.getMarkerNum();
+            
+            console.log('processScene2: markerNum =', markerNum);
+            
+            // Проходимо по всіх детектованих маркерах
+            for (let i = 0; i < markerNum; i++) {
+                const markerInfo = arController.getMarker(i);
+                
+                if (!markerInfo) continue;
+                
+                // Перевіряємо тип маркера (BARCODE_MARKER = 1)
+                const isBarcode = markerInfo.idMatrix >= 0;
+                
+                if (isBarcode) {
+                    const barcodeValue = markerInfo.idMatrix;
+                    
+                    // Перевіряємо чи це маркер з нашої конфігурації
+                    if (!barcodeMarkerValues.includes(barcodeValue)) continue;
+                    
+                    const markerRoot = markerRoots[barcodeValue];
+                    const arMarker = barcodeMarkers[barcodeValue];
+                    
+                    // Перевіряємо чи маркер видимий
+                    if (markerRoot && arMarker && arMarker.inCurrent === true) {
+                        detectedCount++;
+                        
+                        // Отримуємо 2D координати кутів з markerInfo.vertex
+                        const vertex = markerInfo.vertex;
+                        
+                        console.log(`Маркер ${barcodeValue} vertex:`, vertex);
+                        
+                        if (vertex && vertex.length >= 4) {
+                            // vertex - це 2D координати у форматі [[x0,y0], [x1,y1], ...]
+                            const corners = [
+                                { x: vertex[0][0], y: vertex[0][1] },
+                                { x: vertex[1][0], y: vertex[1][1] },
+                                { x: vertex[2][0], y: vertex[2][1] },
+                                { x: vertex[3][0], y: vertex[3][1] }
+                            ];
+                            
+                            console.log(`Маркер ${barcodeValue} corners:`, corners);
+                            
+                            // Малюємо контур маркера (зелений)
+                            ctx2.strokeStyle = '#00ff00';
+                            ctx2.lineWidth = 3;
+                            ctx2.beginPath();
+                            ctx2.moveTo(corners[0].x, corners[0].y);
+                            ctx2.lineTo(corners[1].x, corners[1].y);
+                            ctx2.lineTo(corners[2].x, corners[2].y);
+                            ctx2.lineTo(corners[3].x, corners[3].y);
+                            ctx2.closePath();
+                            ctx2.stroke();
+                            
+                            // Малюємо червоні точки на кутах
+                            for (let corner of corners) {
+                                ctx2.beginPath();
+                                ctx2.arc(corner.x, corner.y, 5, 0, 2 * Math.PI);
+                                ctx2.fillStyle = '#ff0000';
+                                ctx2.fill();
+                            }
+                            
+                            // Малюємо центр маркера
+                            const centerX = (corners[0].x + corners[1].x + corners[2].x + corners[3].x) / 4;
+                            const centerY = (corners[0].y + corners[1].y + corners[2].y + corners[3].y) / 4;
+                            ctx2.beginPath();
+                            ctx2.arc(centerX, centerY, 8, 0, 2 * Math.PI);
+                            ctx2.fillStyle = '#00d4ff';
+                            ctx2.fill();
+                            ctx2.strokeStyle = '#ffffff';
+                            ctx2.lineWidth = 2;
+                            ctx2.stroke();
+                            
+                            // Малюємо ID маркера
+                            ctx2.fillStyle = '#00ff00';
+                            ctx2.font = 'bold 16px Arial';
+                            ctx2.fillText(`ID:${barcodeValue}`, corners[0].x + 10, corners[0].y + 20);
+                        }
+                    }
+                }
+            }
+            
+            // Оновлюємо час останнього оновлення
+            lastUpdateTime = currentTime;
+            
+            // Видаляємо старі маркери з діагностики
+            Object.keys(markerDiagnostics).forEach(key => {
+                if (currentTime - markerDiagnostics[key].lastSeen > 1000) {
+                    delete markerDiagnostics[key];
+                }
+            });
+            
+            // Оновлюємо інформацію
+            document.getElementById('scene2Info').innerHTML = `
+                <span>🔍 Barcode-маркерів в config: ${barcodeMarkerValues.length}</span>
+                <span>✅ Детектовано: ${detectedCount}</span>
+                <span>📦 AR.js detection</span>
+                <span>⏱ Frame: ${timeDelta.toFixed(1)}ms</span>
+            `;
+        }
+
+        // ============================================
+        // СЦЕНА 3: ПОЗИЦІЇ МАРКЕРІВ
+        // ============================================
+        function processScene3(barcodeMarkers) {
+            // Перевіряємо чи відео готове
+            if (video.readyState < 2) return;
+            
+            // Малюємо відео на фоні
+            ctx3.drawImage(video, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+
+            let visibleCount = 0;
+
+            barcodeMarkerValues.forEach((barcodeValue) => {
+                const markerRoot = markerRoots[barcodeValue];
+
+                if (markerRoot && markerRoot.visible) {
+                    visibleCount++;
+
+                    // Отримуємо 2D кути для візуалізації
+                    const corners = getMarkerCorners(markerRoot, VIDEO_WIDTH, VIDEO_HEIGHT);
+
+                    // Перевіряємо чи кути отримані коректно
+                    if (!corners || corners.length !== 4) return;
+
+                    // Малюємо позицію маркера
+                    ctx3.strokeStyle = '#ffa500';
+                    ctx3.lineWidth = 2;
+                    ctx3.beginPath();
+                    ctx3.moveTo(corners[0].x, corners[0].y);
+                    ctx3.lineTo(corners[1].x, corners[1].y);
+                    ctx3.lineTo(corners[2].x, corners[2].y);
+                    ctx3.lineTo(corners[3].x, corners[3].y);
+                    ctx3.closePath();
+                    ctx3.stroke();
+
+                    // Малюємо 3D позицію
+                    const pos = markerRoot.position;
+                    ctx3.fillStyle = '#00d4ff';
+                    ctx3.font = 'bold 12px Arial';
+                    ctx3.fillText(`Pos: [${pos.x.toFixed(2)}, ${pos.y.toFixed(2)}, ${pos.z.toFixed(2)}]`,
+                        corners[0].x, corners[3].y + 20);
+                }
+            });
+            
+            document.getElementById('scene3Info').innerHTML = `
+                <span>📍 Видимих маркерів: ${visibleCount}</span>
+                <span>🎯 Three.js позиції</span>
+            `;
+        }
+
+        // ============================================
+        // СЦЕНА 4: СТАН МАРКЕРІВ
+        // ============================================
+        function processScene4(barcodeMarkers) {
+            // Очищаємо canvas
+            ctx4.fillStyle = '#1a1a2e';
+            ctx4.fillRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+            
+            let y = 40;
+            const lineHeight = 30;
+            
+            // Заголовок
+            ctx4.fillStyle = '#ffffff';
+            ctx4.font = 'bold 16px Arial';
+            ctx4.textAlign = 'center';
+            ctx4.fillText('Стан barcode-маркерів', VIDEO_WIDTH / 2, y);
+            y += lineHeight;
+            
+            barcodeMarkerValues.forEach((barcodeValue) => {
+                const markerRoot = markerRoots[barcodeValue];
+                const isVisible = markerRoot && markerRoot.visible;
+                const wasVisible = markerDiagnostics[barcodeValue] && 
+                                   markerDiagnostics[barcodeValue].visible;
+                
+                // Колір залежно від стану
+                ctx4.fillStyle = isVisible ? '#00ff00' : '#ff4444';
+                ctx4.font = 'bold 14px Arial';
+                ctx4.textAlign = 'left';
+                ctx4.fillText(`ID ${barcodeValue}:`, 20, y);
+                
+                ctx4.fillStyle = isVisible ? '#00ff00' : '#888888';
+                ctx4.font = '12px Arial';
+                ctx4.fillText(`Visible: ${isVisible ? 'YES' : 'NO'}`, 120, y);
+                
+                ctx4.fillStyle = wasVisible ? '#00ff00' : '#888888';
+                ctx4.fillText(`Prev: ${wasVisible ? 'YES' : 'NO'}`, 280, y);
+                
+                y += lineHeight;
+            });
+            
+            document.getElementById('scene4Info').innerHTML = `
+                <span>📊 Visible / Previous</span>
+                <span>🟢 = детектовано, 🔴 = втрачено</span>
+            `;
+        }
+
+        // ============================================
+        // СЦЕНА 5: POSE ESTIMATION
+        // ============================================
+        function processScene5(barcodeMarkers) {
+            // Перевіряємо чи відео готове
+            if (video.readyState < 2) return;
+            
+            // Малюємо відео на фоні
+            ctx5.drawImage(video, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+
+            let poseCount = 0;
+
+            barcodeMarkerValues.forEach((barcodeValue) => {
+                const markerRoot = markerRoots[barcodeValue];
+
+                if (markerRoot && markerRoot.visible) {
+                    poseCount++;
+
+                    // Отримуємо 2D кути
+                    const corners = getMarkerCorners(markerRoot, VIDEO_WIDTH, VIDEO_HEIGHT);
+                    
+                    // Перевіряємо чи кути отримані коректно
+                    if (!corners || corners.length !== 4) return;
+
+                    // Малюємо осі координат
+                    drawAxes(ctx5, corners[0]);
+
+                    // Отримуємо обертання
+                    const euler = new THREE.Euler().setFromQuaternion(markerRoot.quaternion, 'XYZ');
+                    const rotX = (euler.x * 180 / Math.PI).toFixed(1);
+                    const rotY = (euler.y * 180 / Math.PI).toFixed(1);
+                    const rotZ = (euler.z * 180 / Math.PI).toFixed(1);
+
+                    // Малюємо інформацію про позу
+                    ctx5.fillStyle = '#00d4ff';
+                    ctx5.font = '11px Arial';
+                    ctx5.fillText(`R: [${rotX}°, ${rotY}°, ${rotZ}°]`, corners[0].x + 10, corners[0].y + 40);
+                }
+            });
+            
+            document.getElementById('scene5Info').innerHTML = `
+                <span>🔄 Pose Estimation: ${poseCount}</span>
+                <span>📍 Rotation & Translation</span>
+            `;
+        }
+
+        // ============================================
+        // СЦЕНА 6: 3D ВІЗУАЛІЗАЦІЯ (КОНУС)
+        // ============================================
+        function processScene6(barcodeMarkers) {
+            // Перевіряємо чи відео готове
+            if (video.readyState < 2) return;
+            
+            // Малюємо відео на фоні
+            ctx6.drawImage(video, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+
+            let coneCount = 0;
+
+            barcodeMarkerValues.forEach((barcodeValue) => {
+                const markerRoot = markerRoots[barcodeValue];
+
+                if (markerRoot && markerRoot.visible) {
+                    coneCount++;
+
+                    // Отримуємо 2D кути
+                    const corners = getMarkerCorners(markerRoot, VIDEO_WIDTH, VIDEO_HEIGHT);
+                    
+                    // Перевіряємо чи кути отримані коректно
+                    if (!corners || corners.length !== 4) return;
+
+                    // Знаходимо центр
+                    const centerX = (corners[0].x + corners[1].x + corners[2].x + corners[3].x) / 4;
+                    const centerY = (corners[0].y + corners[1].y + corners[2].y + corners[3].y) / 4;
+                    
+                    // Розмір конуса залежить від відстані (z позиції)
+                    const coneHeight = Math.min(80, 150 / (Math.abs(markerRoot.position.z) + 0.5));
+                    const coneRadius = coneHeight * 0.4;
+                    
+                    // Вершина конуса
+                    const apexX = centerX - markerRoot.position.x * 50;
+                    const apexY = centerY - coneHeight - markerRoot.position.y * 50;
+                    
+                    // Малюємо конус
+                    ctx6.save();
+                    
+                    // Тінь
+                    ctx6.beginPath();
+                    ctx6.ellipse(centerX, centerY + 5, coneRadius, coneRadius * 0.3, 0, 0, Math.PI * 2);
+                    ctx6.fillStyle = 'rgba(0, 0, 0, 0.3)';
+                    ctx6.fill();
+                    
+                    // Основа
+                    ctx6.beginPath();
+                    ctx6.ellipse(centerX, centerY, coneRadius, coneRadius * 0.5, 0, 0, Math.PI * 2);
+                    ctx6.fillStyle = 'rgba(0, 212, 255, 0.3)';
+                    ctx6.fill();
+                    ctx6.strokeStyle = '#00d4ff';
+                    ctx6.lineWidth = 2;
+                    ctx6.stroke();
+                    
+                    // Бічні сторони
+                    ctx6.beginPath();
+                    ctx6.moveTo(apexX, apexY);
+                    ctx6.lineTo(centerX - coneRadius, centerY);
+                    ctx6.lineTo(centerX + coneRadius, centerY);
+                    ctx6.closePath();
+                    
+                    const gradient = ctx6.createLinearGradient(apexX, apexY, centerX, centerY);
+                    gradient.addColorStop(0, 'rgba(0, 212, 255, 0.9)');
+                    gradient.addColorStop(1, 'rgba(0, 153, 204, 0.7)');
+                    ctx6.fillStyle = gradient;
+                    ctx6.fill();
+                    ctx6.strokeStyle = '#00d4ff';
+                    ctx6.lineWidth = 2;
+                    ctx6.stroke();
+                    
+                    // Вершина
+                    ctx6.beginPath();
+                    ctx6.arc(apexX, apexY, 3, 0, Math.PI * 2);
+                    ctx6.fillStyle = '#ffffff';
+                    ctx6.fill();
+                    
+                    // ID маркера
+                    ctx6.fillStyle = '#00ff00';
+                    ctx6.font = 'bold 12px Arial';
+                    ctx6.fillText(`ID:${barcodeValue}`, apexX + 10, apexY - 10);
+                    
+                    ctx6.restore();
+                }
+            });
+            
+            document.getElementById('scene6Info').innerHTML = `
+                <span>🔺 Конусів: ${coneCount}</span>
+                <span>🎯 Маркерів: ${coneCount}</span>
+                <span>📍 3D прив'язка (Three.js)</span>
+            `;
+        }
+
+        // ============================================
+        // ДОПОМІЖНІ ФУНКЦІЇ
+        // ============================================
+
+        /**
+         * Отримує 2D кути маркера з матриці перетворення AR.js
+         * AR.js повертає 12 елементів (3x4 матриця)
+         */
+        function getCornersFromARMatrix(transform, videoWidth, videoHeight) {
+            // Розмір маркера (AR.js використовує одиничний розмір)
+            const size = 0.5;
+
+            // Локальні кути маркера
+            const localCorners = [
+                { x: -size, y: size, z: 0 },   // topLeft
+                { x: size, y: size, z: 0 },    // topRight
+                { x: size, y: -size, z: 0 },   // bottomRight
+                { x: -size, y: -size, z: 0 }   // bottomLeft
+            ];
+
+            // Проектуємо у 2D простір
+            const projectedCorners = [];
+
+            // AR.js матриця 3x4 (12 елементів):
+            // [0-2] = перший рядок (X)
+            // [3-5] = другий рядок (Y)  
+            // [6-8] = третій рядок (Z)
+            // [9-11] = трансляція (X, Y, Z)
+            
+            for (let i = 0; i < localCorners.length; i++) {
+                const corner = localCorners[i];
+                
+                // Застосовуємо матрицю перетворення 3x4
+                const x = transform[0] * corner.x + transform[1] * corner.y + transform[2] * corner.z + transform[9];
+                const y = transform[3] * corner.x + transform[4] * corner.y + transform[5] * corner.z + transform[10];
+                const z = transform[6] * corner.x + transform[7] * corner.y + transform[8] * corner.z + transform[11];
+
+                // Проекція на екран з урахуванням фокусної відстані камери
+                // AR.js використовує стандартну проекцію
+                const projX = (x / z) * videoWidth / 2 + videoWidth / 2;
+                const projY = (-y / z) * videoHeight / 2 + videoHeight / 2;
+                
+                projectedCorners.push({ x: projX, y: projY });
+            }
+
+            return projectedCorners;
+        }
+
+        /**
+         * Отримує 2D кути маркера з Three.js об'єкта
+         */
+        function getMarkerCorners(markerRoot, videoWidth, videoHeight) {
+            // AR.js маркер має розмір 1 одиницю
+            const size = 0.5;
+
+            // Локальні кути маркера (у локальному просторі маркера)
+            const localCorners = [
+                new THREE.Vector3(-size, size, 0),   // topLeft
+                new THREE.Vector3(size, size, 0),    // topRight
+                new THREE.Vector3(size, -size, 0),   // bottomRight
+                new THREE.Vector3(-size, -size, 0)   // bottomLeft
+            ];
+
+            // Отримуємо матрицю перетворення з AR.js
+            // AR.js зберігає матрицю у markerRoot.matrix
+            const matrix = markerRoot.matrix;
+            
+            // Проектуємо у 2D простір
+            const projectedCorners = [];
+
+            for (let i = 0; i < localCorners.length; i++) {
+                // Копіюємо локальний кут
+                const corner = localCorners[i].clone();
+                
+                // Застосовуємо матрицю перетворення
+                corner.applyMatrix4(matrix);
+
+                // Проекція на екран (Three.js використовує -Z як напрям камери)
+                // Тому перевіряємо corner.z < -0.1 (маркер перед камерою)
+                if (corner.z < -0.1) {
+                    const x = (corner.x / corner.z + 1) * videoWidth / 2;
+                    const y = (-corner.y / corner.z + 1) * videoHeight / 2;
+                    projectedCorners.push({ x, y });
+                }
+            }
+
+            return projectedCorners;
+        }
+
+        /**
+         * Малює осі координат
+         */
+        function drawAxes(ctx, origin) {
+            const axisLength = 40;
+            
+            // Вісь X (червоний)
+            ctx.beginPath();
+            ctx.moveTo(origin.x, origin.y);
+            ctx.lineTo(origin.x + axisLength, origin.y);
+            ctx.strokeStyle = '#ff0000';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            ctx.fillStyle = '#ff0000';
+            ctx.font = 'bold 12px Arial';
+            ctx.fillText('X', origin.x + axisLength + 5, origin.y);
+            
+            // Вісь Y (зелений)
+            ctx.beginPath();
+            ctx.moveTo(origin.x, origin.y);
+            ctx.lineTo(origin.x, origin.y + axisLength);
+            ctx.strokeStyle = '#00ff00';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            ctx.fillStyle = '#00ff00';
+            ctx.fillText('Y', origin.x, origin.y + axisLength + 12);
+            
+            // Вісь Z (синій)
+            ctx.beginPath();
+            ctx.moveTo(origin.x, origin.y);
+            ctx.lineTo(origin.x - axisLength * 0.7, origin.y - axisLength * 0.7);
+            ctx.strokeStyle = '#0000ff';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            ctx.fillStyle = '#0000ff';
+            ctx.fillText('Z', origin.x - axisLength * 0.7 - 15, origin.y - axisLength * 0.7);
+        }
+    </script>
+</body>
+</html>
