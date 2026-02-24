@@ -55,7 +55,7 @@
 
         // Оголошуємо глобальну змінну для конфігурації
         let config = null; // Configuration loaded from config.json
-        
+
         // Змінні для діагностики Тесту 2
         let lastMarkerStates = {};
         let lastUpdateTime = 0;
@@ -536,7 +536,7 @@
                 arToolkitContext = new THREEx.ArToolkitContext({
                     cameraParametersUrl: 'data/camera_para.dat',
                     detectionMode: 'mono_and_matrix',
-                    matrixCodeType: "3x3",
+                    matrixCodeType: '3x3',
                     maxDetectionRate: -1,  // Вимикаємо обмеження частоти для AR.js (детектуємо самі)
                     canvasWidth: canvasWidth,
                     canvasHeight: canvasHeight
@@ -1173,8 +1173,8 @@
                     trackMarkerDiagnostics(1, currentTime, timeDelta);
                     trackMarkerDiagnostics(5, currentTime, timeDelta);
                     // --- КІНЕЦЬ діагностики для Тесту 2 ---
-            
-                                // --- DIAGNOSTIC LOG for Barcode Marker --- (removed for production)                    // Оновлюємо Aruco маркери (детектуємо один раз на кадр для всіх маркерів)
+
+                    // Оновлюємо Aruco маркери (детектуємо один раз на кадр для всіх маркерів)
                     if (arucoControls && arucoControls.length > 0) {
                         // Детектуємо маркери один раз на кадр (як у 4x4-3d.html)
                         var arucoMarkers = ArucoMarkerControls.detectMarkers(arToolkitSource);
