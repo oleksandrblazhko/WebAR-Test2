@@ -25,6 +25,10 @@ var ArucoMarkerControls = function (arToolkitContext, object3d, parameters, canv
     this.object3d = object3d;
     this.id = parameters.id;
     this.modelSize = parameters.modelSize; // Розмір маркера в мм (має передаватися з конфігурації)
+    
+    // Змінні для корекції позиції
+    this.positionOffsetX = 0;
+    this.positionOffsetZ = 0;
 
     // Змінні для згладжування видимості
     this.framesLost = 0;
@@ -56,6 +60,12 @@ var ArucoMarkerControls = function (arToolkitContext, object3d, parameters, canv
     }
     this.posit = ArucoMarkerControls.posit;
 
+    // Обчислюємо корекцію позиції: 10% від розміру маркера
+    // Це компенсує різницю в системах координат між js-aruco2 та AR.js
+    var positionCorrection = this.modelSize * 0.1;
+    this.positionOffsetX = -positionCorrection;
+    this.positionOffsetZ = -positionCorrection;
+
     // Ініціалізація спільного detection canvas (як у 4x4-3d.html)
     if (!detectionCanvas) {
         detectionCanvas = document.createElement('canvas');
@@ -79,24 +89,39 @@ var ArucoMarkerControls = function (arToolkitContext, object3d, parameters, canv
     var updateObjectPose = function(rotation, translation) {
         var object = _this.object3d;
 
-        // Створюємо матрицю обертання з даних POSIT
+        // Конвертуємо матрицю обертання з POSIT у формат Three.js
+        // POSIT повертає матрицю у стовпчиковому порядку (column-major)
+        // THREE.Matrix4.set() приймає параметри у рядковому порядку (row-major)
+        // Тому транспонуємо матрицю: rotation[col][row] замість rotation[row][col]
         var rotMatrix = new THREE.Matrix4();
         rotMatrix.set(
-            rotation[0][0], rotation[0][1], rotation[0][2], 0,
-            rotation[1][0], rotation[1][1], rotation[1][2], 0,
-            rotation[2][0], rotation[2][1], rotation[2][2], 0,
+            rotation[0][0], rotation[1][0], rotation[2][0], 0,  // 1-й рядок (транспоновано)
+            rotation[0][1], rotation[1][1], rotation[2][1], 0,  // 2-й рядок (транспоновано)
+            rotation[0][2], rotation[1][2], rotation[2][2], 0,  // 3-й рядок (транспоновано)
             0, 0, 0, 1
         );
 
-        // Встановлюємо кватерніон з матриці обертання (без корекції - геометрія вже правильно орієнтована)
+        // Корекція орієнтації: POSIT повертає систему, де Z спрямований на камеру
+        // (перпендикулярно площині маркера). Для Three.js нам потрібно, щоб Y вісь
+        // об'єкта була перпендикулярна площині маркера і спрямована ВГОРУ.
+        // Поворот на +90° навколо X осі: Y→-Z, Z→Y (Y стає перпендикулярно до маркера і спрямований вгору)
+        var correctionMatrix = new THREE.Matrix4();
+        correctionMatrix.makeRotationX(Math.PI / 2);
+        rotMatrix.multiply(correctionMatrix);
+
+        // Встановлюємо кватерніон з матриці обертання з урахуванням корекції
         _this.targetQuaternion.setFromRotationMatrix(rotMatrix);
 
-        // Встановлення позиції (як у 4x4-3d.html, тільки інвертуємо Z)
+        // Встановлення позиції (інвертуємо Z для узгодження з Three.js)
         _this.targetPosition.set(
             translation[0],
             translation[1],
             -translation[2]
         );
+        
+        // Корекція позиції: додаємо зміщення
+        _this.targetPosition.x += _this.positionOffsetX;
+        _this.targetPosition.z += _this.positionOffsetZ;
 
         // Ініціалізуємо поточну позицію при першому оновленні
         if (_this.firstUpdate) {

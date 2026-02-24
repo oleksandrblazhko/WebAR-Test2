@@ -107,8 +107,8 @@
       "contentType": "primitive",
       "primitive": {
         "type": "ConeGeometry",
-        "radius": 30,
-        "height": 40,
+        "radius": 16,
+        "height": 32,
         "radialSegments": 16,
         "color": "#ffff00",
         "textureFile": "texture_green.jpg",

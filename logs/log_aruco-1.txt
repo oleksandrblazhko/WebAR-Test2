@@ -1,0 +1,1218 @@
+Successfully compiled asm.js code (total compilation time 157ms) artoolkit.min.js
+asm.js is deprecated and should no longer be used. Please recompile using WebAssembly to get the best performance. artoolkit.min.js:18:1
+THREE.WebGLRenderer 86 three.js:20307:11
+Aruco detector initialized for dictionary: ARUCO_4X4_1000 aruco.js:101:17
+Posit initialized with modelSize: 30 and detectionWidth: 640 aruco.js:109:17
+Detection canvas initialized: 640x480 aruco.js:127:17
+Allocated videoFrameSize 1228800 artoolkit.min.js:1:23009
+Pattern detection mode set to 4. artoolkit.min.js:1:23009
+Pattern ratio size set to 0.900000. artoolkit.min.js:1:23009
+obsolete function arToolkitSource.onResize. Use arToolkitSource.onResizeElement threex-artoolkitsource.js:388:11
+obsolete function arToolkitSource.copySizeTo. Use arToolkitSource.copyElementSizeTo 2 threex-artoolkitsource.js:378:10
+ARUCO ID=5: 
+Object { pos_x: "17.782", pos_y: "16.643", pos_z: "-256.153", rot_x_deg: "0.1", rot_y_deg: "-2.8", rot_z_deg: "4.5", q_w: "0.815", q_x: "-0.000", q_y: "-0.030", q_z: "0.048", … }
+aruco.js:270:21
+THREE.WebGLRenderer: image is not power of two (199x176). Resized to 256x128 
+<img src="texture_green.jpg">
+three.js:18028:13
+ARUCO ID=5: 
+Object { pos_x: "10.295", pos_y: "12.456", pos_z: "-256.780", rot_x_deg: "0.2", rot_y_deg: "-3.8", rot_z_deg: "6.0", q_w: "0.856", q_x: "-0.001", q_y: "-0.038", q_z: "0.061", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "6.551", pos_y: "10.363", pos_z: "-257.094", rot_x_deg: "0.3", rot_y_deg: "-4.3", rot_z_deg: "6.8", q_w: "0.870", q_x: "-0.001", q_y: "-0.043", q_z: "0.067", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "3.591", pos_y: "9.185", pos_z: "-257.561", rot_x_deg: "0.3", rot_y_deg: "-4.4", rot_z_deg: "7.0", q_w: "0.876", q_x: "-0.001", q_y: "-0.044", q_z: "0.069", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "2.111", pos_y: "8.597", pos_z: "-257.794", rot_x_deg: "0.3", rot_y_deg: "-4.5", rot_z_deg: "7.1", q_w: "0.878", q_x: "-0.001", q_y: "-0.045", q_z: "0.070", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "0.268", pos_y: "7.762", pos_z: "-256.000", rot_x_deg: "0.4", rot_y_deg: "-4.9", rot_z_deg: "7.8", q_w: "0.878", q_x: "-0.000", q_y: "-0.048", q_z: "0.077", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-1.265", pos_y: "6.606", pos_z: "-256.211", rot_x_deg: "0.5", rot_y_deg: "-5.2", rot_z_deg: "8.3", q_w: "0.877", q_x: "0.000", q_y: "-0.052", q_z: "0.082", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-2.542", pos_y: "5.862", pos_z: "-254.929", rot_x_deg: "0.4", rot_y_deg: "-4.7", rot_z_deg: "7.7", q_w: "0.878", q_x: "0.000", q_y: "-0.046", q_z: "0.075", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-3.462", pos_y: "5.410", pos_z: "-254.152", rot_x_deg: "0.5", rot_y_deg: "-4.8", rot_z_deg: "7.9", q_w: "0.878", q_x: "0.000", q_y: "-0.048", q_z: "0.077", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-3.925", pos_y: "4.727", pos_z: "-253.817", rot_x_deg: "0.5", rot_y_deg: "-5.0", rot_z_deg: "8.2", q_w: "0.878", q_x: "0.001", q_y: "-0.049", q_z: "0.080", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-4.157", pos_y: "4.386", pos_z: "-253.649", rot_x_deg: "0.6", rot_y_deg: "-5.1", rot_z_deg: "8.4", q_w: "0.878", q_x: "0.001", q_y: "-0.051", q_z: "0.082", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-4.007", pos_y: "4.392", pos_z: "-254.662", rot_x_deg: "0.6", rot_y_deg: "-5.0", rot_z_deg: "8.2", q_w: "0.878", q_x: "0.001", q_y: "-0.050", q_z: "0.081", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-3.765", pos_y: "4.609", pos_z: "-254.337", rot_x_deg: "0.7", rot_y_deg: "-5.4", rot_z_deg: "8.8", q_w: "0.877", q_x: "0.001", q_y: "-0.054", q_z: "0.087", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-3.252", pos_y: "4.522", pos_z: "-254.144", rot_x_deg: "0.7", rot_y_deg: "-5.5", rot_z_deg: "9.1", q_w: "0.877", q_x: "0.001", q_y: "-0.055", q_z: "0.089", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-2.995", pos_y: "4.479", pos_z: "-254.047", rot_x_deg: "0.7", rot_y_deg: "-5.6", rot_z_deg: "9.2", q_w: "0.877", q_x: "0.001", q_y: "-0.056", q_z: "0.090", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-2.520", pos_y: "4.687", pos_z: "-253.630", rot_x_deg: "0.6", rot_y_deg: "-5.3", rot_z_deg: "8.8", q_w: "0.877", q_x: "0.001", q_y: "-0.053", q_z: "0.086", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-2.044", pos_y: "4.636", pos_z: "-254.045", rot_x_deg: "0.6", rot_y_deg: "-4.9", rot_z_deg: "8.1", q_w: "0.878", q_x: "0.001", q_y: "-0.049", q_z: "0.080", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-1.806", pos_y: "4.610", pos_z: "-254.252", rot_x_deg: "0.5", rot_y_deg: "-4.7", rot_z_deg: "7.7", q_w: "0.878", q_x: "0.001", q_y: "-0.047", q_z: "0.076", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-1.508", pos_y: "4.639", pos_z: "-252.435", rot_x_deg: "0.6", rot_y_deg: "-4.8", rot_z_deg: "8.0", q_w: "0.878", q_x: "0.001", q_y: "-0.047", q_z: "0.079", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-1.084", pos_y: "4.762", pos_z: "-252.866", rot_x_deg: "0.5", rot_y_deg: "-4.6", rot_z_deg: "7.7", q_w: "0.878", q_x: "0.001", q_y: "-0.046", q_z: "0.076", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-0.872", pos_y: "4.824", pos_z: "-253.081", rot_x_deg: "0.5", rot_y_deg: "-4.6", rot_z_deg: "7.5", q_w: "0.878", q_x: "0.001", q_y: "-0.046", q_z: "0.074", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-0.631", pos_y: "4.704", pos_z: "-253.735", rot_x_deg: "0.5", rot_y_deg: "-4.4", rot_z_deg: "7.3", q_w: "0.878", q_x: "0.001", q_y: "-0.044", q_z: "0.072", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-0.551", pos_y: "5.317", pos_z: "-253.358", rot_x_deg: "0.5", rot_y_deg: "-4.7", rot_z_deg: "7.7", q_w: "0.878", q_x: "0.001", q_y: "-0.046", q_z: "0.076", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-0.303", pos_y: "5.608", pos_z: "-252.171", rot_x_deg: "0.5", rot_y_deg: "-4.5", rot_z_deg: "7.5", q_w: "0.878", q_x: "0.001", q_y: "-0.045", q_z: "0.074", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-0.179", pos_y: "5.753", pos_z: "-251.577", rot_x_deg: "0.5", rot_y_deg: "-4.5", rot_z_deg: "7.5", q_w: "0.878", q_x: "0.001", q_y: "-0.044", q_z: "0.073", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-0.171", pos_y: "6.190", pos_z: "-251.782", rot_x_deg: "0.5", rot_y_deg: "-4.5", rot_z_deg: "7.5", q_w: "0.878", q_x: "0.001", q_y: "-0.045", q_z: "0.074", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-0.501", pos_y: "7.013", pos_z: "-251.458", rot_x_deg: "0.5", rot_y_deg: "-4.5", rot_z_deg: "7.5", q_w: "0.878", q_x: "0.001", q_y: "-0.045", q_z: "0.074", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-0.655", pos_y: "7.090", pos_z: "-251.073", rot_x_deg: "0.6", rot_y_deg: "-4.8", rot_z_deg: "7.9", q_w: "0.878", q_x: "0.001", q_y: "-0.047", q_z: "0.078", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-0.943", pos_y: "7.759", pos_z: "-251.125", rot_x_deg: "0.5", rot_y_deg: "-4.6", rot_z_deg: "7.7", q_w: "0.878", q_x: "0.001", q_y: "-0.046", q_z: "0.076", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-1.086", pos_y: "8.094", pos_z: "-251.151", rot_x_deg: "0.5", rot_y_deg: "-4.5", rot_z_deg: "7.7", q_w: "0.878", q_x: "0.001", q_y: "-0.045", q_z: "0.075", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-1.382", pos_y: "8.402", pos_z: "-253.360", rot_x_deg: "0.5", rot_y_deg: "-4.9", rot_z_deg: "7.9", q_w: "0.878", q_x: "0.001", q_y: "-0.049", q_z: "0.078", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-1.417", pos_y: "8.084", pos_z: "-253.533", rot_x_deg: "0.5", rot_y_deg: "-4.7", rot_z_deg: "7.6", q_w: "0.878", q_x: "0.001", q_y: "-0.047", q_z: "0.074", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-1.435", pos_y: "7.925", pos_z: "-253.620", rot_x_deg: "0.5", rot_y_deg: "-4.6", rot_z_deg: "7.4", q_w: "0.878", q_x: "0.001", q_y: "-0.045", q_z: "0.072", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-1.805", pos_y: "8.624", pos_z: "-252.414", rot_x_deg: "0.4", rot_y_deg: "-4.3", rot_z_deg: "7.1", q_w: "0.879", q_x: "0.001", q_y: "-0.043", q_z: "0.070", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-2.382", pos_y: "9.104", pos_z: "-251.960", rot_x_deg: "0.5", rot_y_deg: "-4.4", rot_z_deg: "7.3", q_w: "0.879", q_x: "0.001", q_y: "-0.044", q_z: "0.071", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-2.670", pos_y: "9.345", pos_z: "-251.734", rot_x_deg: "0.5", rot_y_deg: "-4.5", rot_z_deg: "7.3", q_w: "0.878", q_x: "0.001", q_y: "-0.044", q_z: "0.072", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-2.834", pos_y: "8.710", pos_z: "-252.685", rot_x_deg: "0.5", rot_y_deg: "-4.5", rot_z_deg: "7.3", q_w: "0.879", q_x: "0.001", q_y: "-0.045", q_z: "0.071", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-3.622", pos_y: "6.947", pos_z: "-253.340", rot_x_deg: "0.4", rot_y_deg: "-4.3", rot_z_deg: "7.0", q_w: "0.879", q_x: "0.001", q_y: "-0.042", q_z: "0.069", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-4.500", pos_y: "6.288", pos_z: "-253.555", rot_x_deg: "0.5", rot_y_deg: "-4.5", rot_z_deg: "7.5", q_w: "0.878", q_x: "0.001", q_y: "-0.045", q_z: "0.073", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-4.939", pos_y: "5.958", pos_z: "-253.662", rot_x_deg: "0.5", rot_y_deg: "-4.6", rot_z_deg: "7.7", q_w: "0.878", q_x: "0.001", q_y: "-0.046", q_z: "0.076", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-5.142", pos_y: "5.489", pos_z: "-253.555", rot_x_deg: "0.6", rot_y_deg: "-4.7", rot_z_deg: "7.9", q_w: "0.878", q_x: "0.001", q_y: "-0.047", q_z: "0.077", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-5.319", pos_y: "4.999", pos_z: "-254.197", rot_x_deg: "0.6", rot_y_deg: "-4.9", rot_z_deg: "7.9", q_w: "0.878", q_x: "0.001", q_y: "-0.048", q_z: "0.078", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-5.211", pos_y: "4.787", pos_z: "-254.235", rot_x_deg: "0.7", rot_y_deg: "-5.3", rot_z_deg: "8.7", q_w: "0.877", q_x: "0.001", q_y: "-0.053", q_z: "0.085", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-5.158", pos_y: "4.680", pos_z: "-254.254", rot_x_deg: "0.7", rot_y_deg: "-5.5", rot_z_deg: "9.1", q_w: "0.877", q_x: "0.001", q_y: "-0.055", q_z: "0.089", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-4.793", pos_y: "4.189", pos_z: "-253.130", rot_x_deg: "0.7", rot_y_deg: "-5.4", rot_z_deg: "9.0", q_w: "0.877", q_x: "0.002", q_y: "-0.054", q_z: "0.088", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-4.850", pos_y: "3.855", pos_z: "-252.285", rot_x_deg: "0.6", rot_y_deg: "-5.0", rot_z_deg: "8.4", q_w: "0.877", q_x: "0.002", q_y: "-0.050", q_z: "0.082", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-4.583", pos_y: "2.940", pos_z: "-251.656", rot_x_deg: "0.6", rot_y_deg: "-5.0", rot_z_deg: "8.4", q_w: "0.877", q_x: "0.001", q_y: "-0.050", q_z: "0.083", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-4.394", pos_y: "2.524", pos_z: "-252.600", rot_x_deg: "0.6", rot_y_deg: "-4.8", rot_z_deg: "8.1", q_w: "0.878", q_x: "0.001", q_y: "-0.048", q_z: "0.080", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-4.355", pos_y: "2.081", pos_z: "-251.803", rot_x_deg: "0.6", rot_y_deg: "-4.9", rot_z_deg: "8.3", q_w: "0.878", q_x: "0.001", q_y: "-0.048", q_z: "0.082", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-4.335", pos_y: "1.859", pos_z: "-251.405", rot_x_deg: "0.6", rot_y_deg: "-4.9", rot_z_deg: "8.4", q_w: "0.878", q_x: "0.001", q_y: "-0.049", q_z: "0.082", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-4.136", pos_y: "1.093", pos_z: "-253.082", rot_x_deg: "0.5", rot_y_deg: "-4.7", rot_z_deg: "7.9", q_w: "0.878", q_x: "0.001", q_y: "-0.046", q_z: "0.077", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-4.037", pos_y: "0.710", pos_z: "-253.920", rot_x_deg: "0.5", rot_y_deg: "-4.5", rot_z_deg: "7.6", q_w: "0.878", q_x: "0.001", q_y: "-0.045", q_z: "0.074", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-1.966", pos_y: "-3.439", pos_z: "-253.465", rot_x_deg: "0.5", rot_y_deg: "-4.4", rot_z_deg: "7.4", q_w: "0.878", q_x: "0.001", q_y: "-0.044", q_z: "0.073", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "1.972", pos_y: "-10.695", pos_z: "-253.032", rot_x_deg: "0.4", rot_y_deg: "-4.1", rot_z_deg: "7.1", q_w: "0.879", q_x: "0.001", q_y: "-0.040", q_z: "0.070", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "4.744", pos_y: "-15.450", pos_z: "-251.163", rot_x_deg: "0.3", rot_y_deg: "-3.7", rot_z_deg: "6.6", q_w: "0.879", q_x: "0.000", q_y: "-0.037", q_z: "0.066", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "6.130", pos_y: "-17.827", pos_z: "-250.228", rot_x_deg: "0.2", rot_y_deg: "-3.6", rot_z_deg: "6.4", q_w: "0.879", q_x: "-0.000", q_y: "-0.035", q_z: "0.063", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "6.477", pos_y: "-18.537", pos_z: "-249.578", rot_x_deg: "0.1", rot_y_deg: "-2.9", rot_z_deg: "5.3", q_w: "0.880", q_x: "-0.000", q_y: "-0.029", q_z: "0.052", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "6.651", pos_y: "-18.893", pos_z: "-249.253", rot_x_deg: "0.1", rot_y_deg: "-2.5", rot_z_deg: "4.7", q_w: "0.880", q_x: "-0.000", q_y: "-0.025", q_z: "0.046", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "6.439", pos_y: "-18.327", pos_z: "-247.814", rot_x_deg: "0.1", rot_y_deg: "-2.7", rot_z_deg: "5.1", q_w: "0.880", q_x: "-0.000", q_y: "-0.027", q_z: "0.051", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "6.187", pos_y: "-18.584", pos_z: "-246.682", rot_x_deg: "0.1", rot_y_deg: "-2.8", rot_z_deg: "5.3", q_w: "0.880", q_x: "-0.000", q_y: "-0.028", q_z: "0.052", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "6.061", pos_y: "-18.712", pos_z: "-246.116", rot_x_deg: "0.1", rot_y_deg: "-2.9", rot_z_deg: "5.4", q_w: "0.880", q_x: "-0.000", q_y: "-0.028", q_z: "0.053", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "5.998", pos_y: "-18.776", pos_z: "-245.833", rot_x_deg: "0.1", rot_y_deg: "-2.9", rot_z_deg: "5.4", q_w: "0.880", q_x: "-0.000", q_y: "-0.029", q_z: "0.054", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "6.460", pos_y: "-19.049", pos_z: "-244.211", rot_x_deg: "0.1", rot_y_deg: "-2.5", rot_z_deg: "4.9", q_w: "0.880", q_x: "-0.000", q_y: "-0.025", q_z: "0.048", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "6.992", pos_y: "-19.877", pos_z: "-244.397", rot_x_deg: "0.1", rot_y_deg: "-2.7", rot_z_deg: "5.0", q_w: "0.880", q_x: "-0.000", q_y: "-0.026", q_z: "0.050", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "7.702", pos_y: "-21.032", pos_z: "-243.242", rot_x_deg: "0.1", rot_y_deg: "-2.6", rot_z_deg: "5.0", q_w: "0.880", q_x: "-0.001", q_y: "-0.026", q_z: "0.050", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "9.076", pos_y: "-29.694", pos_z: "-238.595", rot_x_deg: "0.0", rot_y_deg: "-1.7", rot_z_deg: "3.2", q_w: "0.881", q_x: "-0.000", q_y: "-0.016", q_z: "0.032", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "9.997", pos_y: "-35.458", pos_z: "-235.263", rot_x_deg: "0.0", rot_y_deg: "-1.2", rot_z_deg: "2.5", q_w: "0.881", q_x: "-0.000", q_y: "-0.012", q_z: "0.025", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "10.478", pos_y: "-40.007", pos_z: "-231.573", rot_x_deg: "0.0", rot_y_deg: "-1.1", rot_z_deg: "2.4", q_w: "0.881", q_x: "-0.000", q_y: "-0.011", q_z: "0.024", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "10.719", pos_y: "-42.282", pos_z: "-229.728", rot_x_deg: "0.0", rot_y_deg: "-1.0", rot_z_deg: "2.3", q_w: "0.881", q_x: "-0.000", q_y: "-0.010", q_z: "0.023", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "13.073", pos_y: "-46.710", pos_z: "-225.861", rot_x_deg: "-0.0", rot_y_deg: "-0.6", rot_z_deg: "1.3", q_w: "0.882", q_x: "-0.000", q_y: "-0.006", q_z: "0.013", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "14.250", pos_y: "-48.923", pos_z: "-223.927", rot_x_deg: "-0.0", rot_y_deg: "-0.3", rot_z_deg: "0.8", q_w: "0.882", q_x: "-0.000", q_y: "-0.003", q_z: "0.008", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "15.120", pos_y: "-49.649", pos_z: "-222.671", rot_x_deg: "0.0", rot_y_deg: "0.0", rot_z_deg: "-0.1", q_w: "0.882", q_x: "0.000", q_y: "0.000", q_z: "-0.001", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "15.556", pos_y: "-50.012", pos_z: "-222.043", rot_x_deg: "0.0", rot_y_deg: "0.2", rot_z_deg: "-0.6", q_w: "0.882", q_x: "0.000", q_y: "0.002", q_z: "-0.006", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "15.573", pos_y: "-49.914", pos_z: "-220.429", rot_x_deg: "0.0", rot_y_deg: "0.2", rot_z_deg: "-0.7", q_w: "0.882", q_x: "0.000", q_y: "0.002", q_z: "-0.007", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "15.791", pos_y: "-49.348", pos_z: "-220.383", rot_x_deg: "0.0", rot_y_deg: "0.3", rot_z_deg: "-0.7", q_w: "0.882", q_x: "0.000", q_y: "0.002", q_z: "-0.007", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "15.901", pos_y: "-49.065", pos_z: "-220.361", rot_x_deg: "0.0", rot_y_deg: "0.3", rot_z_deg: "-0.8", q_w: "0.882", q_x: "0.000", q_y: "0.003", q_z: "-0.007", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "15.785", pos_y: "-47.222", pos_z: "-218.271", rot_x_deg: "0.0", rot_y_deg: "0.2", rot_z_deg: "-0.7", q_w: "0.882", q_x: "0.000", q_y: "0.002", q_z: "-0.007", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "5.936", pos_y: "-33.606", pos_z: "-220.680", rot_x_deg: "-0.1", rot_y_deg: "-0.6", rot_z_deg: "1.5", q_w: "0.882", q_x: "-0.001", q_y: "-0.006", q_z: "0.015", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "1.045", pos_y: "-27.593", pos_z: "-221.022", rot_x_deg: "-0.1", rot_y_deg: "-1.0", rot_z_deg: "2.7", q_w: "0.881", q_x: "-0.001", q_y: "-0.010", q_z: "0.027", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-1.599", pos_y: "-24.554", pos_z: "-220.860", rot_x_deg: "-0.1", rot_y_deg: "-1.3", rot_z_deg: "3.4", q_w: "0.881", q_x: "-0.001", q_y: "-0.012", q_z: "0.033", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-2.922", pos_y: "-23.034", pos_z: "-220.779", rot_x_deg: "-0.0", rot_y_deg: "-1.4", rot_z_deg: "3.7", q_w: "0.881", q_x: "-0.001", q_y: "-0.014", q_z: "0.037", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-3.446", pos_y: "-22.504", pos_z: "-221.585", rot_x_deg: "-0.1", rot_y_deg: "-1.4", rot_z_deg: "3.9", q_w: "0.881", q_x: "-0.001", q_y: "-0.014", q_z: "0.038", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-3.899", pos_y: "-20.829", pos_z: "-221.568", rot_x_deg: "-0.0", rot_y_deg: "-1.4", rot_z_deg: "3.9", q_w: "0.881", q_x: "-0.001", q_y: "-0.014", q_z: "0.039", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-4.126", pos_y: "-19.992", pos_z: "-221.559", rot_x_deg: "-0.0", rot_y_deg: "-1.4", rot_z_deg: "3.9", q_w: "0.881", q_x: "-0.001", q_y: "-0.014", q_z: "0.039", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-1.910", pos_y: "-17.578", pos_z: "-219.951", rot_x_deg: "-0.0", rot_y_deg: "-1.3", rot_z_deg: "3.5", q_w: "0.881", q_x: "-0.001", q_y: "-0.013", q_z: "0.035", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-0.463", pos_y: "-16.914", pos_z: "-218.277", rot_x_deg: "-0.0", rot_y_deg: "-1.1", rot_z_deg: "2.9", q_w: "0.881", q_x: "-0.001", q_y: "-0.011", q_z: "0.029", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "0.261", pos_y: "-16.583", pos_z: "-217.440", rot_x_deg: "-0.0", rot_y_deg: "-1.0", rot_z_deg: "2.6", q_w: "0.881", q_x: "-0.001", q_y: "-0.009", q_z: "0.026", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "0.363", pos_y: "-16.210", pos_z: "-217.929", rot_x_deg: "-0.0", rot_y_deg: "-0.8", rot_z_deg: "2.2", q_w: "0.881", q_x: "-0.001", q_y: "-0.008", q_z: "0.022", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "0.414", pos_y: "-16.024", pos_z: "-218.173", rot_x_deg: "-0.0", rot_y_deg: "-0.7", rot_z_deg: "2.0", q_w: "0.882", q_x: "-0.000", q_y: "-0.007", q_z: "0.020", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "0.388", pos_y: "-16.051", pos_z: "-218.759", rot_x_deg: "-0.0", rot_y_deg: "-0.6", rot_z_deg: "1.7", q_w: "0.882", q_x: "-0.000", q_y: "-0.006", q_z: "0.017", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-0.244", pos_y: "-15.355", pos_z: "-218.569", rot_x_deg: "-0.0", rot_y_deg: "-0.7", rot_z_deg: "2.0", q_w: "0.882", q_x: "-0.000", q_y: "-0.007", q_z: "0.020", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-0.561", pos_y: "-15.007", pos_z: "-218.473", rot_x_deg: "-0.0", rot_y_deg: "-0.8", rot_z_deg: "2.1", q_w: "0.882", q_x: "-0.000", q_y: "-0.008", q_z: "0.021", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-0.719", pos_y: "-14.832", pos_z: "-218.426", rot_x_deg: "-0.0", rot_y_deg: "-0.8", rot_z_deg: "2.2", q_w: "0.882", q_x: "-0.000", q_y: "-0.008", q_z: "0.021", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-0.789", pos_y: "-14.695", pos_z: "-219.647", rot_x_deg: "-0.0", rot_y_deg: "-0.6", rot_z_deg: "1.6", q_w: "0.882", q_x: "-0.000", q_y: "-0.006", q_z: "0.016", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-1.591", pos_y: "-13.653", pos_z: "-218.999", rot_x_deg: "-0.0", rot_y_deg: "-0.9", rot_z_deg: "2.5", q_w: "0.881", q_x: "-0.001", q_y: "-0.009", q_z: "0.024", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-1.872", pos_y: "-13.313", pos_z: "-219.050", rot_x_deg: "-0.0", rot_y_deg: "-1.0", rot_z_deg: "2.8", q_w: "0.881", q_x: "-0.001", q_y: "-0.010", q_z: "0.027", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-2.222", pos_y: "-12.456", pos_z: "-218.768", rot_x_deg: "-0.0", rot_y_deg: "-1.0", rot_z_deg: "2.6", q_w: "0.881", q_x: "-0.001", q_y: "-0.010", q_z: "0.026", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-2.397", pos_y: "-12.028", pos_z: "-218.627", rot_x_deg: "-0.0", rot_y_deg: "-1.0", rot_z_deg: "2.5", q_w: "0.881", q_x: "-0.001", q_y: "-0.009", q_z: "0.025", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-2.300", pos_y: "-11.781", pos_z: "-218.563", rot_x_deg: "-0.0", rot_y_deg: "-1.0", rot_z_deg: "2.7", q_w: "0.881", q_x: "-0.001", q_y: "-0.010", q_z: "0.027", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-2.432", pos_y: "-11.384", pos_z: "-218.560", rot_x_deg: "-0.0", rot_y_deg: "-1.0", rot_z_deg: "2.7", q_w: "0.881", q_x: "-0.001", q_y: "-0.010", q_z: "0.027", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-2.498", pos_y: "-11.186", pos_z: "-218.559", rot_x_deg: "-0.0", rot_y_deg: "-1.0", rot_z_deg: "2.7", q_w: "0.881", q_x: "-0.001", q_y: "-0.010", q_z: "0.027", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-2.531", pos_y: "-10.750", pos_z: "-218.573", rot_x_deg: "-0.0", rot_y_deg: "-1.0", rot_z_deg: "2.7", q_w: "0.881", q_x: "-0.001", q_y: "-0.010", q_z: "0.027", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-2.547", pos_y: "-10.027", pos_z: "-218.602", rot_x_deg: "-0.0", rot_y_deg: "-1.0", rot_z_deg: "2.7", q_w: "0.881", q_x: "-0.001", q_y: "-0.010", q_z: "0.027", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-2.962", pos_y: "-7.202", pos_z: "-219.842", rot_x_deg: "-0.0", rot_y_deg: "-1.1", rot_z_deg: "2.7", q_w: "0.881", q_x: "-0.001", q_y: "-0.011", q_z: "0.027", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-3.720", pos_y: "-4.026", pos_z: "-219.633", rot_x_deg: "-0.0", rot_y_deg: "-1.4", rot_z_deg: "3.4", q_w: "0.881", q_x: "-0.001", q_y: "-0.014", q_z: "0.034", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-4.155", pos_y: "-2.439", pos_z: "-220.582", rot_x_deg: "-0.0", rot_y_deg: "-1.6", rot_z_deg: "3.7", q_w: "0.881", q_x: "-0.001", q_y: "-0.015", q_z: "0.037", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-4.888", pos_y: "-0.306", pos_z: "-222.554", rot_x_deg: "0.0", rot_y_deg: "-1.7", rot_z_deg: "3.9", q_w: "0.881", q_x: "-0.001", q_y: "-0.017", q_z: "0.039", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-5.397", pos_y: "0.613", pos_z: "-223.962", rot_x_deg: "0.0", rot_y_deg: "-1.9", rot_z_deg: "4.2", q_w: "0.881", q_x: "-0.001", q_y: "-0.018", q_z: "0.041", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-5.986", pos_y: "-1.509", pos_z: "-226.370", rot_x_deg: "0.0", rot_y_deg: "-2.0", rot_z_deg: "4.4", q_w: "0.881", q_x: "-0.001", q_y: "-0.020", q_z: "0.043", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-8.934", pos_y: "0.455", pos_z: "-229.395", rot_x_deg: "0.1", rot_y_deg: "-2.4", rot_z_deg: "5.1", q_w: "0.880", q_x: "-0.000", q_y: "-0.024", q_z: "0.050", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-10.408", pos_y: "1.437", pos_z: "-230.908", rot_x_deg: "0.1", rot_y_deg: "-2.6", rot_z_deg: "5.4", q_w: "0.880", q_x: "-0.000", q_y: "-0.026", q_z: "0.054", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-11.614", pos_y: "1.546", pos_z: "-231.364", rot_x_deg: "0.2", rot_y_deg: "-3.0", rot_z_deg: "6.3", q_w: "0.880", q_x: "0.000", q_y: "-0.030", q_z: "0.062", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-12.543", pos_y: "1.690", pos_z: "-233.055", rot_x_deg: "0.3", rot_y_deg: "-3.3", rot_z_deg: "6.8", q_w: "0.879", q_x: "0.000", q_y: "-0.033", q_z: "0.067", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-13.007", pos_y: "1.762", pos_z: "-233.900", rot_x_deg: "0.3", rot_y_deg: "-3.5", rot_z_deg: "7.0", q_w: "0.879", q_x: "0.000", q_y: "-0.035", q_z: "0.069", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-13.239", pos_y: "1.798", pos_z: "-234.323", rot_x_deg: "0.3", rot_y_deg: "-3.6", rot_z_deg: "7.2", q_w: "0.879", q_x: "0.000", q_y: "-0.036", q_z: "0.071", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-15.594", pos_y: "3.164", pos_z: "-236.934", rot_x_deg: "0.4", rot_y_deg: "-4.0", rot_z_deg: "7.8", q_w: "0.878", q_x: "0.001", q_y: "-0.040", q_z: "0.077", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.509", pos_y: "4.397", pos_z: "-237.842", rot_x_deg: "0.5", rot_y_deg: "-4.2", rot_z_deg: "8.3", q_w: "0.878", q_x: "0.001", q_y: "-0.042", q_z: "0.082", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-18.731", pos_y: "5.340", pos_z: "-239.710", rot_x_deg: "0.6", rot_y_deg: "-4.8", rot_z_deg: "9.2", q_w: "0.877", q_x: "0.001", q_y: "-0.047", q_z: "0.090", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-19.342", pos_y: "5.811", pos_z: "-240.645", rot_x_deg: "0.7", rot_y_deg: "-5.1", rot_z_deg: "9.6", q_w: "0.877", q_x: "0.002", q_y: "-0.050", q_z: "0.094", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-19.648", pos_y: "5.491", pos_z: "-241.087", rot_x_deg: "0.8", rot_y_deg: "-5.2", rot_z_deg: "9.9", q_w: "0.876", q_x: "0.002", q_y: "-0.052", q_z: "0.097", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-19.737", pos_y: "4.631", pos_z: "-242.488", rot_x_deg: "0.7", rot_y_deg: "-5.3", rot_z_deg: "9.9", q_w: "0.876", q_x: "0.002", q_y: "-0.053", q_z: "0.097", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-19.860", pos_y: "3.988", pos_z: "-243.522", rot_x_deg: "0.8", rot_y_deg: "-5.3", rot_z_deg: "10.0", q_w: "0.876", q_x: "0.002", q_y: "-0.053", q_z: "0.098", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-20.108", pos_y: "3.479", pos_z: "-244.025", rot_x_deg: "0.8", rot_y_deg: "-5.4", rot_z_deg: "10.1", q_w: "0.876", q_x: "0.002", q_y: "-0.054", q_z: "0.099", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-20.652", pos_y: "3.007", pos_z: "-246.142", rot_x_deg: "0.8", rot_y_deg: "-5.5", rot_z_deg: "10.0", q_w: "0.876", q_x: "0.002", q_y: "-0.055", q_z: "0.098", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-20.923", pos_y: "2.770", pos_z: "-247.200", rot_x_deg: "0.8", rot_y_deg: "-5.5", rot_z_deg: "9.9", q_w: "0.876", q_x: "0.002", q_y: "-0.055", q_z: "0.097", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-21.059", pos_y: "2.652", pos_z: "-247.729", rot_x_deg: "0.8", rot_y_deg: "-5.5", rot_z_deg: "9.9", q_w: "0.876", q_x: "0.002", q_y: "-0.055", q_z: "0.097", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-21.890", pos_y: "1.674", pos_z: "-249.278", rot_x_deg: "0.9", rot_y_deg: "-5.7", rot_z_deg: "10.2", q_w: "0.876", q_x: "0.002", q_y: "-0.057", q_z: "0.100", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-22.849", pos_y: "0.938", pos_z: "-251.545", rot_x_deg: "0.9", rot_y_deg: "-6.0", rot_z_deg: "10.6", q_w: "0.875", q_x: "0.002", q_y: "-0.060", q_z: "0.104", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-23.328", pos_y: "0.569", pos_z: "-252.679", rot_x_deg: "1.0", rot_y_deg: "-6.2", rot_z_deg: "10.8", q_w: "0.875", q_x: "0.002", q_y: "-0.062", q_z: "0.106", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-23.833", pos_y: "-0.154", pos_z: "-253.378", rot_x_deg: "1.0", rot_y_deg: "-6.2", rot_z_deg: "10.8", q_w: "0.875", q_x: "0.003", q_y: "-0.062", q_z: "0.106", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.183", pos_y: "-1.433", pos_z: "-253.667", rot_x_deg: "1.0", rot_y_deg: "-6.3", rot_z_deg: "11.0", q_w: "0.875", q_x: "0.002", q_y: "-0.063", q_z: "0.108", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.358", pos_y: "-2.073", pos_z: "-253.811", rot_x_deg: "1.0", rot_y_deg: "-6.3", rot_z_deg: "11.1", q_w: "0.875", q_x: "0.002", q_y: "-0.063", q_z: "0.108", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.397", pos_y: "-3.188", pos_z: "-256.125", rot_x_deg: "1.0", rot_y_deg: "-6.4", rot_z_deg: "11.2", q_w: "0.874", q_x: "0.002", q_y: "-0.064", q_z: "0.109", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.916", pos_y: "-3.746", pos_z: "-257.281", rot_x_deg: "1.0", rot_y_deg: "-6.5", rot_z_deg: "11.2", q_w: "0.874", q_x: "0.002", q_y: "-0.065", q_z: "0.110", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-27.447", pos_y: "-4.915", pos_z: "-257.677", rot_x_deg: "1.1", rot_y_deg: "-6.8", rot_z_deg: "11.8", q_w: "0.874", q_x: "0.002", q_y: "-0.068", q_z: "0.116", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-28.213", pos_y: "-5.500", pos_z: "-257.875", rot_x_deg: "1.2", rot_y_deg: "-7.0", rot_z_deg: "12.2", q_w: "0.873", q_x: "0.002", q_y: "-0.070", q_z: "0.119", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-28.876", pos_y: "-6.192", pos_z: "-258.691", rot_x_deg: "1.3", rot_y_deg: "-7.3", rot_z_deg: "12.9", q_w: "0.872", q_x: "0.003", q_y: "-0.073", q_z: "0.126", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-29.061", pos_y: "-9.071", pos_z: "-261.163", rot_x_deg: "1.6", rot_y_deg: "-7.9", rot_z_deg: "13.8", q_w: "0.871", q_x: "0.003", q_y: "-0.079", q_z: "0.134", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-28.850", pos_y: "-10.962", pos_z: "-261.867", rot_x_deg: "1.6", rot_y_deg: "-8.0", rot_z_deg: "14.2", q_w: "0.870", q_x: "0.003", q_y: "-0.081", q_z: "0.138", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-28.744", pos_y: "-11.908", pos_z: "-262.220", rot_x_deg: "1.6", rot_y_deg: "-8.1", rot_z_deg: "14.4", q_w: "0.870", q_x: "0.003", q_y: "-0.082", q_z: "0.140", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-28.684", pos_y: "-13.738", pos_z: "-264.925", rot_x_deg: "1.8", rot_y_deg: "-8.4", rot_z_deg: "14.5", q_w: "0.870", q_x: "0.004", q_y: "-0.085", q_z: "0.140", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-28.654", pos_y: "-14.653", pos_z: "-266.278", rot_x_deg: "1.8", rot_y_deg: "-8.6", rot_z_deg: "14.5", q_w: "0.869", q_x: "0.004", q_y: "-0.087", q_z: "0.141", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-28.141", pos_y: "-15.254", pos_z: "-264.864", rot_x_deg: "1.7", rot_y_deg: "-8.3", rot_z_deg: "14.4", q_w: "0.870", q_x: "0.004", q_y: "-0.084", q_z: "0.140", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-27.884", pos_y: "-15.555", pos_z: "-264.157", rot_x_deg: "1.7", rot_y_deg: "-8.2", rot_z_deg: "14.4", q_w: "0.870", q_x: "0.003", q_y: "-0.082", q_z: "0.139", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-28.026", pos_y: "-15.347", pos_z: "-265.192", rot_x_deg: "1.6", rot_y_deg: "-7.9", rot_z_deg: "13.9", q_w: "0.870", q_x: "0.003", q_y: "-0.080", q_z: "0.135", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-28.301", pos_y: "-14.947", pos_z: "-265.777", rot_x_deg: "1.6", rot_y_deg: "-7.9", rot_z_deg: "13.7", q_w: "0.871", q_x: "0.003", q_y: "-0.080", q_z: "0.133", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-28.038", pos_y: "-15.413", pos_z: "-266.556", rot_x_deg: "1.7", rot_y_deg: "-8.3", rot_z_deg: "14.2", q_w: "0.870", q_x: "0.004", q_y: "-0.083", q_z: "0.138", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-27.907", pos_y: "-15.646", pos_z: "-266.945", rot_x_deg: "1.8", rot_y_deg: "-8.5", rot_z_deg: "14.5", q_w: "0.870", q_x: "0.004", q_y: "-0.085", q_z: "0.140", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-27.576", pos_y: "-15.325", pos_z: "-267.909", rot_x_deg: "1.7", rot_y_deg: "-8.2", rot_z_deg: "14.0", q_w: "0.870", q_x: "0.004", q_y: "-0.083", q_z: "0.136", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-27.457", pos_y: "-14.029", pos_z: "-267.482", rot_x_deg: "1.7", rot_y_deg: "-8.3", rot_z_deg: "14.2", q_w: "0.870", q_x: "0.004", q_y: "-0.083", q_z: "0.138", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-27.562", pos_y: "-13.346", pos_z: "-268.720", rot_x_deg: "1.7", rot_y_deg: "-8.5", rot_z_deg: "14.2", q_w: "0.870", q_x: "0.004", q_y: "-0.086", q_z: "0.138", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-27.614", pos_y: "-13.005", pos_z: "-269.338", rot_x_deg: "1.8", rot_y_deg: "-8.7", rot_z_deg: "14.3", q_w: "0.870", q_x: "0.004", q_y: "-0.088", q_z: "0.138", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-27.641", pos_y: "-12.835", pos_z: "-269.648", rot_x_deg: "1.8", rot_y_deg: "-8.8", rot_z_deg: "14.3", q_w: "0.869", q_x: "0.004", q_y: "-0.088", q_z: "0.138", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-28.067", pos_y: "-11.504", pos_z: "-267.405", rot_x_deg: "1.5", rot_y_deg: "-8.0", rot_z_deg: "13.4", q_w: "0.871", q_x: "0.003", q_y: "-0.081", q_z: "0.130", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-28.537", pos_y: "-10.635", pos_z: "-267.477", rot_x_deg: "1.6", rot_y_deg: "-8.4", rot_z_deg: "13.8", q_w: "0.870", q_x: "0.003", q_y: "-0.084", q_z: "0.133", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-29.025", pos_y: "-10.568", pos_z: "-268.757", rot_x_deg: "1.8", rot_y_deg: "-8.7", rot_z_deg: "14.1", q_w: "0.870", q_x: "0.004", q_y: "-0.088", q_z: "0.136", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-29.268", pos_y: "-10.535", pos_z: "-269.396", rot_x_deg: "1.9", rot_y_deg: "-8.9", rot_z_deg: "14.2", q_w: "0.870", q_x: "0.005", q_y: "-0.089", q_z: "0.137", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-29.390", pos_y: "-10.519", pos_z: "-269.716", rot_x_deg: "2.0", rot_y_deg: "-9.0", rot_z_deg: "14.3", q_w: "0.869", q_x: "0.005", q_y: "-0.090", q_z: "0.138", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-29.178", pos_y: "-10.322", pos_z: "-268.843", rot_x_deg: "2.2", rot_y_deg: "-9.3", rot_z_deg: "15.2", q_w: "0.868", q_x: "0.006", q_y: "-0.094", q_z: "0.146", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-29.072", pos_y: "-10.224", pos_z: "-268.407", rot_x_deg: "2.3", rot_y_deg: "-9.5", rot_z_deg: "15.6", q_w: "0.867", q_x: "0.006", q_y: "-0.096", q_z: "0.150", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-27.944", pos_y: "-10.201", pos_z: "-268.642", rot_x_deg: "2.0", rot_y_deg: "-8.9", rot_z_deg: "14.6", q_w: "0.869", q_x: "0.005", q_y: "-0.090", q_z: "0.141", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-27.380", pos_y: "-10.189", pos_z: "-268.759", rot_x_deg: "1.8", rot_y_deg: "-8.6", rot_z_deg: "14.1", q_w: "0.870", q_x: "0.004", q_y: "-0.087", q_z: "0.136", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-27.098", pos_y: "-10.184", pos_z: "-268.818", rot_x_deg: "1.7", rot_y_deg: "-8.5", rot_z_deg: "13.8", q_w: "0.870", q_x: "0.004", q_y: "-0.085", q_z: "0.134", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-26.346", pos_y: "-9.764", pos_z: "-267.466", rot_x_deg: "1.8", rot_y_deg: "-8.6", rot_z_deg: "13.8", q_w: "0.870", q_x: "0.004", q_y: "-0.087", q_z: "0.134", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-26.060", pos_y: "-9.391", pos_z: "-268.638", rot_x_deg: "1.7", rot_y_deg: "-8.4", rot_z_deg: "13.6", q_w: "0.870", q_x: "0.004", q_y: "-0.085", q_z: "0.132", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.917", pos_y: "-9.205", pos_z: "-269.225", rot_x_deg: "1.7", rot_y_deg: "-8.3", rot_z_deg: "13.5", q_w: "0.871", q_x: "0.004", q_y: "-0.084", q_z: "0.131", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-26.021", pos_y: "-8.270", pos_z: "-267.854", rot_x_deg: "1.6", rot_y_deg: "-8.1", rot_z_deg: "13.2", q_w: "0.871", q_x: "0.004", q_y: "-0.082", q_z: "0.128", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.791", pos_y: "-8.096", pos_z: "-268.386", rot_x_deg: "1.6", rot_y_deg: "-8.3", rot_z_deg: "13.1", q_w: "0.871", q_x: "0.004", q_y: "-0.083", q_z: "0.127", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.676", pos_y: "-8.009", pos_z: "-268.651", rot_x_deg: "1.6", rot_y_deg: "-8.3", rot_z_deg: "13.0", q_w: "0.871", q_x: "0.004", q_y: "-0.084", q_z: "0.126", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.755", pos_y: "-8.135", pos_z: "-269.008", rot_x_deg: "1.4", rot_y_deg: "-7.8", rot_z_deg: "12.2", q_w: "0.872", q_x: "0.003", q_y: "-0.078", q_z: "0.119", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-26.014", pos_y: "-7.206", pos_z: "-266.595", rot_x_deg: "1.3", rot_y_deg: "-7.5", rot_z_deg: "12.0", q_w: "0.873", q_x: "0.002", q_y: "-0.075", q_z: "0.117", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-26.024", pos_y: "-7.310", pos_z: "-266.318", rot_x_deg: "1.6", rot_y_deg: "-8.2", rot_z_deg: "12.9", q_w: "0.872", q_x: "0.004", q_y: "-0.082", q_z: "0.125", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-26.029", pos_y: "-7.363", pos_z: "-266.180", rot_x_deg: "1.8", rot_y_deg: "-8.6", rot_z_deg: "13.4", q_w: "0.871", q_x: "0.005", q_y: "-0.086", q_z: "0.129", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-26.337", pos_y: "-7.658", pos_z: "-268.271", rot_x_deg: "1.6", rot_y_deg: "-8.4", rot_z_deg: "13.0", q_w: "0.871", q_x: "0.004", q_y: "-0.084", q_z: "0.126", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-26.607", pos_y: "-7.014", pos_z: "-267.215", rot_x_deg: "1.8", rot_y_deg: "-8.6", rot_z_deg: "13.4", q_w: "0.871", q_x: "0.005", q_y: "-0.086", q_z: "0.130", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-26.741", pos_y: "-6.691", pos_z: "-266.687", rot_x_deg: "1.9", rot_y_deg: "-8.7", rot_z_deg: "13.7", q_w: "0.870", q_x: "0.005", q_y: "-0.087", q_z: "0.133", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-26.809", pos_y: "-6.530", pos_z: "-266.423", rot_x_deg: "1.9", rot_y_deg: "-8.7", rot_z_deg: "13.8", q_w: "0.870", q_x: "0.005", q_y: "-0.088", q_z: "0.134", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-26.757", pos_y: "-6.918", pos_z: "-266.669", rot_x_deg: "1.6", rot_y_deg: "-8.3", rot_z_deg: "12.9", q_w: "0.871", q_x: "0.004", q_y: "-0.083", q_z: "0.125", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-26.731", pos_y: "-7.112", pos_z: "-266.792", rot_x_deg: "1.5", rot_y_deg: "-8.0", rot_z_deg: "12.4", q_w: "0.872", q_x: "0.004", q_y: "-0.080", q_z: "0.120", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-27.045", pos_y: "-6.642", pos_z: "-266.758", rot_x_deg: "1.5", rot_y_deg: "-8.0", rot_z_deg: "12.5", q_w: "0.872", q_x: "0.003", q_y: "-0.081", q_z: "0.121", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-27.098", pos_y: "-6.984", pos_z: "-266.197", rot_x_deg: "1.4", rot_y_deg: "-8.0", rot_z_deg: "12.4", q_w: "0.872", q_x: "0.003", q_y: "-0.080", q_z: "0.120", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-27.124", pos_y: "-7.154", pos_z: "-265.916", rot_x_deg: "1.3", rot_y_deg: "-7.9", rot_z_deg: "12.3", q_w: "0.872", q_x: "0.002", q_y: "-0.079", q_z: "0.120", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-27.137", pos_y: "-7.240", pos_z: "-265.776", rot_x_deg: "1.3", rot_y_deg: "-7.9", rot_z_deg: "12.3", q_w: "0.872", q_x: "0.002", q_y: "-0.079", q_z: "0.120", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-27.388", pos_y: "-6.852", pos_z: "-264.419", rot_x_deg: "1.4", rot_y_deg: "-7.9", rot_z_deg: "12.5", q_w: "0.872", q_x: "0.002", q_y: "-0.079", q_z: "0.122", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-27.084", pos_y: "-7.000", pos_z: "-263.574", rot_x_deg: "1.5", rot_y_deg: "-8.1", rot_z_deg: "13.0", q_w: "0.872", q_x: "0.003", q_y: "-0.082", q_z: "0.126", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-26.931", pos_y: "-7.073", pos_z: "-263.151", rot_x_deg: "1.6", rot_y_deg: "-8.3", rot_z_deg: "13.3", q_w: "0.871", q_x: "0.004", q_y: "-0.083", q_z: "0.129", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-26.855", pos_y: "-7.110", pos_z: "-262.940", rot_x_deg: "1.7", rot_y_deg: "-8.3", rot_z_deg: "13.4", q_w: "0.871", q_x: "0.004", q_y: "-0.084", q_z: "0.130", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-27.107", pos_y: "-6.846", pos_z: "-264.823", rot_x_deg: "1.6", rot_y_deg: "-8.2", rot_z_deg: "13.1", q_w: "0.871", q_x: "0.004", q_y: "-0.082", q_z: "0.127", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-27.232", pos_y: "-6.714", pos_z: "-265.764", rot_x_deg: "1.5", rot_y_deg: "-8.1", rot_z_deg: "12.9", q_w: "0.872", q_x: "0.003", q_y: "-0.082", q_z: "0.125", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-27.086", pos_y: "-6.764", pos_z: "-266.263", rot_x_deg: "1.5", rot_y_deg: "-8.2", rot_z_deg: "12.7", q_w: "0.872", q_x: "0.003", q_y: "-0.082", q_z: "0.123", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-26.902", pos_y: "-7.061", pos_z: "-266.323", rot_x_deg: "1.6", rot_y_deg: "-8.5", rot_z_deg: "13.1", q_w: "0.871", q_x: "0.003", q_y: "-0.085", q_z: "0.127", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-26.741", pos_y: "-6.911", pos_z: "-264.746", rot_x_deg: "1.4", rot_y_deg: "-8.0", rot_z_deg: "12.5", q_w: "0.872", q_x: "0.003", q_y: "-0.080", q_z: "0.122", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-26.660", pos_y: "-6.836", pos_z: "-263.958", rot_x_deg: "1.4", rot_y_deg: "-7.8", rot_z_deg: "12.2", q_w: "0.872", q_x: "0.003", q_y: "-0.078", q_z: "0.119", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-26.502", pos_y: "-7.173", pos_z: "-263.416", rot_x_deg: "1.4", rot_y_deg: "-8.0", rot_z_deg: "12.5", q_w: "0.872", q_x: "0.003", q_y: "-0.080", q_z: "0.122", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-26.347", pos_y: "-7.502", pos_z: "-263.302", rot_x_deg: "1.3", rot_y_deg: "-7.5", rot_z_deg: "11.9", q_w: "0.873", q_x: "0.003", q_y: "-0.076", q_z: "0.116", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-26.403", pos_y: "-7.578", pos_z: "-264.948", rot_x_deg: "1.4", rot_y_deg: "-8.0", rot_z_deg: "12.4", q_w: "0.872", q_x: "0.003", q_y: "-0.080", q_z: "0.120", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-26.431", pos_y: "-7.616", pos_z: "-265.771", rot_x_deg: "1.5", rot_y_deg: "-8.3", rot_z_deg: "12.6", q_w: "0.872", q_x: "0.003", q_y: "-0.083", q_z: "0.123", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-26.240", pos_y: "-7.766", pos_z: "-266.013", rot_x_deg: "1.7", rot_y_deg: "-8.6", rot_z_deg: "13.0", q_w: "0.871", q_x: "0.004", q_y: "-0.086", q_z: "0.126", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.922", pos_y: "-8.003", pos_z: "-264.424", rot_x_deg: "1.6", rot_y_deg: "-8.3", rot_z_deg: "12.9", q_w: "0.871", q_x: "0.004", q_y: "-0.083", q_z: "0.125", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.894", pos_y: "-8.213", pos_z: "-264.860", rot_x_deg: "1.6", rot_y_deg: "-8.4", rot_z_deg: "13.0", q_w: "0.871", q_x: "0.004", q_y: "-0.084", q_z: "0.126", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.880", pos_y: "-8.317", pos_z: "-265.078", rot_x_deg: "1.6", rot_y_deg: "-8.4", rot_z_deg: "13.0", q_w: "0.871", q_x: "0.004", q_y: "-0.084", q_z: "0.126", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.719", pos_y: "-8.538", pos_z: "-263.823", rot_x_deg: "1.6", rot_y_deg: "-8.3", rot_z_deg: "13.1", q_w: "0.871", q_x: "0.004", q_y: "-0.084", q_z: "0.127", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.915", pos_y: "-8.700", pos_z: "-265.216", rot_x_deg: "1.6", rot_y_deg: "-8.2", rot_z_deg: "12.8", q_w: "0.872", q_x: "0.004", q_y: "-0.083", q_z: "0.124", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-26.012", pos_y: "-8.781", pos_z: "-265.913", rot_x_deg: "1.5", rot_y_deg: "-8.2", rot_z_deg: "12.6", q_w: "0.872", q_x: "0.003", q_y: "-0.082", q_z: "0.122", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.685", pos_y: "-9.061", pos_z: "-264.479", rot_x_deg: "1.4", rot_y_deg: "-7.9", rot_z_deg: "12.3", q_w: "0.872", q_x: "0.003", q_y: "-0.079", q_z: "0.120", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.418", pos_y: "-9.313", pos_z: "-263.492", rot_x_deg: "1.5", rot_y_deg: "-8.0", rot_z_deg: "12.7", q_w: "0.872", q_x: "0.004", q_y: "-0.080", q_z: "0.123", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.284", pos_y: "-9.440", pos_z: "-262.999", rot_x_deg: "1.6", rot_y_deg: "-8.1", rot_z_deg: "12.9", q_w: "0.872", q_x: "0.004", q_y: "-0.081", q_z: "0.126", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.217", pos_y: "-9.503", pos_z: "-262.752", rot_x_deg: "1.6", rot_y_deg: "-8.1", rot_z_deg: "13.1", q_w: "0.871", q_x: "0.004", q_y: "-0.081", q_z: "0.127", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.109", pos_y: "-9.814", pos_z: "-262.878", rot_x_deg: "1.4", rot_y_deg: "-7.7", rot_z_deg: "12.4", q_w: "0.872", q_x: "0.004", q_y: "-0.077", q_z: "0.120", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.072", pos_y: "-10.386", pos_z: "-263.539", rot_x_deg: "1.4", rot_y_deg: "-7.7", rot_z_deg: "12.2", q_w: "0.873", q_x: "0.003", q_y: "-0.077", q_z: "0.118", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.053", pos_y: "-10.671", pos_z: "-263.870", rot_x_deg: "1.4", rot_y_deg: "-7.7", rot_z_deg: "12.1", q_w: "0.873", q_x: "0.003", q_y: "-0.077", q_z: "0.118", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.229", pos_y: "-11.005", pos_z: "-263.426", rot_x_deg: "1.3", rot_y_deg: "-7.5", rot_z_deg: "11.9", q_w: "0.873", q_x: "0.003", q_y: "-0.075", q_z: "0.116", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.224", pos_y: "-11.506", pos_z: "-264.722", rot_x_deg: "1.6", rot_y_deg: "-8.1", rot_z_deg: "12.6", q_w: "0.872", q_x: "0.004", q_y: "-0.081", q_z: "0.122", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.222", pos_y: "-11.757", pos_z: "-265.370", rot_x_deg: "1.7", rot_y_deg: "-8.4", rot_z_deg: "13.0", q_w: "0.871", q_x: "0.005", q_y: "-0.085", q_z: "0.126", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.271", pos_y: "-11.936", pos_z: "-265.563", rot_x_deg: "1.4", rot_y_deg: "-7.8", rot_z_deg: "12.0", q_w: "0.873", q_x: "0.003", q_y: "-0.078", q_z: "0.117", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.296", pos_y: "-12.026", pos_z: "-265.659", rot_x_deg: "1.2", rot_y_deg: "-7.5", rot_z_deg: "11.5", q_w: "0.873", q_x: "0.003", q_y: "-0.075", q_z: "0.112", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.489", pos_y: "-12.166", pos_z: "-266.048", rot_x_deg: "1.4", rot_y_deg: "-7.9", rot_z_deg: "12.2", q_w: "0.873", q_x: "0.003", q_y: "-0.080", q_z: "0.118", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.585", pos_y: "-12.442", pos_z: "-266.234", rot_x_deg: "1.6", rot_y_deg: "-8.2", rot_z_deg: "12.6", q_w: "0.872", q_x: "0.004", q_y: "-0.082", q_z: "0.122", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.633", pos_y: "-12.579", pos_z: "-266.328", rot_x_deg: "1.6", rot_y_deg: "-8.4", rot_z_deg: "12.8", q_w: "0.872", q_x: "0.004", q_y: "-0.084", q_z: "0.124", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.537", pos_y: "-12.699", pos_z: "-265.211", rot_x_deg: "1.4", rot_y_deg: "-7.9", rot_z_deg: "12.3", q_w: "0.872", q_x: "0.003", q_y: "-0.079", q_z: "0.119", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.489", pos_y: "-12.759", pos_z: "-264.653", rot_x_deg: "1.3", rot_y_deg: "-7.7", rot_z_deg: "12.0", q_w: "0.873", q_x: "0.003", q_y: "-0.077", q_z: "0.117", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.322", pos_y: "-12.776", pos_z: "-264.029", rot_x_deg: "1.5", rot_y_deg: "-8.1", rot_z_deg: "12.8", q_w: "0.872", q_x: "0.003", q_y: "-0.081", q_z: "0.124", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-25.105", pos_y: "-12.925", pos_z: "-264.833", rot_x_deg: "1.4", rot_y_deg: "-7.8", rot_z_deg: "12.1", q_w: "0.873", q_x: "0.003", q_y: "-0.078", q_z: "0.118", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.997", pos_y: "-12.999", pos_z: "-265.235", rot_x_deg: "1.3", rot_y_deg: "-7.6", rot_z_deg: "11.8", q_w: "0.873", q_x: "0.003", q_y: "-0.076", q_z: "0.115", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.794", pos_y: "-12.976", pos_z: "-264.049", rot_x_deg: "1.3", rot_y_deg: "-7.4", rot_z_deg: "11.6", q_w: "0.873", q_x: "0.003", q_y: "-0.074", q_z: "0.113", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.692", pos_y: "-12.965", pos_z: "-263.456", rot_x_deg: "1.3", rot_y_deg: "-7.3", rot_z_deg: "11.6", q_w: "0.874", q_x: "0.003", q_y: "-0.073", q_z: "0.113", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.642", pos_y: "-12.959", pos_z: "-263.160", rot_x_deg: "1.3", rot_y_deg: "-7.2", rot_z_deg: "11.5", q_w: "0.874", q_x: "0.003", q_y: "-0.072", q_z: "0.112", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.610", pos_y: "-13.028", pos_z: "-263.473", rot_x_deg: "1.4", rot_y_deg: "-7.5", rot_z_deg: "11.9", q_w: "0.873", q_x: "0.003", q_y: "-0.076", q_z: "0.116", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.556", pos_y: "-13.045", pos_z: "-261.800", rot_x_deg: "1.4", rot_y_deg: "-7.5", rot_z_deg: "12.2", q_w: "0.873", q_x: "0.003", q_y: "-0.075", q_z: "0.118", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.667", pos_y: "-13.065", pos_z: "-262.207", rot_x_deg: "1.4", rot_y_deg: "-7.6", rot_z_deg: "12.5", q_w: "0.872", q_x: "0.003", q_y: "-0.076", q_z: "0.121", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.723", pos_y: "-13.074", pos_z: "-262.410", rot_x_deg: "1.4", rot_y_deg: "-7.6", rot_z_deg: "12.6", q_w: "0.872", q_x: "0.003", q_y: "-0.077", q_z: "0.123", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.522", pos_y: "-13.127", pos_z: "-262.024", rot_x_deg: "1.4", rot_y_deg: "-7.5", rot_z_deg: "12.3", q_w: "0.873", q_x: "0.003", q_y: "-0.075", q_z: "0.120", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.557", pos_y: "-13.040", pos_z: "-262.443", rot_x_deg: "1.3", rot_y_deg: "-7.3", rot_z_deg: "11.9", q_w: "0.873", q_x: "0.003", q_y: "-0.073", q_z: "0.116", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.574", pos_y: "-12.997", pos_z: "-262.653", rot_x_deg: "1.3", rot_y_deg: "-7.2", rot_z_deg: "11.7", q_w: "0.873", q_x: "0.003", q_y: "-0.072", q_z: "0.114", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.582", pos_y: "-12.975", pos_z: "-262.758", rot_x_deg: "1.3", rot_y_deg: "-7.2", rot_z_deg: "11.6", q_w: "0.874", q_x: "0.003", q_y: "-0.072", q_z: "0.113", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.680", pos_y: "-12.859", pos_z: "-262.722", rot_x_deg: "1.3", rot_y_deg: "-7.4", rot_z_deg: "11.9", q_w: "0.873", q_x: "0.003", q_y: "-0.074", q_z: "0.116", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.729", pos_y: "-12.801", pos_z: "-262.704", rot_x_deg: "1.3", rot_y_deg: "-7.5", rot_z_deg: "12.1", q_w: "0.873", q_x: "0.003", q_y: "-0.075", q_z: "0.117", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.526", pos_y: "-12.909", pos_z: "-262.525", rot_x_deg: "1.5", rot_y_deg: "-7.8", rot_z_deg: "12.6", q_w: "0.872", q_x: "0.004", q_y: "-0.079", q_z: "0.122", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.304", pos_y: "-12.815", pos_z: "-260.489", rot_x_deg: "1.2", rot_y_deg: "-7.1", rot_z_deg: "11.5", q_w: "0.874", q_x: "0.003", q_y: "-0.071", q_z: "0.112", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.334", pos_y: "-12.861", pos_z: "-261.577", rot_x_deg: "1.3", rot_y_deg: "-7.5", rot_z_deg: "12.1", q_w: "0.873", q_x: "0.003", q_y: "-0.075", q_z: "0.117", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.349", pos_y: "-12.883", pos_z: "-262.121", rot_x_deg: "1.4", rot_y_deg: "-7.7", rot_z_deg: "12.4", q_w: "0.873", q_x: "0.003", q_y: "-0.077", q_z: "0.120", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.356", pos_y: "-12.895", pos_z: "-262.393", rot_x_deg: "1.5", rot_y_deg: "-7.8", rot_z_deg: "12.5", q_w: "0.872", q_x: "0.004", q_y: "-0.078", q_z: "0.122", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.218", pos_y: "-12.845", pos_z: "-261.192", rot_x_deg: "1.5", rot_y_deg: "-7.7", rot_z_deg: "12.6", q_w: "0.872", q_x: "0.004", q_y: "-0.078", q_z: "0.123", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.259", pos_y: "-12.679", pos_z: "-261.374", rot_x_deg: "1.5", rot_y_deg: "-7.7", rot_z_deg: "12.5", q_w: "0.872", q_x: "0.004", q_y: "-0.077", q_z: "0.122", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.219", pos_y: "-12.730", pos_z: "-262.155", rot_x_deg: "1.4", rot_y_deg: "-7.5", rot_z_deg: "12.0", q_w: "0.873", q_x: "0.004", q_y: "-0.076", q_z: "0.117", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.199", pos_y: "-12.755", pos_z: "-262.545", rot_x_deg: "1.3", rot_y_deg: "-7.4", rot_z_deg: "11.7", q_w: "0.873", q_x: "0.003", q_y: "-0.075", q_z: "0.114", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.189", pos_y: "-12.767", pos_z: "-262.740", rot_x_deg: "1.3", rot_y_deg: "-7.4", rot_z_deg: "11.5", q_w: "0.873", q_x: "0.003", q_y: "-0.074", q_z: "0.112", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.264", pos_y: "-12.822", pos_z: "-262.112", rot_x_deg: "1.3", rot_y_deg: "-7.4", rot_z_deg: "11.8", q_w: "0.873", q_x: "0.004", q_y: "-0.074", q_z: "0.115", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.294", pos_y: "-12.718", pos_z: "-262.237", rot_x_deg: "1.5", rot_y_deg: "-7.8", rot_z_deg: "12.4", q_w: "0.872", q_x: "0.004", q_y: "-0.078", q_z: "0.121", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-24.029", pos_y: "-12.907", pos_z: "-262.697", rot_x_deg: "1.3", rot_y_deg: "-7.5", rot_z_deg: "11.8", q_w: "0.873", q_x: "0.003", q_y: "-0.075", q_z: "0.115", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-23.896", pos_y: "-13.002", pos_z: "-262.927", rot_x_deg: "1.3", rot_y_deg: "-7.3", rot_z_deg: "11.4", q_w: "0.874", q_x: "0.003", q_y: "-0.074", q_z: "0.111", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-23.814", pos_y: "-12.805", pos_z: "-261.641", rot_x_deg: "1.2", rot_y_deg: "-7.1", rot_z_deg: "11.4", q_w: "0.874", q_x: "0.002", q_y: "-0.071", q_z: "0.111", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-23.773", pos_y: "-12.706", pos_z: "-260.997", rot_x_deg: "1.1", rot_y_deg: "-7.0", rot_z_deg: "11.3", q_w: "0.874", q_x: "0.002", q_y: "-0.070", q_z: "0.111", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-23.570", pos_y: "-12.944", pos_z: "-261.934", rot_x_deg: "1.2", rot_y_deg: "-7.1", rot_z_deg: "11.2", q_w: "0.874", q_x: "0.003", q_y: "-0.071", q_z: "0.110", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-23.560", pos_y: "-13.240", pos_z: "-261.903", rot_x_deg: "1.1", rot_y_deg: "-6.9", rot_z_deg: "11.0", q_w: "0.874", q_x: "0.002", q_y: "-0.069", q_z: "0.108", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-23.555", pos_y: "-13.387", pos_z: "-261.887", rot_x_deg: "1.0", rot_y_deg: "-6.8", rot_z_deg: "10.9", q_w: "0.874", q_x: "0.002", q_y: "-0.068", q_z: "0.107", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-23.553", pos_y: "-13.461", pos_z: "-261.879", rot_x_deg: "1.0", rot_y_deg: "-6.8", rot_z_deg: "10.8", q_w: "0.875", q_x: "0.002", q_y: "-0.068", q_z: "0.106", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-23.808", pos_y: "-13.673", pos_z: "-263.710", rot_x_deg: "1.1", rot_y_deg: "-7.0", rot_z_deg: "11.0", q_w: "0.874", q_x: "0.002", q_y: "-0.070", q_z: "0.107", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-23.820", pos_y: "-13.667", pos_z: "-263.960", rot_x_deg: "1.1", rot_y_deg: "-7.1", rot_z_deg: "11.2", q_w: "0.874", q_x: "0.002", q_y: "-0.071", q_z: "0.109", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-23.484", pos_y: "-14.006", pos_z: "-262.904", rot_x_deg: "1.0", rot_y_deg: "-6.9", rot_z_deg: "11.0", q_w: "0.874", q_x: "0.002", q_y: "-0.069", q_z: "0.107", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-23.205", pos_y: "-14.105", pos_z: "-261.574", rot_x_deg: "1.0", rot_y_deg: "-6.8", rot_z_deg: "11.0", q_w: "0.874", q_x: "0.002", q_y: "-0.068", q_z: "0.108", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-23.428", pos_y: "-14.198", pos_z: "-263.535", rot_x_deg: "1.1", rot_y_deg: "-7.0", rot_z_deg: "11.1", q_w: "0.874", q_x: "0.002", q_y: "-0.070", q_z: "0.108", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-23.540", pos_y: "-14.244", pos_z: "-264.515", rot_x_deg: "1.1", rot_y_deg: "-7.1", rot_z_deg: "11.1", q_w: "0.874", q_x: "0.002", q_y: "-0.071", q_z: "0.108", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-23.331", pos_y: "-14.528", pos_z: "-263.858", rot_x_deg: "1.3", rot_y_deg: "-7.6", rot_z_deg: "12.1", q_w: "0.873", q_x: "0.003", q_y: "-0.076", q_z: "0.118", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-23.140", pos_y: "-14.419", pos_z: "-263.750", rot_x_deg: "1.4", rot_y_deg: "-7.6", rot_z_deg: "12.1", q_w: "0.873", q_x: "0.003", q_y: "-0.076", q_z: "0.117", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-23.044", pos_y: "-14.365", pos_z: "-263.695", rot_x_deg: "1.4", rot_y_deg: "-7.7", rot_z_deg: "12.1", q_w: "0.873", q_x: "0.003", q_y: "-0.077", q_z: "0.117", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-22.896", pos_y: "-14.558", pos_z: "-262.767", rot_x_deg: "1.2", rot_y_deg: "-7.2", rot_z_deg: "11.4", q_w: "0.874", q_x: "0.002", q_y: "-0.072", q_z: "0.111", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-22.620", pos_y: "-14.857", pos_z: "-262.298", rot_x_deg: "1.1", rot_y_deg: "-6.9", rot_z_deg: "11.0", q_w: "0.874", q_x: "0.002", q_y: "-0.069", q_z: "0.107", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-22.403", pos_y: "-15.290", pos_z: "-262.586", rot_x_deg: "1.0", rot_y_deg: "-6.6", rot_z_deg: "10.5", q_w: "0.875", q_x: "0.002", q_y: "-0.066", q_z: "0.103", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-21.954", pos_y: "-16.177", pos_z: "-262.104", rot_x_deg: "1.1", rot_y_deg: "-6.8", rot_z_deg: "10.9", q_w: "0.875", q_x: "0.002", q_y: "-0.068", q_z: "0.106", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-21.729", pos_y: "-16.620", pos_z: "-261.863", rot_x_deg: "1.1", rot_y_deg: "-7.0", rot_z_deg: "11.1", q_w: "0.874", q_x: "0.002", q_y: "-0.070", q_z: "0.108", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-21.617", pos_y: "-16.842", pos_z: "-261.743", rot_x_deg: "1.1", rot_y_deg: "-7.0", rot_z_deg: "11.2", q_w: "0.874", q_x: "0.003", q_y: "-0.070", q_z: "0.109", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-20.872", pos_y: "-17.919", pos_z: "-262.068", rot_x_deg: "1.1", rot_y_deg: "-6.7", rot_z_deg: "10.9", q_w: "0.875", q_x: "0.002", q_y: "-0.067", q_z: "0.106", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-20.500", pos_y: "-18.458", pos_z: "-262.230", rot_x_deg: "1.0", rot_y_deg: "-6.5", rot_z_deg: "10.7", q_w: "0.875", q_x: "0.002", q_y: "-0.065", q_z: "0.104", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-20.170", pos_y: "-18.818", pos_z: "-261.938", rot_x_deg: "1.3", rot_y_deg: "-7.1", rot_z_deg: "11.6", q_w: "0.874", q_x: "0.003", q_y: "-0.071", q_z: "0.113", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-19.236", pos_y: "-19.702", pos_z: "-261.510", rot_x_deg: "1.1", rot_y_deg: "-6.7", rot_z_deg: "11.0", q_w: "0.874", q_x: "0.003", q_y: "-0.067", q_z: "0.107", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-18.768", pos_y: "-20.144", pos_z: "-261.296", rot_x_deg: "1.0", rot_y_deg: "-6.5", rot_z_deg: "10.7", q_w: "0.875", q_x: "0.002", q_y: "-0.065", q_z: "0.104", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.917", pos_y: "-21.029", pos_z: "-261.094", rot_x_deg: "1.1", rot_y_deg: "-6.5", rot_z_deg: "10.7", q_w: "0.875", q_x: "0.003", q_y: "-0.065", q_z: "0.105", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.185", pos_y: "-22.204", pos_z: "-260.183", rot_x_deg: "1.1", rot_y_deg: "-6.5", rot_z_deg: "10.8", q_w: "0.875", q_x: "0.003", q_y: "-0.065", q_z: "0.106", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-16.820", pos_y: "-22.791", pos_z: "-259.728", rot_x_deg: "1.1", rot_y_deg: "-6.5", rot_z_deg: "10.9", q_w: "0.875", q_x: "0.003", q_y: "-0.065", q_z: "0.107", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-15.540", pos_y: "-24.359", pos_z: "-260.175", rot_x_deg: "1.0", rot_y_deg: "-6.3", rot_z_deg: "10.4", q_w: "0.875", q_x: "0.002", q_y: "-0.063", q_z: "0.102", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-14.900", pos_y: "-25.143", pos_z: "-260.399", rot_x_deg: "0.9", rot_y_deg: "-6.1", rot_z_deg: "10.1", q_w: "0.876", q_x: "0.002", q_y: "-0.061", q_z: "0.099", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-13.114", pos_y: "-27.595", pos_z: "-259.308", rot_x_deg: "0.8", rot_y_deg: "-5.5", rot_z_deg: "9.3", q_w: "0.876", q_x: "0.002", q_y: "-0.055", q_z: "0.091", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-12.222", pos_y: "-28.821", pos_z: "-258.763", rot_x_deg: "0.7", rot_y_deg: "-5.2", rot_z_deg: "8.9", q_w: "0.877", q_x: "0.001", q_y: "-0.052", q_z: "0.087", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-11.776", pos_y: "-29.434", pos_z: "-258.490", rot_x_deg: "0.6", rot_y_deg: "-5.0", rot_z_deg: "8.6", q_w: "0.877", q_x: "0.001", q_y: "-0.050", q_z: "0.085", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-10.343", pos_y: "-31.387", pos_z: "-255.889", rot_x_deg: "0.6", rot_y_deg: "-4.8", rot_z_deg: "8.5", q_w: "0.878", q_x: "0.001", q_y: "-0.048", q_z: "0.083", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-9.293", pos_y: "-33.252", pos_z: "-255.114", rot_x_deg: "0.6", rot_y_deg: "-4.8", rot_z_deg: "8.6", q_w: "0.877", q_x: "0.001", q_y: "-0.048", q_z: "0.084", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-8.769", pos_y: "-34.184", pos_z: "-254.727", rot_x_deg: "0.6", rot_y_deg: "-4.9", rot_z_deg: "8.6", q_w: "0.877", q_x: "0.002", q_y: "-0.048", q_z: "0.085", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-8.789", pos_y: "-34.026", pos_z: "-253.036", rot_x_deg: "0.5", rot_y_deg: "-4.5", rot_z_deg: "8.1", q_w: "0.878", q_x: "0.001", q_y: "-0.045", q_z: "0.080", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-8.720", pos_y: "-34.243", pos_z: "-251.571", rot_x_deg: "0.5", rot_y_deg: "-4.4", rot_z_deg: "8.1", q_w: "0.878", q_x: "0.001", q_y: "-0.043", q_z: "0.080", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-8.513", pos_y: "-33.987", pos_z: "-250.316", rot_x_deg: "0.5", rot_y_deg: "-4.2", rot_z_deg: "8.0", q_w: "0.878", q_x: "0.001", q_y: "-0.042", q_z: "0.078", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-8.409", pos_y: "-33.860", pos_z: "-249.689", rot_x_deg: "0.5", rot_y_deg: "-4.1", rot_z_deg: "7.9", q_w: "0.878", q_x: "0.001", q_y: "-0.041", q_z: "0.078", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-8.472", pos_y: "-33.754", pos_z: "-249.600", rot_x_deg: "0.3", rot_y_deg: "-3.6", rot_z_deg: "6.9", q_w: "0.879", q_x: "0.001", q_y: "-0.036", q_z: "0.068", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-8.416", pos_y: "-33.980", pos_z: "-248.997", rot_x_deg: "0.3", rot_y_deg: "-3.6", rot_z_deg: "6.8", q_w: "0.879", q_x: "0.001", q_y: "-0.036", q_z: "0.067", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-8.344", pos_y: "-33.833", pos_z: "-247.593", rot_x_deg: "0.3", rot_y_deg: "-3.3", rot_z_deg: "6.5", q_w: "0.879", q_x: "0.001", q_y: "-0.033", q_z: "0.064", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-8.719", pos_y: "-32.804", pos_z: "-246.376", rot_x_deg: "0.2", rot_y_deg: "-3.0", rot_z_deg: "5.9", q_w: "0.880", q_x: "0.000", q_y: "-0.030", q_z: "0.059", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-8.906", pos_y: "-32.290", pos_z: "-245.767", rot_x_deg: "0.2", rot_y_deg: "-2.8", rot_z_deg: "5.7", q_w: "0.880", q_x: "0.000", q_y: "-0.028", q_z: "0.056", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-10.042", pos_y: "-31.340", pos_z: "-244.998", rot_x_deg: "0.2", rot_y_deg: "-3.0", rot_z_deg: "6.0", q_w: "0.880", q_x: "0.000", q_y: "-0.030", q_z: "0.059", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-11.094", pos_y: "-31.105", pos_z: "-244.089", rot_x_deg: "0.3", rot_y_deg: "-3.2", rot_z_deg: "6.4", q_w: "0.880", q_x: "0.000", q_y: "-0.032", q_z: "0.063", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-6.395", pos_y: "-45.239", pos_z: "-236.881", rot_x_deg: "0.2", rot_y_deg: "-2.6", rot_z_deg: "5.6", q_w: "0.880", q_x: "0.000", q_y: "-0.025", q_z: "0.055", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-3.493", pos_y: "-52.426", pos_z: "-231.505", rot_x_deg: "0.1", rot_y_deg: "-1.9", rot_z_deg: "4.5", q_w: "0.881", q_x: "0.000", q_y: "-0.019", q_z: "0.045", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-2.042", pos_y: "-56.020", pos_z: "-228.817", rot_x_deg: "0.1", rot_y_deg: "-1.6", rot_z_deg: "4.0", q_w: "0.881", q_x: "-0.000", q_y: "-0.016", q_z: "0.039", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-2.980", pos_y: "-40.285", pos_z: "-215.090", rot_x_deg: "0.0", rot_y_deg: "-1.3", rot_z_deg: "3.6", q_w: "0.881", q_x: "-0.000", q_y: "-0.013", q_z: "0.035", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-2.814", pos_y: "-32.306", pos_z: "-207.569", rot_x_deg: "0.0", rot_y_deg: "-1.0", rot_z_deg: "3.1", q_w: "0.881", q_x: "-0.000", q_y: "-0.010", q_z: "0.030", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-2.730", pos_y: "-28.317", pos_z: "-203.809", rot_x_deg: "0.0", rot_y_deg: "-0.9", rot_z_deg: "2.8", q_w: "0.881", q_x: "-0.000", q_y: "-0.009", q_z: "0.027", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-1.732", pos_y: "-25.952", pos_z: "-202.269", rot_x_deg: "0.0", rot_y_deg: "-0.8", rot_z_deg: "2.6", q_w: "0.881", q_x: "0.000", q_y: "-0.008", q_z: "0.026", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-0.885", pos_y: "-25.089", pos_z: "-201.153", rot_x_deg: "0.0", rot_y_deg: "-0.7", rot_z_deg: "2.4", q_w: "0.881", q_x: "-0.000", q_y: "-0.007", q_z: "0.024", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-0.462", pos_y: "-24.658", pos_z: "-200.595", rot_x_deg: "0.0", rot_y_deg: "-0.7", rot_z_deg: "2.3", q_w: "0.881", q_x: "-0.000", q_y: "-0.007", q_z: "0.023", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-0.250", pos_y: "-24.442", pos_z: "-200.316", rot_x_deg: "0.0", rot_y_deg: "-0.7", rot_z_deg: "2.2", q_w: "0.881", q_x: "-0.000", q_y: "-0.007", q_z: "0.022", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-0.013", pos_y: "-23.946", pos_z: "-199.180", rot_x_deg: "0.0", rot_y_deg: "-0.5", rot_z_deg: "1.7", q_w: "0.882", q_x: "-0.000", q_y: "-0.005", q_z: "0.017", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-0.163", pos_y: "-23.281", pos_z: "-198.905", rot_x_deg: "0.0", rot_y_deg: "-0.6", rot_z_deg: "1.9", q_w: "0.882", q_x: "-0.000", q_y: "-0.006", q_z: "0.019", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-0.515", pos_y: "-22.950", pos_z: "-199.192", rot_x_deg: "0.0", rot_y_deg: "-0.5", rot_z_deg: "1.5", q_w: "0.882", q_x: "-0.000", q_y: "-0.005", q_z: "0.015", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-0.691", pos_y: "-22.785", pos_z: "-199.335", rot_x_deg: "0.0", rot_y_deg: "-0.4", rot_z_deg: "1.4", q_w: "0.882", q_x: "0.000", q_y: "-0.004", q_z: "0.013", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-0.779", pos_y: "-22.702", pos_z: "-199.406", rot_x_deg: "0.0", rot_y_deg: "-0.4", rot_z_deg: "1.3", q_w: "0.882", q_x: "0.000", q_y: "-0.004", q_z: "0.012", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-1.459", pos_y: "-21.999", pos_z: "-199.020", rot_x_deg: "0.0", rot_y_deg: "-0.6", rot_z_deg: "1.9", q_w: "0.882", q_x: "-0.000", q_y: "-0.006", q_z: "0.019", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-1.830", pos_y: "-21.689", pos_z: "-198.514", rot_x_deg: "0.0", rot_y_deg: "-0.6", rot_z_deg: "2.0", q_w: "0.882", q_x: "-0.000", q_y: "-0.006", q_z: "0.020", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-2.262", pos_y: "-21.578", pos_z: "-198.861", rot_x_deg: "0.0", rot_y_deg: "-0.8", rot_z_deg: "2.6", q_w: "0.881", q_x: "-0.000", q_y: "-0.008", q_z: "0.026", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-2.478", pos_y: "-21.523", pos_z: "-199.035", rot_x_deg: "0.0", rot_y_deg: "-0.9", rot_z_deg: "3.0", q_w: "0.881", q_x: "-0.000", q_y: "-0.009", q_z: "0.029", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-2.586", pos_y: "-21.495", pos_z: "-199.122", rot_x_deg: "0.0", rot_y_deg: "-1.0", rot_z_deg: "3.2", q_w: "0.881", q_x: "-0.000", q_y: "-0.010", q_z: "0.031", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-2.818", pos_y: "-20.863", pos_z: "-198.867", rot_x_deg: "0.0", rot_y_deg: "-1.0", rot_z_deg: "3.1", q_w: "0.881", q_x: "-0.000", q_y: "-0.010", q_z: "0.031", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-3.115", pos_y: "-20.363", pos_z: "-198.448", rot_x_deg: "0.0", rot_y_deg: "-0.9", rot_z_deg: "2.9", q_w: "0.881", q_x: "-0.000", q_y: "-0.009", q_z: "0.029", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-3.311", pos_y: "-20.020", pos_z: "-198.556", rot_x_deg: "0.0", rot_y_deg: "-0.8", rot_z_deg: "2.7", q_w: "0.881", q_x: "0.000", q_y: "-0.008", q_z: "0.027", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-3.434", pos_y: "-19.338", pos_z: "-199.362", rot_x_deg: "0.0", rot_y_deg: "-0.8", rot_z_deg: "2.7", q_w: "0.881", q_x: "0.000", q_y: "-0.008", q_z: "0.027", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-3.418", pos_y: "-18.970", pos_z: "-199.734", rot_x_deg: "0.0", rot_y_deg: "-1.0", rot_z_deg: "3.1", q_w: "0.881", q_x: "-0.000", q_y: "-0.010", q_z: "0.030", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-3.537", pos_y: "-18.535", pos_z: "-199.189", rot_x_deg: "0.0", rot_y_deg: "-1.0", rot_z_deg: "3.2", q_w: "0.881", q_x: "0.000", q_y: "-0.010", q_z: "0.032", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-3.596", pos_y: "-18.318", pos_z: "-198.917", rot_x_deg: "0.0", rot_y_deg: "-1.0", rot_z_deg: "3.3", q_w: "0.881", q_x: "0.000", q_y: "-0.010", q_z: "0.032", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-3.778", pos_y: "-17.905", pos_z: "-198.786", rot_x_deg: "0.0", rot_y_deg: "-1.1", rot_z_deg: "3.4", q_w: "0.881", q_x: "0.000", q_y: "-0.010", q_z: "0.033", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-3.868", pos_y: "-17.699", pos_z: "-198.720", rot_x_deg: "0.0", rot_y_deg: "-1.1", rot_z_deg: "3.4", q_w: "0.881", q_x: "0.000", q_y: "-0.011", q_z: "0.034", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-3.941", pos_y: "-17.415", pos_z: "-198.394", rot_x_deg: "0.0", rot_y_deg: "-1.0", rot_z_deg: "3.1", q_w: "0.881", q_x: "0.000", q_y: "-0.010", q_z: "0.031", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-4.304", pos_y: "-16.950", pos_z: "-198.888", rot_x_deg: "0.0", rot_y_deg: "-1.0", rot_z_deg: "3.3", q_w: "0.881", q_x: "0.000", q_y: "-0.010", q_z: "0.032", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-4.486", pos_y: "-16.718", pos_z: "-199.134", rot_x_deg: "0.0", rot_y_deg: "-1.1", rot_z_deg: "3.3", q_w: "0.881", q_x: "0.000", q_y: "-0.011", q_z: "0.033", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-4.728", pos_y: "-16.316", pos_z: "-199.775", rot_x_deg: "0.0", rot_y_deg: "-0.9", rot_z_deg: "2.7", q_w: "0.881", q_x: "-0.000", q_y: "-0.009", q_z: "0.027", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-4.800", pos_y: "-15.789", pos_z: "-199.232", rot_x_deg: "0.0", rot_y_deg: "-1.0", rot_z_deg: "3.2", q_w: "0.881", q_x: "-0.000", q_y: "-0.010", q_z: "0.031", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-5.065", pos_y: "-15.272", pos_z: "-199.003", rot_x_deg: "0.0", rot_y_deg: "-1.0", rot_z_deg: "3.1", q_w: "0.881", q_x: "-0.000", q_y: "-0.010", q_z: "0.031", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-5.198", pos_y: "-15.014", pos_z: "-198.888", rot_x_deg: "0.0", rot_y_deg: "-1.0", rot_z_deg: "3.0", q_w: "0.881", q_x: "-0.000", q_y: "-0.010", q_z: "0.030", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-5.413", pos_y: "-14.453", pos_z: "-198.826", rot_x_deg: "0.0", rot_y_deg: "-1.0", rot_z_deg: "3.2", q_w: "0.881", q_x: "0.000", q_y: "-0.010", q_z: "0.031", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-5.601", pos_y: "-13.817", pos_z: "-198.758", rot_x_deg: "0.0", rot_y_deg: "-1.1", rot_z_deg: "3.5", q_w: "0.881", q_x: "-0.000", q_y: "-0.011", q_z: "0.035", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-6.148", pos_y: "-12.051", pos_z: "-198.771", rot_x_deg: "0.1", rot_y_deg: "-1.3", rot_z_deg: "3.9", q_w: "0.881", q_x: "-0.000", q_y: "-0.012", q_z: "0.038", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-6.627", pos_y: "-11.136", pos_z: "-199.124", rot_x_deg: "0.1", rot_y_deg: "-1.3", rot_z_deg: "4.1", q_w: "0.881", q_x: "0.000", q_y: "-0.013", q_z: "0.040", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-7.288", pos_y: "-10.517", pos_z: "-200.077", rot_x_deg: "0.1", rot_y_deg: "-1.4", rot_z_deg: "4.1", q_w: "0.881", q_x: "0.000", q_y: "-0.014", q_z: "0.041", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-7.619", pos_y: "-10.207", pos_z: "-200.553", rot_x_deg: "0.1", rot_y_deg: "-1.4", rot_z_deg: "4.2", q_w: "0.881", q_x: "0.000", q_y: "-0.014", q_z: "0.041", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-7.862", pos_y: "-10.284", pos_z: "-200.768", rot_x_deg: "0.1", rot_y_deg: "-1.6", rot_z_deg: "4.5", q_w: "0.881", q_x: "0.000", q_y: "-0.015", q_z: "0.045", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-7.882", pos_y: "-10.932", pos_z: "-201.187", rot_x_deg: "0.1", rot_y_deg: "-1.6", rot_z_deg: "4.7", q_w: "0.881", q_x: "0.000", q_y: "-0.016", q_z: "0.047", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-8.071", pos_y: "-12.055", pos_z: "-202.514", rot_x_deg: "0.1", rot_y_deg: "-1.6", rot_z_deg: "4.5", q_w: "0.881", q_x: "0.000", q_y: "-0.016", q_z: "0.045", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-8.166", pos_y: "-12.617", pos_z: "-203.178", rot_x_deg: "0.1", rot_y_deg: "-1.6", rot_z_deg: "4.4", q_w: "0.881", q_x: "0.001", q_y: "-0.015", q_z: "0.044", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-8.977", pos_y: "-11.860", pos_z: "-205.778", rot_x_deg: "0.2", rot_y_deg: "-1.9", rot_z_deg: "5.1", q_w: "0.880", q_x: "0.001", q_y: "-0.018", q_z: "0.050", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-9.383", pos_y: "-11.482", pos_z: "-207.077", rot_x_deg: "0.2", rot_y_deg: "-2.0", rot_z_deg: "5.4", q_w: "0.880", q_x: "0.001", q_y: "-0.020", q_z: "0.054", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-9.586", pos_y: "-11.292", pos_z: "-207.727", rot_x_deg: "0.2", rot_y_deg: "-2.1", rot_z_deg: "5.6", q_w: "0.880", q_x: "0.001", q_y: "-0.021", q_z: "0.056", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-19.705", pos_y: "-15.640", pos_z: "-231.090", rot_x_deg: "0.9", rot_y_deg: "-4.7", rot_z_deg: "9.4", q_w: "0.877", q_x: "0.004", q_y: "-0.047", q_z: "0.092", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-22.948", pos_y: "-21.814", pos_z: "-244.227", rot_x_deg: "1.2", rot_y_deg: "-5.7", rot_z_deg: "10.8", q_w: "0.876", q_x: "0.005", q_y: "-0.057", q_z: "0.105", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-22.282", pos_y: "-29.453", pos_z: "-252.520", rot_x_deg: "1.4", rot_y_deg: "-6.1", rot_z_deg: "11.3", q_w: "0.875", q_x: "0.006", q_y: "-0.061", q_z: "0.110", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-21.800", pos_y: "-33.830", pos_z: "-257.907", rot_x_deg: "1.3", rot_y_deg: "-5.8", rot_z_deg: "10.7", q_w: "0.875", q_x: "0.006", q_y: "-0.059", q_z: "0.104", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-21.560", pos_y: "-36.018", pos_z: "-260.600", rot_x_deg: "1.3", rot_y_deg: "-5.7", rot_z_deg: "10.4", q_w: "0.876", q_x: "0.006", q_y: "-0.057", q_z: "0.101", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-21.081", pos_y: "-38.109", pos_z: "-262.347", rot_x_deg: "1.5", rot_y_deg: "-6.0", rot_z_deg: "11.0", q_w: "0.875", q_x: "0.007", q_y: "-0.061", q_z: "0.107", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-20.499", pos_y: "-38.767", pos_z: "-262.106", rot_x_deg: "1.2", rot_y_deg: "-5.4", rot_z_deg: "10.2", q_w: "0.876", q_x: "0.006", q_y: "-0.054", q_z: "0.100", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-20.207", pos_y: "-39.096", pos_z: "-261.985", rot_x_deg: "1.1", rot_y_deg: "-5.1", rot_z_deg: "9.8", q_w: "0.876", q_x: "0.005", q_y: "-0.051", q_z: "0.096", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-20.251", pos_y: "-38.439", pos_z: "-263.531", rot_x_deg: "1.2", rot_y_deg: "-5.2", rot_z_deg: "10.0", q_w: "0.876", q_x: "0.006", q_y: "-0.053", q_z: "0.098", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-20.273", pos_y: "-38.111", pos_z: "-264.304", rot_x_deg: "1.2", rot_y_deg: "-5.3", rot_z_deg: "10.1", q_w: "0.876", q_x: "0.006", q_y: "-0.054", q_z: "0.099", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-19.578", pos_y: "-37.313", pos_z: "-262.993", rot_x_deg: "1.0", rot_y_deg: "-4.9", rot_z_deg: "9.4", q_w: "0.877", q_x: "0.005", q_y: "-0.049", q_z: "0.092", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-19.405", pos_y: "-36.331", pos_z: "-263.297", rot_x_deg: "1.2", rot_y_deg: "-5.4", rot_z_deg: "10.0", q_w: "0.876", q_x: "0.006", q_y: "-0.054", q_z: "0.098", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-19.319", pos_y: "-35.841", pos_z: "-263.449", rot_x_deg: "1.3", rot_y_deg: "-5.6", rot_z_deg: "10.3", q_w: "0.876", q_x: "0.006", q_y: "-0.057", q_z: "0.101", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-19.276", pos_y: "-35.595", pos_z: "-263.525", rot_x_deg: "1.3", rot_y_deg: "-5.8", rot_z_deg: "10.5", q_w: "0.875", q_x: "0.007", q_y: "-0.058", q_z: "0.103", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-18.689", pos_y: "-35.660", pos_z: "-263.363", rot_x_deg: "1.1", rot_y_deg: "-5.2", rot_z_deg: "9.6", q_w: "0.876", q_x: "0.005", q_y: "-0.052", q_z: "0.094", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-18.666", pos_y: "-35.003", pos_z: "-263.071", rot_x_deg: "1.2", rot_y_deg: "-5.5", rot_z_deg: "10.0", q_w: "0.876", q_x: "0.006", q_y: "-0.055", q_z: "0.098", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.952", pos_y: "-35.338", pos_z: "-261.533", rot_x_deg: "1.1", rot_y_deg: "-5.4", rot_z_deg: "9.9", q_w: "0.876", q_x: "0.005", q_y: "-0.054", q_z: "0.096", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.595", pos_y: "-35.506", pos_z: "-260.763", rot_x_deg: "1.1", rot_y_deg: "-5.3", rot_z_deg: "9.8", q_w: "0.876", q_x: "0.005", q_y: "-0.053", q_z: "0.095", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.417", pos_y: "-35.589", pos_z: "-260.379", rot_x_deg: "1.1", rot_y_deg: "-5.2", rot_z_deg: "9.7", q_w: "0.876", q_x: "0.005", q_y: "-0.053", q_z: "0.095", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.741", pos_y: "-35.357", pos_z: "-261.056", rot_x_deg: "1.1", rot_y_deg: "-5.3", rot_z_deg: "9.9", q_w: "0.876", q_x: "0.005", q_y: "-0.053", q_z: "0.096", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.903", pos_y: "-35.240", pos_z: "-261.394", rot_x_deg: "1.1", rot_y_deg: "-5.3", rot_z_deg: "9.9", q_w: "0.876", q_x: "0.005", q_y: "-0.054", q_z: "0.097", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.782", pos_y: "-35.640", pos_z: "-260.983", rot_x_deg: "1.1", rot_y_deg: "-5.2", rot_z_deg: "9.7", q_w: "0.876", q_x: "0.005", q_y: "-0.053", q_z: "0.095", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.722", pos_y: "-35.840", pos_z: "-260.777", rot_x_deg: "1.0", rot_y_deg: "-5.2", rot_z_deg: "9.6", q_w: "0.876", q_x: "0.005", q_y: "-0.052", q_z: "0.094", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.692", pos_y: "-35.940", pos_z: "-260.674", rot_x_deg: "1.0", rot_y_deg: "-5.2", rot_z_deg: "9.5", q_w: "0.877", q_x: "0.005", q_y: "-0.052", q_z: "0.093", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.678", pos_y: "-35.352", pos_z: "-260.483", rot_x_deg: "1.0", rot_y_deg: "-5.1", rot_z_deg: "9.4", q_w: "0.877", q_x: "0.005", q_y: "-0.051", q_z: "0.092", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.658", pos_y: "-34.753", pos_z: "-260.408", rot_x_deg: "1.1", rot_y_deg: "-5.2", rot_z_deg: "9.6", q_w: "0.876", q_x: "0.005", q_y: "-0.053", q_z: "0.094", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.759", pos_y: "-35.100", pos_z: "-261.700", rot_x_deg: "1.1", rot_y_deg: "-5.3", rot_z_deg: "9.7", q_w: "0.876", q_x: "0.005", q_y: "-0.053", q_z: "0.095", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.809", pos_y: "-35.273", pos_z: "-262.346", rot_x_deg: "1.1", rot_y_deg: "-5.4", rot_z_deg: "9.8", q_w: "0.876", q_x: "0.005", q_y: "-0.054", q_z: "0.096", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.737", pos_y: "-34.818", pos_z: "-261.325", rot_x_deg: "1.0", rot_y_deg: "-5.2", rot_z_deg: "9.6", q_w: "0.876", q_x: "0.005", q_y: "-0.052", q_z: "0.094", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.487", pos_y: "-34.685", pos_z: "-260.816", rot_x_deg: "1.1", rot_y_deg: "-5.3", rot_z_deg: "9.6", q_w: "0.876", q_x: "0.005", q_y: "-0.053", q_z: "0.094", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.563", pos_y: "-34.779", pos_z: "-260.425", rot_x_deg: "1.1", rot_y_deg: "-5.3", rot_z_deg: "9.7", q_w: "0.876", q_x: "0.005", q_y: "-0.053", q_z: "0.095", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.712", pos_y: "-34.508", pos_z: "-261.726", rot_x_deg: "1.1", rot_y_deg: "-5.3", rot_z_deg: "9.8", q_w: "0.876", q_x: "0.005", q_y: "-0.054", q_z: "0.095", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.772", pos_y: "-34.425", pos_z: "-262.239", rot_x_deg: "1.2", rot_y_deg: "-5.5", rot_z_deg: "10.0", q_w: "0.876", q_x: "0.005", q_y: "-0.056", q_z: "0.098", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.803", pos_y: "-34.383", pos_z: "-262.495", rot_x_deg: "1.2", rot_y_deg: "-5.6", rot_z_deg: "10.1", q_w: "0.876", q_x: "0.005", q_y: "-0.057", q_z: "0.099", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.953", pos_y: "-34.370", pos_z: "-261.629", rot_x_deg: "1.0", rot_y_deg: "-5.2", rot_z_deg: "9.5", q_w: "0.877", q_x: "0.005", q_y: "-0.052", q_z: "0.093", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-18.028", pos_y: "-34.364", pos_z: "-261.196", rot_x_deg: "0.9", rot_y_deg: "-5.0", rot_z_deg: "9.1", q_w: "0.877", q_x: "0.004", q_y: "-0.050", q_z: "0.089", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-18.065", pos_y: "-34.361", pos_z: "-260.979", rot_x_deg: "0.9", rot_y_deg: "-4.9", rot_z_deg: "8.9", q_w: "0.877", q_x: "0.004", q_y: "-0.049", q_z: "0.087", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.852", pos_y: "-34.457", pos_z: "-260.650", rot_x_deg: "1.0", rot_y_deg: "-5.1", rot_z_deg: "9.3", q_w: "0.877", q_x: "0.005", q_y: "-0.051", q_z: "0.091", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.745", pos_y: "-34.505", pos_z: "-260.485", rot_x_deg: "1.1", rot_y_deg: "-5.3", rot_z_deg: "9.5", q_w: "0.877", q_x: "0.005", q_y: "-0.053", q_z: "0.093", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.904", pos_y: "-34.674", pos_z: "-260.554", rot_x_deg: "1.1", rot_y_deg: "-5.2", rot_z_deg: "9.5", q_w: "0.877", q_x: "0.005", q_y: "-0.053", q_z: "0.093", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.850", pos_y: "-34.304", pos_z: "-260.178", rot_x_deg: "1.2", rot_y_deg: "-5.7", rot_z_deg: "10.4", q_w: "0.876", q_x: "0.006", q_y: "-0.057", q_z: "0.102", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-17.142", pos_y: "-34.626", pos_z: "-260.225", rot_x_deg: "1.2", rot_y_deg: "-5.5", rot_z_deg: "10.0", q_w: "0.876", q_x: "0.005", q_y: "-0.055", q_z: "0.098", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-16.788", pos_y: "-34.787", pos_z: "-260.249", rot_x_deg: "1.1", rot_y_deg: "-5.3", rot_z_deg: "9.8", q_w: "0.876", q_x: "0.005", q_y: "-0.054", q_z: "0.095", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-15.293", pos_y: "-35.348", pos_z: "-259.951", rot_x_deg: "1.1", rot_y_deg: "-5.4", rot_z_deg: "10.0", q_w: "0.876", q_x: "0.005", q_y: "-0.054", q_z: "0.098", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-14.545", pos_y: "-35.629", pos_z: "-259.801", rot_x_deg: "1.2", rot_y_deg: "-5.4", rot_z_deg: "10.1", q_w: "0.876", q_x: "0.005", q_y: "-0.055", q_z: "0.099", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-12.864", pos_y: "-36.367", pos_z: "-259.660", rot_x_deg: "1.1", rot_y_deg: "-5.2", rot_z_deg: "9.6", q_w: "0.876", q_x: "0.005", q_y: "-0.052", q_z: "0.094", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-11.225", pos_y: "-36.934", pos_z: "-259.586", rot_x_deg: "1.0", rot_y_deg: "-5.0", rot_z_deg: "9.1", q_w: "0.877", q_x: "0.005", q_y: "-0.050", q_z: "0.089", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-10.405", pos_y: "-37.218", pos_z: "-259.549", rot_x_deg: "1.0", rot_y_deg: "-4.8", rot_z_deg: "8.8", q_w: "0.877", q_x: "0.005", q_y: "-0.048", q_z: "0.086", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-9.492", pos_y: "-37.121", pos_z: "-258.373", rot_x_deg: "1.1", rot_y_deg: "-5.0", rot_z_deg: "9.2", q_w: "0.877", q_x: "0.006", q_y: "-0.051", q_z: "0.090", … }
+aruco.js:270:21
+ARUCO ID=5: 
+Object { pos_x: "-7.893", pos_y: "-38.234", pos_z: "-259.022", rot_x_deg: "1.1", rot_y_deg: "-5.1", rot_z_deg: "9.2", q_w: "0.877", q_x: "0.006", q_y: "-0.052", q_z: "0.090", … }
+aruco.js:270:21
+obsolete function arToolkitSource.onResize. Use arToolkitSource.onResizeElement threex-artoolkitsource.js:388:11
+obsolete function arToolkitSource.copySizeTo. Use arToolkitSource.copyElementSizeTo 2 threex-artoolkitsource.js:378:10
+Source map error: Error: URL constructor:  is not a valid URL.
+Stack in the worker:resolveSourceMapURL@resource://devtools/client/shared/source-map-loader/utils/fetchSourceMap.js:56:22
+getOriginalURLs@resource://devtools/client/shared/source-map-loader/source-map.js:75:24
+workerHandler/</<@resource://devtools/client/shared/worker-utils.js:115:52
+workerHandler/<@resource://devtools/client/shared/worker-utils.js:113:13
+
+Resource URL: wasm:http://127.0.0.1:8080/jsartoolkit5/artoolkit.min.js
+Source Map URL: null

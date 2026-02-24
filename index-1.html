@@ -1144,23 +1144,6 @@
                             rotationAngleDelta = 2 * Math.atan2(vectorLength, rotationDelta.w) * (180 / Math.PI);
                         }
 
-                        const euler = new THREE.Euler().setFromQuaternion(markerObject.quaternion, 'XYZ');
-
-                        // Виводимо структуроване повідомлення
-                        console.log(`Marker ${barcodeIdToTrack}:`, {
-                            'Timestamp (ms)': currentTime.toFixed(0),
-                            'Visible': 'yes',
-                            'x': markerObject.position.x.toFixed(3),
-                            'y': markerObject.position.y.toFixed(3),
-                            'z': markerObject.position.z.toFixed(3),
-                            'a_x': (euler.x * 180 / Math.PI).toFixed(1),
-                            'a_y': (euler.y * 180 / Math.PI).toFixed(1),
-                            'a_z': (euler.z * 180 / Math.PI).toFixed(1),
-                            'FrameDelay(ms)': timeDelta.toFixed(1),
-                            'PosΔ(Jitter)': positionDelta.toFixed(4),
-                            'RotΔ(°/frame)': rotationAngleDelta.toFixed(2)
-                        });
-
                         // Оновлюємо або ініціалізуємо останній стан
                         if (!lastMarkerStates[markerIndexToTrack]) {
                             lastMarkerStates[markerIndexToTrack] = {};
@@ -1171,7 +1154,7 @@
 
                     } else if (lastMarkerStates[markerIndexToTrack] && lastMarkerStates[markerIndexToTrack].visible) {
                         // Виводимо повідомлення, коли маркер втрачено
-                        console.log(`[Test 2] Marker ${barcodeIdToTrack} is lost`);
+                        console.log(`[Test 2] Barcode ID=${barcodeIdToTrack} is lost`);
                         lastMarkerStates[markerIndexToTrack].visible = false; // Скидаємо стан
                     }
                 }

@@ -1,0 +1,770 @@
+Successfully compiled asm.js code (total compilation time 134ms) artoolkit.min.js
+asm.js is deprecated and should no longer be used. Please recompile using WebAssembly to get the best performance. artoolkit.min.js:18:1
+THREE.WebGLRenderer 86 three.js:20307:11
+Aruco detector initialized for dictionary: ARUCO_4X4_1000 aruco.js:97:17
+Posit initialized with modelSize: 30 and detectionWidth: 640 aruco.js:105:17
+Detection canvas initialized: 640x480 aruco.js:117:17
+Allocated videoFrameSize 1228800 artoolkit.min.js:1:23009
+Pattern detection mode set to 4. artoolkit.min.js:1:23009
+Pattern ratio size set to 0.900000. artoolkit.min.js:1:23009
+obsolete function arToolkitSource.onResize. Use arToolkitSource.onResizeElement threex-artoolkitsource.js:388:11
+obsolete function arToolkitSource.copySizeTo. Use arToolkitSource.copyElementSizeTo 2 threex-artoolkitsource.js:378:10
+Barcode ID=1: 
+Object { "Timestamp (ms)": "10938", Visible: "yes", pos_x: "22.997", pos_y: "8.188", pos_z: "-199.435", rot_x_deg: "75.4", rot_y_deg: "-6.0", rot_z_deg: "6.6", q_w: "0.791", q_x: "0.607", … }
+index-1.html:1200:33
+THREE.WebGLRenderer: image is not power of two (199x176). Resized to 256x128 
+<img src="texture_green.jpg">
+three.js:18028:13
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11004", Visible: "yes", pos_x: "18.291", pos_y: "9.295", pos_z: "-195.211", rot_x_deg: "70.1", rot_y_deg: "-5.9", rot_z_deg: "5.0", q_w: "0.818", q_x: "0.571", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11050", Visible: "yes", pos_x: "16.133", pos_y: "10.076", pos_z: "-188.747", rot_x_deg: "68.4", rot_y_deg: "-5.6", rot_z_deg: "3.9", q_w: "0.826", q_x: "0.560", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11076", Visible: "yes", pos_x: "16.443", pos_y: "9.521", pos_z: "-188.623", rot_x_deg: "68.5", rot_y_deg: "-5.2", rot_z_deg: "2.7", q_w: "0.826", q_x: "0.561", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11102", Visible: "yes", pos_x: "16.713", pos_y: "9.349", pos_z: "-187.747", rot_x_deg: "68.1", rot_y_deg: "-5.5", rot_z_deg: "3.3", q_w: "0.828", q_x: "0.558", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11125", Visible: "yes", pos_x: "16.713", pos_y: "9.349", pos_z: "-187.747", rot_x_deg: "68.1", rot_y_deg: "-5.5", rot_z_deg: "3.3", q_w: "0.828", q_x: "0.558", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11151", Visible: "yes", pos_x: "16.855", pos_y: "9.333", pos_z: "-187.928", rot_x_deg: "68.4", rot_y_deg: "-5.5", rot_z_deg: "3.3", q_w: "0.826", q_x: "0.560", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11172", Visible: "yes", pos_x: "17.294", pos_y: "8.474", pos_z: "-188.409", rot_x_deg: "68.6", rot_y_deg: "-5.5", rot_z_deg: "3.1", q_w: "0.826", q_x: "0.561", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11195", Visible: "yes", pos_x: "17.163", pos_y: "8.233", pos_z: "-189.153", rot_x_deg: "68.0", rot_y_deg: "-6.0", rot_z_deg: "4.0", q_w: "0.828", q_x: "0.557", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11220", Visible: "yes", pos_x: "17.163", pos_y: "8.233", pos_z: "-189.153", rot_x_deg: "68.0", rot_y_deg: "-6.0", rot_z_deg: "4.0", q_w: "0.828", q_x: "0.557", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11242", Visible: "yes", pos_x: "16.377", pos_y: "8.640", pos_z: "-189.242", rot_x_deg: "68.3", rot_y_deg: "-5.9", rot_z_deg: "3.5", q_w: "0.827", q_x: "0.559", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11268", Visible: "yes", pos_x: "15.622", pos_y: "8.380", pos_z: "-190.226", rot_x_deg: "68.4", rot_y_deg: "-6.1", rot_z_deg: "3.7", q_w: "0.826", q_x: "0.560", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11290", Visible: "yes", pos_x: "14.628", pos_y: "8.423", pos_z: "-190.313", rot_x_deg: "67.9", rot_y_deg: "-5.8", rot_z_deg: "3.1", q_w: "0.829", q_x: "0.556", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11311", Visible: "yes", pos_x: "14.628", pos_y: "8.423", pos_z: "-190.313", rot_x_deg: "67.9", rot_y_deg: "-5.8", rot_z_deg: "3.1", q_w: "0.829", q_x: "0.556", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11340", Visible: "yes", pos_x: "14.031", pos_y: "8.615", pos_z: "-190.120", rot_x_deg: "67.6", rot_y_deg: "-5.7", rot_z_deg: "3.0", q_w: "0.830", q_x: "0.555", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11367", Visible: "yes", pos_x: "13.655", pos_y: "8.744", pos_z: "-190.219", rot_x_deg: "67.6", rot_y_deg: "-5.7", rot_z_deg: "2.7", q_w: "0.830", q_x: "0.555", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11392", Visible: "yes", pos_x: "13.290", pos_y: "8.978", pos_z: "-190.008", rot_x_deg: "67.6", rot_y_deg: "-5.6", rot_z_deg: "2.6", q_w: "0.831", q_x: "0.554", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11419", Visible: "yes", pos_x: "13.290", pos_y: "8.978", pos_z: "-190.008", rot_x_deg: "67.6", rot_y_deg: "-5.6", rot_z_deg: "2.6", q_w: "0.831", q_x: "0.554", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11441", Visible: "yes", pos_x: "13.305", pos_y: "9.011", pos_z: "-189.822", rot_x_deg: "67.7", rot_y_deg: "-5.5", rot_z_deg: "2.3", q_w: "0.830", q_x: "0.556", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11467", Visible: "yes", pos_x: "13.374", pos_y: "9.298", pos_z: "-189.412", rot_x_deg: "67.4", rot_y_deg: "-5.5", rot_z_deg: "2.5", q_w: "0.832", q_x: "0.553", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11491", Visible: "yes", pos_x: "13.374", pos_y: "9.298", pos_z: "-189.412", rot_x_deg: "67.4", rot_y_deg: "-5.5", rot_z_deg: "2.5", q_w: "0.832", q_x: "0.553", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11512", Visible: "yes", pos_x: "13.237", pos_y: "9.641", pos_z: "-189.456", rot_x_deg: "67.8", rot_y_deg: "-5.6", rot_z_deg: "2.7", q_w: "0.830", q_x: "0.556", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11541", Visible: "yes", pos_x: "13.031", pos_y: "9.555", pos_z: "-189.517", rot_x_deg: "67.9", rot_y_deg: "-5.5", rot_z_deg: "2.6", q_w: "0.829", q_x: "0.557", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11567", Visible: "yes", pos_x: "12.786", pos_y: "9.496", pos_z: "-189.698", rot_x_deg: "67.8", rot_y_deg: "-5.4", rot_z_deg: "2.5", q_w: "0.829", q_x: "0.556", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11590", Visible: "yes", pos_x: "12.786", pos_y: "9.496", pos_z: "-189.698", rot_x_deg: "67.8", rot_y_deg: "-5.4", rot_z_deg: "2.5", q_w: "0.829", q_x: "0.556", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11612", Visible: "yes", pos_x: "12.622", pos_y: "9.234", pos_z: "-190.019", rot_x_deg: "67.9", rot_y_deg: "-5.4", rot_z_deg: "2.6", q_w: "0.829", q_x: "0.557", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11639", Visible: "yes", pos_x: "12.490", pos_y: "9.006", pos_z: "-190.234", rot_x_deg: "67.6", rot_y_deg: "-5.3", rot_z_deg: "2.3", q_w: "0.830", q_x: "0.555", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11665", Visible: "yes", pos_x: "12.461", pos_y: "8.939", pos_z: "-190.428", rot_x_deg: "67.7", rot_y_deg: "-5.3", rot_z_deg: "2.4", q_w: "0.830", q_x: "0.555", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11691", Visible: "yes", pos_x: "12.054", pos_y: "8.734", pos_z: "-190.841", rot_x_deg: "67.9", rot_y_deg: "-5.4", rot_z_deg: "2.7", q_w: "0.829", q_x: "0.556", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11712", Visible: "yes", pos_x: "12.054", pos_y: "8.734", pos_z: "-190.841", rot_x_deg: "67.9", rot_y_deg: "-5.4", rot_z_deg: "2.7", q_w: "0.829", q_x: "0.556", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11739", Visible: "yes", pos_x: "11.580", pos_y: "7.761", pos_z: "-191.219", rot_x_deg: "67.8", rot_y_deg: "-5.3", rot_z_deg: "2.6", q_w: "0.830", q_x: "0.556", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11766", Visible: "yes", pos_x: "11.175", pos_y: "6.592", pos_z: "-191.499", rot_x_deg: "67.4", rot_y_deg: "-5.0", rot_z_deg: "2.1", q_w: "0.831", q_x: "0.554", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11790", Visible: "yes", pos_x: "11.403", pos_y: "4.928", pos_z: "-192.395", rot_x_deg: "66.8", rot_y_deg: "-4.9", rot_z_deg: "1.7", q_w: "0.834", q_x: "0.549", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11809", Visible: "yes", pos_x: "11.403", pos_y: "4.928", pos_z: "-192.395", rot_x_deg: "66.8", rot_y_deg: "-4.9", rot_z_deg: "1.7", q_w: "0.834", q_x: "0.549", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11833", Visible: "yes", pos_x: "13.045", pos_y: "1.235", pos_z: "-193.791", rot_x_deg: "64.6", rot_y_deg: "-5.1", rot_z_deg: "1.3", q_w: "0.844", q_x: "0.534", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11855", Visible: "yes", pos_x: "13.045", pos_y: "1.235", pos_z: "-193.791", rot_x_deg: "64.6", rot_y_deg: "-5.1", rot_z_deg: "1.3", q_w: "0.844", q_x: "0.534", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11875", Visible: "yes", pos_x: "13.567", pos_y: "-2.063", pos_z: "-192.955", rot_x_deg: "64.5", rot_y_deg: "-5.7", rot_z_deg: "3.0", q_w: "0.845", q_x: "0.531", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11900", Visible: "yes", pos_x: "13.469", pos_y: "-3.540", pos_z: "-193.603", rot_x_deg: "63.9", rot_y_deg: "-5.9", rot_z_deg: "3.1", q_w: "0.848", q_x: "0.527", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11922", Visible: "yes", pos_x: "13.469", pos_y: "-3.540", pos_z: "-193.603", rot_x_deg: "63.9", rot_y_deg: "-5.9", rot_z_deg: "3.1", q_w: "0.848", q_x: "0.527", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11942", Visible: "yes", pos_x: "13.324", pos_y: "-5.737", pos_z: "-194.275", rot_x_deg: "62.4", rot_y_deg: "-6.0", rot_z_deg: "3.2", q_w: "0.855", q_x: "0.516", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11966", Visible: "yes", pos_x: "13.322", pos_y: "-8.596", pos_z: "-194.975", rot_x_deg: "61.4", rot_y_deg: "-6.1", rot_z_deg: "3.0", q_w: "0.859", q_x: "0.509", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "11989", Visible: "yes", pos_x: "13.322", pos_y: "-8.596", pos_z: "-194.974", rot_x_deg: "61.4", rot_y_deg: "-6.1", rot_z_deg: "3.0", q_w: "0.859", q_x: "0.509", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12008", Visible: "yes", pos_x: "13.928", pos_y: "-10.791", pos_z: "-195.582", rot_x_deg: "60.6", rot_y_deg: "-6.1", rot_z_deg: "2.9", q_w: "0.862", q_x: "0.503", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12035", Visible: "yes", pos_x: "14.319", pos_y: "-12.573", pos_z: "-195.076", rot_x_deg: "59.7", rot_y_deg: "-6.7", rot_z_deg: "4.3", q_w: "0.866", q_x: "0.494", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12056", Visible: "yes", pos_x: "13.856", pos_y: "-12.860", pos_z: "-194.694", rot_x_deg: "58.9", rot_y_deg: "-6.6", rot_z_deg: "4.3", q_w: "0.870", q_x: "0.489", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12081", Visible: "yes", pos_x: "13.856", pos_y: "-12.860", pos_z: "-194.694", rot_x_deg: "58.9", rot_y_deg: "-6.6", rot_z_deg: "4.3", q_w: "0.870", q_x: "0.489", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12105", Visible: "yes", pos_x: "13.969", pos_y: "-13.103", pos_z: "-194.249", rot_x_deg: "57.8", rot_y_deg: "-6.7", rot_z_deg: "4.8", q_w: "0.875", q_x: "0.480", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12128", Visible: "yes", pos_x: "12.897", pos_y: "-12.088", pos_z: "-193.643", rot_x_deg: "57.2", rot_y_deg: "-6.8", rot_z_deg: "5.1", q_w: "0.877", q_x: "0.475", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12154", Visible: "yes", pos_x: "12.764", pos_y: "-12.785", pos_z: "-192.528", rot_x_deg: "56.9", rot_y_deg: "-6.5", rot_z_deg: "4.6", q_w: "0.878", q_x: "0.474", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12173", Visible: "yes", pos_x: "12.764", pos_y: "-12.785", pos_z: "-192.528", rot_x_deg: "56.9", rot_y_deg: "-6.5", rot_z_deg: "4.6", q_w: "0.878", q_x: "0.474", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12197", Visible: "yes", pos_x: "12.764", pos_y: "-12.785", pos_z: "-192.528", rot_x_deg: "56.9", rot_y_deg: "-6.5", rot_z_deg: "4.6", q_w: "0.878", q_x: "0.474", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12225", Visible: "yes", pos_x: "12.578", pos_y: "-13.813", pos_z: "-191.564", rot_x_deg: "55.8", rot_y_deg: "-6.8", rot_z_deg: "5.5", q_w: "0.883", q_x: "0.464", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12249", Visible: "yes", pos_x: "12.711", pos_y: "-16.177", pos_z: "-190.935", rot_x_deg: "53.4", rot_y_deg: "-6.7", rot_z_deg: "5.1", q_w: "0.892", q_x: "0.446", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12272", Visible: "yes", pos_x: "12.735", pos_y: "-18.957", pos_z: "-189.653", rot_x_deg: "52.4", rot_y_deg: "-7.2", rot_z_deg: "6.2", q_w: "0.896", q_x: "0.437", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12293", Visible: "yes", pos_x: "12.735", pos_y: "-18.957", pos_z: "-189.653", rot_x_deg: "52.4", rot_y_deg: "-7.2", rot_z_deg: "6.2", q_w: "0.896", q_x: "0.437", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12318", Visible: "yes", pos_x: "12.996", pos_y: "-21.101", pos_z: "-188.673", rot_x_deg: "50.8", rot_y_deg: "-7.2", rot_z_deg: "6.4", q_w: "0.902", q_x: "0.424", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12337", Visible: "yes", pos_x: "12.298", pos_y: "-23.224", pos_z: "-187.962", rot_x_deg: "49.6", rot_y_deg: "-7.8", rot_z_deg: "7.4", q_w: "0.906", q_x: "0.414", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12358", Visible: "yes", pos_x: "11.419", pos_y: "-24.937", pos_z: "-187.164", rot_x_deg: "47.6", rot_y_deg: "-7.3", rot_z_deg: "6.4", q_w: "0.913", q_x: "0.399", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12384", Visible: "yes", pos_x: "11.419", pos_y: "-24.937", pos_z: "-187.164", rot_x_deg: "47.6", rot_y_deg: "-7.3", rot_z_deg: "6.4", q_w: "0.913", q_x: "0.399", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12407", Visible: "yes", pos_x: "11.983", pos_y: "-28.693", pos_z: "-186.172", rot_x_deg: "44.7", rot_y_deg: "-7.8", rot_z_deg: "6.4", q_w: "0.923", q_x: "0.375", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12431", Visible: "yes", pos_x: "10.705", pos_y: "-30.808", pos_z: "-185.562", rot_x_deg: "44.3", rot_y_deg: "-8.3", rot_z_deg: "7.3", q_w: "0.923", q_x: "0.371", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12453", Visible: "yes", pos_x: "10.705", pos_y: "-30.808", pos_z: "-185.562", rot_x_deg: "44.3", rot_y_deg: "-8.3", rot_z_deg: "7.3", q_w: "0.923", q_x: "0.371", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12472", Visible: "yes", pos_x: "9.913", pos_y: "-32.932", pos_z: "-184.522", rot_x_deg: "42.4", rot_y_deg: "-8.1", rot_z_deg: "7.1", q_w: "0.930", q_x: "0.356", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12494", Visible: "yes", pos_x: "9.077", pos_y: "-34.167", pos_z: "-184.181", rot_x_deg: "41.1", rot_y_deg: "-8.3", rot_z_deg: "7.1", q_w: "0.934", q_x: "0.345", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12520", Visible: "yes", pos_x: "9.077", pos_y: "-34.167", pos_z: "-184.181", rot_x_deg: "41.1", rot_y_deg: "-8.3", rot_z_deg: "7.1", q_w: "0.934", q_x: "0.345", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12539", Visible: "yes", pos_x: "8.548", pos_y: "-34.883", pos_z: "-183.371", rot_x_deg: "40.1", rot_y_deg: "-8.3", rot_z_deg: "6.9", q_w: "0.937", q_x: "0.337", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12560", Visible: "yes", pos_x: "8.548", pos_y: "-34.883", pos_z: "-183.371", rot_x_deg: "40.1", rot_y_deg: "-8.3", rot_z_deg: "6.9", q_w: "0.937", q_x: "0.337", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12587", Visible: "yes", pos_x: "8.384", pos_y: "-34.564", pos_z: "-182.911", rot_x_deg: "38.3", rot_y_deg: "-8.3", rot_z_deg: "6.8", q_w: "0.942", q_x: "0.323", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12608", Visible: "yes", pos_x: "8.199", pos_y: "-32.214", pos_z: "-182.806", rot_x_deg: "36.9", rot_y_deg: "-8.4", rot_z_deg: "6.5", q_w: "0.946", q_x: "0.312", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12633", Visible: "yes", pos_x: "7.654", pos_y: "-29.689", pos_z: "-182.097", rot_x_deg: "38.1", rot_y_deg: "-8.3", rot_z_deg: "6.8", q_w: "0.942", q_x: "0.321", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12654", Visible: "yes", pos_x: "7.654", pos_y: "-29.689", pos_z: "-182.097", rot_x_deg: "38.1", rot_y_deg: "-8.3", rot_z_deg: "6.8", q_w: "0.942", q_x: "0.321", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12673", Visible: "yes", pos_x: "7.414", pos_y: "-27.609", pos_z: "-181.445", rot_x_deg: "38.4", rot_y_deg: "-8.1", rot_z_deg: "6.9", q_w: "0.942", q_x: "0.323", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12696", Visible: "yes", pos_x: "7.025", pos_y: "-25.488", pos_z: "-181.129", rot_x_deg: "39.1", rot_y_deg: "-8.1", rot_z_deg: "7.2", q_w: "0.940", q_x: "0.329", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12720", Visible: "yes", pos_x: "7.025", pos_y: "-25.488", pos_z: "-181.129", rot_x_deg: "39.1", rot_y_deg: "-8.1", rot_z_deg: "7.2", q_w: "0.940", q_x: "0.329", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12740", Visible: "yes", pos_x: "6.519", pos_y: "-24.317", pos_z: "-180.895", rot_x_deg: "39.9", rot_y_deg: "-7.8", rot_z_deg: "7.1", q_w: "0.937", q_x: "0.336", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12764", Visible: "yes", pos_x: "6.987", pos_y: "-24.271", pos_z: "-180.676", rot_x_deg: "40.8", rot_y_deg: "-7.6", rot_z_deg: "7.8", q_w: "0.935", q_x: "0.343", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12787", Visible: "yes", pos_x: "6.987", pos_y: "-24.271", pos_z: "-180.676", rot_x_deg: "40.8", rot_y_deg: "-7.6", rot_z_deg: "7.8", q_w: "0.935", q_x: "0.343", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12808", Visible: "yes", pos_x: "7.195", pos_y: "-24.463", pos_z: "-180.196", rot_x_deg: "40.4", rot_y_deg: "-7.9", rot_z_deg: "8.0", q_w: "0.936", q_x: "0.339", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12832", Visible: "yes", pos_x: "7.111", pos_y: "-24.503", pos_z: "-180.276", rot_x_deg: "40.6", rot_y_deg: "-7.8", rot_z_deg: "7.9", q_w: "0.935", q_x: "0.341", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12855", Visible: "yes", pos_x: "7.186", pos_y: "-24.484", pos_z: "-180.318", rot_x_deg: "40.5", rot_y_deg: "-7.8", rot_z_deg: "7.9", q_w: "0.936", q_x: "0.340", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12875", Visible: "yes", pos_x: "7.186", pos_y: "-24.484", pos_z: "-180.318", rot_x_deg: "40.5", rot_y_deg: "-7.8", rot_z_deg: "7.9", q_w: "0.936", q_x: "0.340", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "12901", Visible: "yes", pos_x: "6.915", pos_y: "-24.268", pos_z: "-180.327", rot_x_deg: "40.2", rot_y_deg: "-7.6", rot_z_deg: "8.2", q_w: "0.936", q_x: "0.337", … }
+index-1.html:1200:33
+[Test 2] Barcode ID=1 is lost index-1.html:1231:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13020", Visible: "yes", pos_x: "2.778", pos_y: "-13.757", pos_z: "-184.713", rot_x_deg: "42.3", rot_y_deg: "-6.4", rot_z_deg: "6.8", q_w: "0.931", q_x: "0.356", … }
+index-1.html:1200:33
+[Test 2] Barcode ID=1 is lost index-1.html:1231:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13119", Visible: "yes", pos_x: "-4.425", pos_y: "2.069", pos_z: "-184.302", rot_x_deg: "50.3", rot_y_deg: "-3.8", rot_z_deg: "3.7", q_w: "0.905", q_x: "0.423", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13139", Visible: "yes", pos_x: "-5.323", pos_y: "4.202", pos_z: "-187.182", rot_x_deg: "49.8", rot_y_deg: "-3.7", rot_z_deg: "2.5", q_w: "0.907", q_x: "0.420", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13161", Visible: "yes", pos_x: "-6.201", pos_y: "7.319", pos_z: "-186.632", rot_x_deg: "53.1", rot_y_deg: "-2.9", rot_z_deg: "2.2", q_w: "0.894", q_x: "0.446", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13187", Visible: "yes", pos_x: "-6.201", pos_y: "7.319", pos_z: "-186.633", rot_x_deg: "53.1", rot_y_deg: "-2.9", rot_z_deg: "2.2", q_w: "0.894", q_x: "0.446", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13207", Visible: "yes", pos_x: "-5.232", pos_y: "7.498", pos_z: "-188.016", rot_x_deg: "56.3", rot_y_deg: "-3.0", rot_z_deg: "1.6", q_w: "0.882", q_x: "0.471", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13233", Visible: "yes", pos_x: "-4.934", pos_y: "6.174", pos_z: "-189.236", rot_x_deg: "56.9", rot_y_deg: "-2.9", rot_z_deg: "1.1", q_w: "0.879", q_x: "0.476", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13256", Visible: "yes", pos_x: "-4.618", pos_y: "4.699", pos_z: "-191.205", rot_x_deg: "57.7", rot_y_deg: "-2.6", rot_z_deg: "0.5", q_w: "0.876", q_x: "0.482", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13280", Visible: "yes", pos_x: "-4.618", pos_y: "4.699", pos_z: "-191.205", rot_x_deg: "57.7", rot_y_deg: "-2.6", rot_z_deg: "0.5", q_w: "0.876", q_x: "0.482", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13304", Visible: "yes", pos_x: "-3.652", pos_y: "1.770", pos_z: "-193.795", rot_x_deg: "57.2", rot_y_deg: "-2.6", rot_z_deg: "-0.1", q_w: "0.878", q_x: "0.479", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13325", Visible: "yes", pos_x: "-3.652", pos_y: "1.770", pos_z: "-193.795", rot_x_deg: "57.2", rot_y_deg: "-2.6", rot_z_deg: "-0.1", q_w: "0.878", q_x: "0.479", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13348", Visible: "yes", pos_x: "-2.825", pos_y: "-2.247", pos_z: "-195.045", rot_x_deg: "57.2", rot_y_deg: "-2.7", rot_z_deg: "-0.1", q_w: "0.878", q_x: "0.478", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13371", Visible: "yes", pos_x: "-1.907", pos_y: "-4.766", pos_z: "-197.498", rot_x_deg: "58.3", rot_y_deg: "-2.4", rot_z_deg: "-0.6", q_w: "0.873", q_x: "0.487", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13391", Visible: "yes", pos_x: "-1.907", pos_y: "-4.766", pos_z: "-197.498", rot_x_deg: "58.3", rot_y_deg: "-2.4", rot_z_deg: "-0.6", q_w: "0.873", q_x: "0.487", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13418", Visible: "yes", pos_x: "-0.788", pos_y: "-6.739", pos_z: "-197.868", rot_x_deg: "58.0", rot_y_deg: "-2.9", rot_z_deg: "0.4", q_w: "0.874", q_x: "0.485", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13442", Visible: "yes", pos_x: "-1.070", pos_y: "-6.901", pos_z: "-199.016", rot_x_deg: "58.6", rot_y_deg: "-2.6", rot_z_deg: "0.0", q_w: "0.872", q_x: "0.489", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13465", Visible: "yes", pos_x: "-0.272", pos_y: "-7.606", pos_z: "-200.367", rot_x_deg: "59.3", rot_y_deg: "-2.6", rot_z_deg: "0.1", q_w: "0.869", q_x: "0.494", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13492", Visible: "yes", pos_x: "-0.272", pos_y: "-7.606", pos_z: "-200.367", rot_x_deg: "59.3", rot_y_deg: "-2.6", rot_z_deg: "0.1", q_w: "0.869", q_x: "0.494", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13516", Visible: "yes", pos_x: "0.018", pos_y: "-7.811", pos_z: "-201.153", rot_x_deg: "59.1", rot_y_deg: "-2.5", rot_z_deg: "0.1", q_w: "0.870", q_x: "0.493", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13540", Visible: "yes", pos_x: "-0.873", pos_y: "-6.571", pos_z: "-203.061", rot_x_deg: "58.3", rot_y_deg: "-2.4", rot_z_deg: "0.2", q_w: "0.873", q_x: "0.487", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13569", Visible: "yes", pos_x: "-1.177", pos_y: "-4.474", pos_z: "-203.892", rot_x_deg: "59.3", rot_y_deg: "-1.5", rot_z_deg: "-1.1", q_w: "0.869", q_x: "0.495", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13592", Visible: "yes", pos_x: "-0.498", pos_y: "-2.875", pos_z: "-204.750", rot_x_deg: "60.6", rot_y_deg: "-1.3", rot_z_deg: "-0.9", q_w: "0.863", q_x: "0.505", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13619", Visible: "yes", pos_x: "-0.498", pos_y: "-2.875", pos_z: "-204.750", rot_x_deg: "60.6", rot_y_deg: "-1.3", rot_z_deg: "-0.9", q_w: "0.863", q_x: "0.505", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13639", Visible: "yes", pos_x: "-1.294", pos_y: "-0.529", pos_z: "-206.956", rot_x_deg: "60.3", rot_y_deg: "-1.5", rot_z_deg: "0.1", q_w: "0.864", q_x: "0.503", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13664", Visible: "yes", pos_x: "-1.645", pos_y: "1.036", pos_z: "-208.091", rot_x_deg: "64.6", rot_y_deg: "-0.6", rot_z_deg: "-1.4", q_w: "0.845", q_x: "0.535", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13687", Visible: "yes", pos_x: "-1.645", pos_y: "1.036", pos_z: "-208.091", rot_x_deg: "64.6", rot_y_deg: "-0.6", rot_z_deg: "-1.4", q_w: "0.845", q_x: "0.535", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13708", Visible: "yes", pos_x: "-0.906", pos_y: "0.094", pos_z: "-209.728", rot_x_deg: "65.6", rot_y_deg: "-0.5", rot_z_deg: "-1.5", q_w: "0.840", q_x: "0.542", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13734", Visible: "yes", pos_x: "-0.906", pos_y: "0.094", pos_z: "-209.729", rot_x_deg: "65.6", rot_y_deg: "-0.5", rot_z_deg: "-1.5", q_w: "0.840", q_x: "0.542", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13755", Visible: "yes", pos_x: "-0.247", pos_y: "-1.286", pos_z: "-211.705", rot_x_deg: "66.4", rot_y_deg: "-0.5", rot_z_deg: "-1.6", q_w: "0.837", q_x: "0.547", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13783", Visible: "yes", pos_x: "-0.184", pos_y: "-2.016", pos_z: "-213.395", rot_x_deg: "66.0", rot_y_deg: "-0.5", rot_z_deg: "-1.5", q_w: "0.838", q_x: "0.545", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13805", Visible: "yes", pos_x: "-0.137", pos_y: "-2.446", pos_z: "-215.116", rot_x_deg: "67.2", rot_y_deg: "-0.0", rot_z_deg: "-3.1", q_w: "0.833", q_x: "0.553", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13826", Visible: "yes", pos_x: "-0.137", pos_y: "-2.446", pos_z: "-215.116", rot_x_deg: "67.2", rot_y_deg: "-0.0", rot_z_deg: "-3.1", q_w: "0.833", q_x: "0.553", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13852", Visible: "yes", pos_x: "0.947", pos_y: "-3.762", pos_z: "-216.742", rot_x_deg: "67.6", rot_y_deg: "-0.1", rot_z_deg: "-2.9", q_w: "0.831", q_x: "0.556", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13877", Visible: "yes", pos_x: "1.744", pos_y: "-4.729", pos_z: "-218.162", rot_x_deg: "68.5", rot_y_deg: "-0.1", rot_z_deg: "-3.5", q_w: "0.826", q_x: "0.563", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13903", Visible: "yes", pos_x: "3.401", pos_y: "-6.286", pos_z: "-219.651", rot_x_deg: "69.2", rot_y_deg: "0.0", rot_z_deg: "-4.4", q_w: "0.823", q_x: "0.567", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13927", Visible: "yes", pos_x: "3.401", pos_y: "-6.286", pos_z: "-219.651", rot_x_deg: "69.2", rot_y_deg: "0.0", rot_z_deg: "-4.4", q_w: "0.823", q_x: "0.567", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13954", Visible: "yes", pos_x: "5.065", pos_y: "-6.353", pos_z: "-220.484", rot_x_deg: "68.8", rot_y_deg: "0.1", rot_z_deg: "-4.7", q_w: "0.824", q_x: "0.564", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "13975", Visible: "yes", pos_x: "7.026", pos_y: "-6.383", pos_z: "-221.060", rot_x_deg: "69.7", rot_y_deg: "-0.4", rot_z_deg: "-3.5", q_w: "0.820", q_x: "0.571", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14002", Visible: "yes", pos_x: "7.242", pos_y: "-5.523", pos_z: "-221.977", rot_x_deg: "68.5", rot_y_deg: "-0.9", rot_z_deg: "-2.3", q_w: "0.826", q_x: "0.563", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14024", Visible: "yes", pos_x: "7.744", pos_y: "-2.898", pos_z: "-223.420", rot_x_deg: "66.1", rot_y_deg: "-0.7", rot_z_deg: "-2.8", q_w: "0.838", q_x: "0.545", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14047", Visible: "yes", pos_x: "7.744", pos_y: "-2.898", pos_z: "-223.421", rot_x_deg: "66.1", rot_y_deg: "-0.7", rot_z_deg: "-2.8", q_w: "0.838", q_x: "0.545", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14068", Visible: "yes", pos_x: "8.913", pos_y: "0.048", pos_z: "-223.028", rot_x_deg: "70.2", rot_y_deg: "-0.8", rot_z_deg: "-2.7", q_w: "0.818", q_x: "0.575", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14092", Visible: "yes", pos_x: "8.913", pos_y: "0.048", pos_z: "-223.028", rot_x_deg: "70.2", rot_y_deg: "-0.8", rot_z_deg: "-2.7", q_w: "0.818", q_x: "0.575", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14119", Visible: "yes", pos_x: "8.428", pos_y: "2.412", pos_z: "-224.567", rot_x_deg: "71.1", rot_y_deg: "-0.9", rot_z_deg: "-2.3", q_w: "0.813", q_x: "0.582", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14141", Visible: "yes", pos_x: "8.026", pos_y: "4.793", pos_z: "-224.086", rot_x_deg: "72.9", rot_y_deg: "-0.5", rot_z_deg: "-3.8", q_w: "0.804", q_x: "0.594", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14167", Visible: "yes", pos_x: "8.026", pos_y: "4.793", pos_z: "-224.086", rot_x_deg: "72.9", rot_y_deg: "-0.5", rot_z_deg: "-3.8", q_w: "0.804", q_x: "0.594", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14187", Visible: "yes", pos_x: "8.686", pos_y: "6.933", pos_z: "-223.520", rot_x_deg: "73.8", rot_y_deg: "-0.2", rot_z_deg: "-4.9", q_w: "0.799", q_x: "0.600", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14211", Visible: "yes", pos_x: "8.871", pos_y: "7.931", pos_z: "-224.303", rot_x_deg: "76.7", rot_y_deg: "-0.5", rot_z_deg: "-4.5", q_w: "0.783", q_x: "0.620", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14238", Visible: "yes", pos_x: "8.540", pos_y: "7.349", pos_z: "-224.967", rot_x_deg: "79.0", rot_y_deg: "0.1", rot_z_deg: "-6.4", q_w: "0.771", q_x: "0.635", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14256", Visible: "yes", pos_x: "8.540", pos_y: "7.349", pos_z: "-224.967", rot_x_deg: "79.0", rot_y_deg: "0.1", rot_z_deg: "-6.4", q_w: "0.771", q_x: "0.635", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14283", Visible: "yes", pos_x: "7.998", pos_y: "5.522", pos_z: "-227.951", rot_x_deg: "80.2", rot_y_deg: "-0.4", rot_z_deg: "-4.5", q_w: "0.765", q_x: "0.643", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14303", Visible: "yes", pos_x: "4.856", pos_y: "6.453", pos_z: "-232.220", rot_x_deg: "82.8", rot_y_deg: "-0.7", rot_z_deg: "-3.0", q_w: "0.750", q_x: "0.661", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14326", Visible: "yes", pos_x: "4.856", pos_y: "6.453", pos_z: "-232.220", rot_x_deg: "82.8", rot_y_deg: "-0.7", rot_z_deg: "-3.0", q_w: "0.750", q_x: "0.661", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14354", Visible: "yes", pos_x: "1.552", pos_y: "5.610", pos_z: "-233.759", rot_x_deg: "85.7", rot_y_deg: "-0.4", rot_z_deg: "-6.4", q_w: "0.732", q_x: "0.679", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14375", Visible: "yes", pos_x: "-2.433", pos_y: "4.767", pos_z: "-237.350", rot_x_deg: "86.8", rot_y_deg: "-0.6", rot_z_deg: "-7.9", q_w: "0.725", q_x: "0.686", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14402", Visible: "yes", pos_x: "-7.243", pos_y: "5.072", pos_z: "-240.566", rot_x_deg: "85.9", rot_y_deg: "-0.4", rot_z_deg: "-6.9", q_w: "0.731", q_x: "0.680", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14424", Visible: "yes", pos_x: "-11.793", pos_y: "4.961", pos_z: "-241.849", rot_x_deg: "86.5", rot_y_deg: "-0.3", rot_z_deg: "-12.7", q_w: "0.724", q_x: "0.681", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14450", Visible: "yes", pos_x: "-11.791", pos_y: "4.962", pos_z: "-241.823", rot_x_deg: "86.4", rot_y_deg: "-0.2", rot_z_deg: "-12.7", q_w: "0.724", q_x: "0.681", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14472", Visible: "yes", pos_x: "-17.675", pos_y: "4.544", pos_z: "-245.658", rot_x_deg: "88.5", rot_y_deg: "-0.3", rot_z_deg: "-13.3", q_w: "0.712", q_x: "0.693", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14494", Visible: "yes", pos_x: "-17.673", pos_y: "4.545", pos_z: "-245.646", rot_x_deg: "88.4", rot_y_deg: "-0.3", rot_z_deg: "-13.4", q_w: "0.712", q_x: "0.693", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14520", Visible: "yes", pos_x: "-23.472", pos_y: "6.334", pos_z: "-249.961", rot_x_deg: "84.4", rot_y_deg: "0.9", rot_z_deg: "-13.2", q_w: "0.736", q_x: "0.667", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14547", Visible: "yes", pos_x: "-26.778", pos_y: "7.368", pos_z: "-246.667", rot_x_deg: "85.7", rot_y_deg: "1.5", rot_z_deg: "-17.1", q_w: "0.726", q_x: "0.671", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14571", Visible: "yes", pos_x: "-29.995", pos_y: "5.016", pos_z: "-250.193", rot_x_deg: "86.5", rot_y_deg: "1.5", rot_z_deg: "-18.3", q_w: "0.721", q_x: "0.675", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14591", Visible: "yes", pos_x: "-29.995", pos_y: "5.016", pos_z: "-250.193", rot_x_deg: "86.5", rot_y_deg: "1.5", rot_z_deg: "-18.3", q_w: "0.721", q_x: "0.675", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14618", Visible: "yes", pos_x: "-35.257", pos_y: "7.173", pos_z: "-256.769", rot_x_deg: "84.0", rot_y_deg: "2.0", rot_z_deg: "-15.5", q_w: "0.738", q_x: "0.661", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14647", Visible: "yes", pos_x: "-37.519", pos_y: "8.981", pos_z: "-250.965", rot_x_deg: "85.2", rot_y_deg: "2.9", rot_z_deg: "-22.1", q_w: "0.725", q_x: "0.661", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14676", Visible: "yes", pos_x: "-39.404", pos_y: "6.805", pos_z: "-253.027", rot_x_deg: "85.9", rot_y_deg: "2.9", rot_z_deg: "-22.4", q_w: "0.721", q_x: "0.664", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14706", Visible: "yes", pos_x: "-42.321", pos_y: "6.964", pos_z: "-255.708", rot_x_deg: "83.8", rot_y_deg: "3.6", rot_z_deg: "-22.6", q_w: "0.734", q_x: "0.650", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14740", Visible: "yes", pos_x: "-41.688", pos_y: "5.537", pos_z: "-251.209", rot_x_deg: "82.9", rot_y_deg: "5.0", rot_z_deg: "-26.9", q_w: "0.735", q_x: "0.635", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14769", Visible: "yes", pos_x: "-42.432", pos_y: "2.693", pos_z: "-253.528", rot_x_deg: "83.0", rot_y_deg: "4.5", rot_z_deg: "-26.2", q_w: "0.735", q_x: "0.638", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14803", Visible: "yes", pos_x: "-45.469", pos_y: "3.260", pos_z: "-258.143", rot_x_deg: "81.7", rot_y_deg: "5.3", rot_z_deg: "-23.6", q_w: "0.746", q_x: "0.632", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14831", Visible: "yes", pos_x: "-45.469", pos_y: "3.260", pos_z: "-258.143", rot_x_deg: "81.7", rot_y_deg: "5.3", rot_z_deg: "-23.6", q_w: "0.746", q_x: "0.632", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14858", Visible: "yes", pos_x: "-46.012", pos_y: "3.619", pos_z: "-253.001", rot_x_deg: "83.0", rot_y_deg: "5.7", rot_z_deg: "-28.1", q_w: "0.734", q_x: "0.633", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14889", Visible: "yes", pos_x: "-49.424", pos_y: "2.830", pos_z: "-258.569", rot_x_deg: "84.4", rot_y_deg: "5.3", rot_z_deg: "-25.7", q_w: "0.729", q_x: "0.646", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14919", Visible: "yes", pos_x: "-52.176", pos_y: "4.022", pos_z: "-256.847", rot_x_deg: "82.1", rot_y_deg: "6.5", rot_z_deg: "-28.0", q_w: "0.739", q_x: "0.626", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14953", Visible: "yes", pos_x: "-52.599", pos_y: "3.337", pos_z: "-254.092", rot_x_deg: "82.4", rot_y_deg: "7.1", rot_z_deg: "-30.5", q_w: "0.736", q_x: "0.622", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "14987", Visible: "yes", pos_x: "-56.080", pos_y: "2.700", pos_z: "-259.090", rot_x_deg: "83.6", rot_y_deg: "6.2", rot_z_deg: "-29.3", q_w: "0.729", q_x: "0.634", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15017", Visible: "yes", pos_x: "-59.047", pos_y: "3.764", pos_z: "-258.045", rot_x_deg: "83.4", rot_y_deg: "7.2", rot_z_deg: "-29.8", q_w: "0.731", q_x: "0.629", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15049", Visible: "yes", pos_x: "-58.903", pos_y: "3.255", pos_z: "-256.088", rot_x_deg: "82.6", rot_y_deg: "7.8", rot_z_deg: "-31.1", q_w: "0.734", q_x: "0.621", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15079", Visible: "yes", pos_x: "-59.616", pos_y: "2.982", pos_z: "-256.857", rot_x_deg: "82.4", rot_y_deg: "7.9", rot_z_deg: "-30.8", q_w: "0.736", q_x: "0.620", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15113", Visible: "yes", pos_x: "-59.877", pos_y: "3.580", pos_z: "-256.690", rot_x_deg: "81.7", rot_y_deg: "8.4", rot_z_deg: "-30.9", q_w: "0.740", q_x: "0.614", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15145", Visible: "yes", pos_x: "-57.700", pos_y: "3.273", pos_z: "-253.990", rot_x_deg: "81.6", rot_y_deg: "8.6", rot_z_deg: "-31.8", q_w: "0.739", q_x: "0.611", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15181", Visible: "yes", pos_x: "-58.270", pos_y: "3.852", pos_z: "-256.810", rot_x_deg: "81.8", rot_y_deg: "8.1", rot_z_deg: "-29.6", q_w: "0.741", q_x: "0.618", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15209", Visible: "yes", pos_x: "-55.043", pos_y: "3.654", pos_z: "-252.258", rot_x_deg: "81.1", rot_y_deg: "9.3", rot_z_deg: "-33.6", q_w: "0.740", q_x: "0.603", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15235", Visible: "yes", pos_x: "-55.043", pos_y: "3.654", pos_z: "-252.259", rot_x_deg: "81.1", rot_y_deg: "9.3", rot_z_deg: "-33.6", q_w: "0.740", q_x: "0.603", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15256", Visible: "yes", pos_x: "-46.090", pos_y: "-1.573", pos_z: "-250.936", rot_x_deg: "79.4", rot_y_deg: "9.5", rot_z_deg: "-33.6", q_w: "0.749", q_x: "0.591", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15282", Visible: "yes", pos_x: "-41.708", pos_y: "-4.996", pos_z: "-251.622", rot_x_deg: "78.4", rot_y_deg: "7.5", rot_z_deg: "-27.2", q_w: "0.761", q_x: "0.601", … }
+index-1.html:1200:33
+[Test 2] Barcode ID=1 is lost index-1.html:1231:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15371", Visible: "yes", pos_x: "-15.878", pos_y: "-21.670", pos_z: "-244.764", rot_x_deg: "72.2", rot_y_deg: "4.5", rot_z_deg: "-22.2", q_w: "0.797", q_x: "0.572", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15397", Visible: "yes", pos_x: "-15.878", pos_y: "-21.670", pos_z: "-244.764", rot_x_deg: "72.2", rot_y_deg: "4.5", rot_z_deg: "-22.2", q_w: "0.797", q_x: "0.572", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15416", Visible: "yes", pos_x: "-10.421", pos_y: "-26.015", pos_z: "-242.595", rot_x_deg: "70.7", rot_y_deg: "3.9", rot_z_deg: "-22.6", q_w: "0.803", q_x: "0.561", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15438", Visible: "yes", pos_x: "-4.084", pos_y: "-30.627", pos_z: "-240.531", rot_x_deg: "69.7", rot_y_deg: "2.3", rot_z_deg: "-19.6", q_w: "0.811", q_x: "0.560", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15466", Visible: "yes", pos_x: "-1.058", pos_y: "-33.001", pos_z: "-239.664", rot_x_deg: "69.8", rot_y_deg: "0.4", rot_z_deg: "-14.6", q_w: "0.814", q_x: "0.567", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15487", Visible: "yes", pos_x: "-1.058", pos_y: "-33.001", pos_z: "-239.664", rot_x_deg: "69.8", rot_y_deg: "0.4", rot_z_deg: "-14.6", q_w: "0.814", q_x: "0.567", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15512", Visible: "yes", pos_x: "0.705", pos_y: "-36.814", pos_z: "-238.235", rot_x_deg: "69.3", rot_y_deg: "-0.4", rot_z_deg: "-14.0", q_w: "0.816", q_x: "0.565", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15535", Visible: "yes", pos_x: "4.043", pos_y: "-43.080", pos_z: "-236.911", rot_x_deg: "67.6", rot_y_deg: "-1.4", rot_z_deg: "-11.5", q_w: "0.826", q_x: "0.554", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15556", Visible: "yes", pos_x: "4.043", pos_y: "-43.080", pos_z: "-236.911", rot_x_deg: "67.6", rot_y_deg: "-1.4", rot_z_deg: "-11.5", q_w: "0.826", q_x: "0.554", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15581", Visible: "yes", pos_x: "5.734", pos_y: "-47.866", pos_z: "-235.407", rot_x_deg: "66.2", rot_y_deg: "-2.4", rot_z_deg: "-8.8", q_w: "0.834", q_x: "0.546", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15599", Visible: "yes", pos_x: "5.734", pos_y: "-47.866", pos_z: "-235.407", rot_x_deg: "66.2", rot_y_deg: "-2.4", rot_z_deg: "-8.8", q_w: "0.834", q_x: "0.546", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15621", Visible: "yes", pos_x: "6.788", pos_y: "-53.290", pos_z: "-234.324", rot_x_deg: "64.9", rot_y_deg: "-3.2", rot_z_deg: "-6.3", q_w: "0.841", q_x: "0.537", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15644", Visible: "yes", pos_x: "8.028", pos_y: "-57.349", pos_z: "-232.000", rot_x_deg: "62.6", rot_y_deg: "-3.8", rot_z_deg: "-4.6", q_w: "0.852", q_x: "0.520", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15667", Visible: "yes", pos_x: "8.028", pos_y: "-57.349", pos_z: "-232.000", rot_x_deg: "62.6", rot_y_deg: "-3.8", rot_z_deg: "-4.6", q_w: "0.852", q_x: "0.520", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15687", Visible: "yes", pos_x: "8.776", pos_y: "-59.440", pos_z: "-231.666", rot_x_deg: "60.2", rot_y_deg: "-4.5", rot_z_deg: "-2.3", q_w: "0.864", q_x: "0.501", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15709", Visible: "yes", pos_x: "8.694", pos_y: "-62.426", pos_z: "-229.536", rot_x_deg: "56.7", rot_y_deg: "-5.2", rot_z_deg: "-0.0", q_w: "0.879", q_x: "0.474", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15733", Visible: "yes", pos_x: "8.694", pos_y: "-62.425", pos_z: "-229.534", rot_x_deg: "56.7", rot_y_deg: "-5.2", rot_z_deg: "-0.0", q_w: "0.879", q_x: "0.474", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15753", Visible: "yes", pos_x: "6.927", pos_y: "-64.497", pos_z: "-229.692", rot_x_deg: "58.1", rot_y_deg: "-5.8", rot_z_deg: "2.0", q_w: "0.873", q_x: "0.484", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15776", Visible: "yes", pos_x: "6.366", pos_y: "-63.481", pos_z: "-226.460", rot_x_deg: "55.8", rot_y_deg: "-5.6", rot_z_deg: "0.6", q_w: "0.883", q_x: "0.467", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15803", Visible: "yes", pos_x: "5.909", pos_y: "-64.114", pos_z: "-225.572", rot_x_deg: "55.5", rot_y_deg: "-6.4", rot_z_deg: "2.7", q_w: "0.884", q_x: "0.463", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15823", Visible: "yes", pos_x: "5.908", pos_y: "-64.112", pos_z: "-225.566", rot_x_deg: "55.5", rot_y_deg: "-6.4", rot_z_deg: "2.7", q_w: "0.884", q_x: "0.463", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15849", Visible: "yes", pos_x: "4.610", pos_y: "-65.094", pos_z: "-224.777", rot_x_deg: "53.6", rot_y_deg: "-6.8", rot_z_deg: "2.8", q_w: "0.891", q_x: "0.449", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15872", Visible: "yes", pos_x: "3.623", pos_y: "-64.338", pos_z: "-224.200", rot_x_deg: "50.1", rot_y_deg: "-7.1", rot_z_deg: "3.1", q_w: "0.905", q_x: "0.421", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15900", Visible: "yes", pos_x: "1.755", pos_y: "-61.512", pos_z: "-225.977", rot_x_deg: "48.5", rot_y_deg: "-7.3", rot_z_deg: "3.2", q_w: "0.910", q_x: "0.408", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15923", Visible: "yes", pos_x: "1.755", pos_y: "-61.512", pos_z: "-225.976", rot_x_deg: "48.5", rot_y_deg: "-7.3", rot_z_deg: "3.2", q_w: "0.910", q_x: "0.408", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15948", Visible: "yes", pos_x: "0.925", pos_y: "-59.841", pos_z: "-220.987", rot_x_deg: "50.6", rot_y_deg: "-6.7", rot_z_deg: "2.1", q_w: "0.903", q_x: "0.425", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15968", Visible: "yes", pos_x: "0.925", pos_y: "-59.842", pos_z: "-220.989", rot_x_deg: "50.6", rot_y_deg: "-6.7", rot_z_deg: "2.1", q_w: "0.903", q_x: "0.425", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "15991", Visible: "yes", pos_x: "2.284", pos_y: "-64.292", pos_z: "-221.322", rot_x_deg: "48.9", rot_y_deg: "-7.2", rot_z_deg: "2.8", q_w: "0.909", q_x: "0.411", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "16017", Visible: "yes", pos_x: "3.237", pos_y: "-67.152", pos_z: "-218.496", rot_x_deg: "46.2", rot_y_deg: "-8.0", rot_z_deg: "3.7", q_w: "0.918", q_x: "0.389", … }
+index-1.html:1200:33
+[Test 2] Barcode ID=1 is lost index-1.html:1231:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "16713", Visible: "yes", pos_x: "-24.710", pos_y: "-16.637", pos_z: "-222.321", rot_x_deg: "40.4", rot_y_deg: "-3.8", rot_z_deg: "2.8", q_w: "0.938", q_x: "0.344", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "16739", Visible: "yes", pos_x: "-24.710", pos_y: "-16.637", pos_z: "-222.322", rot_x_deg: "40.4", rot_y_deg: "-3.8", rot_z_deg: "2.8", q_w: "0.938", q_x: "0.344", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "16771", Visible: "yes", pos_x: "-24.103", pos_y: "-14.120", pos_z: "-221.016", rot_x_deg: "41.7", rot_y_deg: "-4.0", rot_z_deg: "3.3", q_w: "0.934", q_x: "0.354", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "16794", Visible: "yes", pos_x: "-23.028", pos_y: "-12.611", pos_z: "-220.805", rot_x_deg: "43.8", rot_y_deg: "-4.4", rot_z_deg: "4.0", q_w: "0.927", q_x: "0.371", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "16820", Visible: "yes", pos_x: "-21.878", pos_y: "-12.597", pos_z: "-219.633", rot_x_deg: "43.8", rot_y_deg: "-4.7", rot_z_deg: "4.0", q_w: "0.927", q_x: "0.371", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "16849", Visible: "yes", pos_x: "-21.481", pos_y: "-11.910", pos_z: "-219.542", rot_x_deg: "43.7", rot_y_deg: "-4.9", rot_z_deg: "3.5", q_w: "0.927", q_x: "0.370", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "16875", Visible: "yes", pos_x: "-20.817", pos_y: "-11.135", pos_z: "-218.499", rot_x_deg: "44.3", rot_y_deg: "-5.1", rot_z_deg: "4.4", q_w: "0.925", q_x: "0.375", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "16902", Visible: "yes", pos_x: "-20.767", pos_y: "-11.096", pos_z: "-217.979", rot_x_deg: "44.2", rot_y_deg: "-5.3", rot_z_deg: "4.5", q_w: "0.926", q_x: "0.374", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "16925", Visible: "yes", pos_x: "-20.767", pos_y: "-11.096", pos_z: "-217.979", rot_x_deg: "44.2", rot_y_deg: "-5.3", rot_z_deg: "4.5", q_w: "0.926", q_x: "0.374", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "16953", Visible: "yes", pos_x: "-20.896", pos_y: "-10.141", pos_z: "-218.256", rot_x_deg: "43.9", rot_y_deg: "-5.1", rot_z_deg: "3.7", q_w: "0.927", q_x: "0.372", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "16979", Visible: "yes", pos_x: "-20.016", pos_y: "-9.420", pos_z: "-217.453", rot_x_deg: "44.9", rot_y_deg: "-5.5", rot_z_deg: "4.1", q_w: "0.923", q_x: "0.380", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17003", Visible: "yes", pos_x: "-20.701", pos_y: "-9.297", pos_z: "-217.371", rot_x_deg: "44.9", rot_y_deg: "-5.6", rot_z_deg: "4.7", q_w: "0.923", q_x: "0.379", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17027", Visible: "yes", pos_x: "-20.701", pos_y: "-9.297", pos_z: "-217.371", rot_x_deg: "44.9", rot_y_deg: "-5.6", rot_z_deg: "4.7", q_w: "0.923", q_x: "0.379", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17054", Visible: "yes", pos_x: "-20.795", pos_y: "-9.674", pos_z: "-217.354", rot_x_deg: "44.9", rot_y_deg: "-5.3", rot_z_deg: "4.3", q_w: "0.923", q_x: "0.379", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17082", Visible: "yes", pos_x: "-20.192", pos_y: "-10.053", pos_z: "-217.896", rot_x_deg: "45.1", rot_y_deg: "-5.3", rot_z_deg: "4.0", q_w: "0.923", q_x: "0.381", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17107", Visible: "yes", pos_x: "-20.192", pos_y: "-10.053", pos_z: "-217.896", rot_x_deg: "45.1", rot_y_deg: "-5.3", rot_z_deg: "4.0", q_w: "0.923", q_x: "0.381", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17135", Visible: "yes", pos_x: "-19.825", pos_y: "-10.633", pos_z: "-217.387", rot_x_deg: "44.8", rot_y_deg: "-5.5", rot_z_deg: "3.9", q_w: "0.923", q_x: "0.379", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17162", Visible: "yes", pos_x: "-19.689", pos_y: "-11.277", pos_z: "-217.546", rot_x_deg: "44.7", rot_y_deg: "-5.4", rot_z_deg: "4.1", q_w: "0.924", q_x: "0.378", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17188", Visible: "yes", pos_x: "-19.466", pos_y: "-11.878", pos_z: "-216.975", rot_x_deg: "44.4", rot_y_deg: "-5.5", rot_z_deg: "4.4", q_w: "0.925", q_x: "0.375", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17216", Visible: "yes", pos_x: "-19.684", pos_y: "-12.096", pos_z: "-217.501", rot_x_deg: "44.6", rot_y_deg: "-5.5", rot_z_deg: "3.9", q_w: "0.924", q_x: "0.377", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17241", Visible: "yes", pos_x: "-19.930", pos_y: "-12.183", pos_z: "-217.613", rot_x_deg: "44.2", rot_y_deg: "-5.5", rot_z_deg: "4.0", q_w: "0.925", q_x: "0.374", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17267", Visible: "yes", pos_x: "-19.930", pos_y: "-12.183", pos_z: "-217.613", rot_x_deg: "44.2", rot_y_deg: "-5.5", rot_z_deg: "4.0", q_w: "0.925", q_x: "0.374", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17290", Visible: "yes", pos_x: "-19.945", pos_y: "-12.265", pos_z: "-217.629", rot_x_deg: "44.5", rot_y_deg: "-5.2", rot_z_deg: "4.0", q_w: "0.925", q_x: "0.377", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17319", Visible: "yes", pos_x: "-19.813", pos_y: "-12.537", pos_z: "-217.456", rot_x_deg: "44.5", rot_y_deg: "-5.4", rot_z_deg: "3.9", q_w: "0.925", q_x: "0.376", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17345", Visible: "yes", pos_x: "-20.117", pos_y: "-12.897", pos_z: "-217.467", rot_x_deg: "44.3", rot_y_deg: "-5.3", rot_z_deg: "3.9", q_w: "0.925", q_x: "0.375", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17369", Visible: "yes", pos_x: "-20.256", pos_y: "-12.768", pos_z: "-217.431", rot_x_deg: "44.3", rot_y_deg: "-5.2", rot_z_deg: "4.1", q_w: "0.925", q_x: "0.375", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17392", Visible: "yes", pos_x: "-20.256", pos_y: "-12.768", pos_z: "-217.432", rot_x_deg: "44.3", rot_y_deg: "-5.2", rot_z_deg: "4.1", q_w: "0.925", q_x: "0.375", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17419", Visible: "yes", pos_x: "-20.212", pos_y: "-13.115", pos_z: "-217.452", rot_x_deg: "44.3", rot_y_deg: "-5.2", rot_z_deg: "4.3", q_w: "0.925", q_x: "0.375", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17446", Visible: "yes", pos_x: "-20.197", pos_y: "-13.339", pos_z: "-217.983", rot_x_deg: "44.3", rot_y_deg: "-5.1", rot_z_deg: "3.7", q_w: "0.925", q_x: "0.375", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17471", Visible: "yes", pos_x: "-20.197", pos_y: "-13.339", pos_z: "-217.983", rot_x_deg: "44.3", rot_y_deg: "-5.1", rot_z_deg: "3.7", q_w: "0.925", q_x: "0.375", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17501", Visible: "yes", pos_x: "-19.972", pos_y: "-13.060", pos_z: "-216.964", rot_x_deg: "44.2", rot_y_deg: "-5.2", rot_z_deg: "4.5", q_w: "0.926", q_x: "0.374", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17528", Visible: "yes", pos_x: "-20.005", pos_y: "-13.337", pos_z: "-217.823", rot_x_deg: "44.5", rot_y_deg: "-5.1", rot_z_deg: "3.7", q_w: "0.925", q_x: "0.377", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17555", Visible: "yes", pos_x: "-19.767", pos_y: "-13.693", pos_z: "-217.581", rot_x_deg: "44.2", rot_y_deg: "-5.2", rot_z_deg: "3.7", q_w: "0.926", q_x: "0.374", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17582", Visible: "yes", pos_x: "-19.763", pos_y: "-13.626", pos_z: "-217.387", rot_x_deg: "44.3", rot_y_deg: "-5.3", rot_z_deg: "3.9", q_w: "0.925", q_x: "0.375", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17608", Visible: "yes", pos_x: "-20.067", pos_y: "-13.597", pos_z: "-217.254", rot_x_deg: "44.4", rot_y_deg: "-5.2", rot_z_deg: "4.0", q_w: "0.925", q_x: "0.376", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17633", Visible: "yes", pos_x: "-20.067", pos_y: "-13.597", pos_z: "-217.254", rot_x_deg: "44.4", rot_y_deg: "-5.2", rot_z_deg: "4.0", q_w: "0.925", q_x: "0.376", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17656", Visible: "yes", pos_x: "-20.034", pos_y: "-13.399", pos_z: "-216.775", rot_x_deg: "44.0", rot_y_deg: "-5.2", rot_z_deg: "4.4", q_w: "0.926", q_x: "0.372", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17684", Visible: "yes", pos_x: "-20.228", pos_y: "-13.443", pos_z: "-216.718", rot_x_deg: "44.2", rot_y_deg: "-5.1", rot_z_deg: "4.4", q_w: "0.926", q_x: "0.374", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17711", Visible: "yes", pos_x: "-20.304", pos_y: "-13.613", pos_z: "-217.128", rot_x_deg: "44.4", rot_y_deg: "-5.1", rot_z_deg: "3.7", q_w: "0.925", q_x: "0.376", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17735", Visible: "yes", pos_x: "-19.807", pos_y: "-13.729", pos_z: "-216.876", rot_x_deg: "44.2", rot_y_deg: "-5.1", rot_z_deg: "3.8", q_w: "0.926", q_x: "0.375", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17758", Visible: "yes", pos_x: "-19.807", pos_y: "-13.729", pos_z: "-216.876", rot_x_deg: "44.2", rot_y_deg: "-5.1", rot_z_deg: "3.8", q_w: "0.926", q_x: "0.375", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17784", Visible: "yes", pos_x: "-19.901", pos_y: "-13.745", pos_z: "-216.521", rot_x_deg: "44.2", rot_y_deg: "-5.1", rot_z_deg: "3.8", q_w: "0.926", q_x: "0.374", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17811", Visible: "yes", pos_x: "-19.660", pos_y: "-13.888", pos_z: "-215.891", rot_x_deg: "44.3", rot_y_deg: "-5.2", rot_z_deg: "4.3", q_w: "0.925", q_x: "0.375", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17836", Visible: "yes", pos_x: "-19.307", pos_y: "-13.771", pos_z: "-215.995", rot_x_deg: "44.5", rot_y_deg: "-5.0", rot_z_deg: "3.6", q_w: "0.925", q_x: "0.377", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17859", Visible: "yes", pos_x: "-19.307", pos_y: "-13.771", pos_z: "-215.995", rot_x_deg: "44.5", rot_y_deg: "-5.0", rot_z_deg: "3.6", q_w: "0.925", q_x: "0.377", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17884", Visible: "yes", pos_x: "-18.213", pos_y: "-13.882", pos_z: "-214.708", rot_x_deg: "44.6", rot_y_deg: "-5.2", rot_z_deg: "4.2", q_w: "0.924", q_x: "0.377", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17905", Visible: "yes", pos_x: "-18.213", pos_y: "-13.882", pos_z: "-214.708", rot_x_deg: "44.6", rot_y_deg: "-5.2", rot_z_deg: "4.2", q_w: "0.924", q_x: "0.377", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17934", Visible: "yes", pos_x: "-17.167", pos_y: "-15.486", pos_z: "-217.450", rot_x_deg: "45.1", rot_y_deg: "-5.0", rot_z_deg: "3.5", q_w: "0.923", q_x: "0.382", … }
+index-1.html:1200:33
+Barcode ID=1: 
+Object { "Timestamp (ms)": "17957", Visible: "yes", pos_x: "-14.355", pos_y: "-18.824", pos_z: "-218.096", rot_x_deg: "45.2", rot_y_deg: "-5.2", rot_z_deg: "3.4", q_w: "0.922", q_x: "0.382", … }
+index-1.html:1200:33
+[Test 2] Barcode ID=1 is lost index-1.html:1231:33
+obsolete function arToolkitSource.onResize. Use arToolkitSource.onResizeElement threex-artoolkitsource.js:388:11
+obsolete function arToolkitSource.copySizeTo. Use arToolkitSource.copyElementSizeTo 2 threex-artoolkitsource.js:378:10
+Source map error: Error: URL constructor:  is not a valid URL.
+Stack in the worker:resolveSourceMapURL@resource://devtools/client/shared/source-map-loader/utils/fetchSourceMap.js:56:22
+getOriginalURLs@resource://devtools/client/shared/source-map-loader/source-map.js:75:24
+workerHandler/</<@resource://devtools/client/shared/worker-utils.js:115:52
+workerHandler/<@resource://devtools/client/shared/worker-utils.js:113:13
+
+Resource URL: wasm:http://127.0.0.1:8080/jsartoolkit5/artoolkit.min.js
+Source Map URL: null
