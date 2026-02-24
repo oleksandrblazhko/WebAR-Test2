@@ -60,6 +60,11 @@
         let lastMarkerStates = {};
         let lastUpdateTime = 0;
         
+        // Змінні для тактильного відгуку (haptic feedback)
+        let hapticFeedbackEnabled = true;
+        let lastHapticTime = 0;
+        let hapticCooldown = 600; // мс між вібраціями (для 0.5 сек сигналу)
+        
         // Функція оновлення привітального тексту з конфігурації
         function updateWelcomeText() {
             if (config && config.settings && config.settings.welcomeText) {
@@ -117,11 +122,45 @@
             let patternToMarkerIndex = new Map();
 
             let arucoControls = [];
-            
+
             let controller;
             
+            // Audio context для тактильного звукового відгуку
+            let audioContext = null;
+            
+            // Функція для відтворення короткого аудіо-кліку при дотику
+            function playTouchSound() {
+                // Ініціалізація AudioContext при першому виклику
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                
+                // Створення аудіо-сигналу (синусоїда 800 Гц, 500 мс)
+                var oscillator = audioContext.createOscillator();
+                var gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800; // Частота 800 Гц
+                oscillator.type = 'sine'; // Синусоїда
+                
+                // Гучність: плавне загасання протягом 0.5 сек
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5); // 500 мс
+            }
+
             // Track current content state for each marker (true = alternative content, false = first content)
             let markerContentState = new Map();
+            
+            // Track which markers have already played sound for current intersection
+            let markerSoundPlayed = new Set();
+            
+            // Store audio timeout IDs for each marker (to cancel if controller moves away)
+            let markerAudioTimeouts = new Map();
             
             // Store alternative content objects for each marker
             let markerAlternativeContent = new Map();
@@ -377,6 +416,16 @@
                     // Hide all current content (main content)
                     markerRoot.children.forEach(child => {
                         if (!(child.userData && child.userData.isController) && !child.userData.isAlternativeContent) {
+                            // --- ОЧИСТКА СПАЛАХУ: відновлюємо колір перед приховуванням ---
+                            if (child.userData.flashTimeout) {
+                                clearTimeout(child.userData.flashTimeout);
+                                child.userData.flashTimeout = null;
+                            }
+                            if (child.userData.originalColor && child.material) {
+                                child.material.color.copy(child.userData.originalColor);
+                            }
+                            // ----------------------------------------------------------------
+                            
                             child.visible = false;
                         }
                     });
@@ -418,6 +467,16 @@
                     markerRoot.children.forEach(child => {
                         if (!(child.userData && child.userData.isController)) {
                             if (child.userData.isAlternativeContent) {
+                                // --- ОЧИСТКА СПАЛАХУ: для альтернативного контенту ---
+                                if (child.userData.flashTimeout) {
+                                    clearTimeout(child.userData.flashTimeout);
+                                    child.userData.flashTimeout = null;
+                                }
+                                if (child.userData.originalColor && child.material) {
+                                    child.material.color.copy(child.userData.originalColor);
+                                }
+                                // ------------------------------------------------------------
+                                
                                 child.visible = false;
                             } else {
                                 child.visible = true;
@@ -1058,7 +1117,34 @@
 
                     // Switch to alternative content for intersected marker if it has alternative content
                     if (intersectedMarkerIndex !== null && markerAlternativeContent.has(intersectedMarkerIndex)) {
-                        switchMarkerContent(intersectedMarkerIndex, true);
+                        // --- ТАКТИЛЬНИЙ ВІДГУК: вібрація + аудіо клік при дотику ---
+                        // Перевіряємо, чи вже був відтворений звук для цього маркера
+                        if (!markerSoundPlayed.has(intersectedMarkerIndex)) {
+                            var currentTime = performance.now();
+                            if (hapticFeedbackEnabled && currentTime - lastHapticTime > hapticCooldown) {
+                                // Вібрація для мобільних пристроїв (Vibration API)
+                                if (navigator.vibrate) {
+                                    navigator.vibrate(15); // Коротка вібрація 15 мс
+                                }
+                                
+                                // Аудіо клік (короткий сигнал)
+                                playTouchSound();
+                                
+                                lastHapticTime = currentTime;
+                                console.log('[HAPTIC FEEDBACK]: Touch detected on marker ' + intersectedMarkerIndex);
+                                
+                                // Позначаємо, що звук вже відтворено для цього маркера
+                                markerSoundPlayed.add(intersectedMarkerIndex);
+                            }
+                        }
+                        // -------------------------------------------------------------
+                        
+                        // --- ЗАТРИМКА ЗМІНИ КОНТЕНТУ: чекаємо завершення аудіо (0.5 сек) ---
+                        // Альтернативний контент з'явиться після завершення звукового сигналу
+                        setTimeout(function() {
+                            switchMarkerContent(intersectedMarkerIndex, true);
+                        }, 500); // 500 мс = 0.5 секунди
+                        // ------------------------------------------------------------------
                     }
 
                     // Reset all other markers to first content when controller is active but not intersecting them
@@ -1069,6 +1155,15 @@
                         // Reset audio played state for markers that are no longer intersected
                         if (i !== intersectedMarkerIndex && markerAudioPlayed.has(i)) {
                             markerAudioPlayed.delete(i);
+                        }
+                        // Reset sound played state for markers that are no longer intersected
+                        if (i !== intersectedMarkerIndex && markerSoundPlayed.has(i)) {
+                            markerSoundPlayed.delete(i);
+                        }
+                        // Cancel audio timeout for markers that are no longer intersected
+                        if (i !== intersectedMarkerIndex && markerAudioTimeouts.has(i)) {
+                            clearTimeout(markerAudioTimeouts.get(i));
+                            markerAudioTimeouts.delete(i);
                         }
                     }
                 }
@@ -1086,11 +1181,20 @@
                         if (markerAudioPlayed.has(i)) {
                             markerAudioPlayed.delete(i);
                         }
+                        // Reset sound played state for all markers
+                        if (markerSoundPlayed.has(i)) {
+                            markerSoundPlayed.delete(i);
+                        }
+                        // Cancel audio timeout for all markers
+                        if (markerAudioTimeouts.has(i)) {
+                            clearTimeout(markerAudioTimeouts.get(i));
+                            markerAudioTimeouts.delete(i);
+                        }
                     }
                 }
             }
 
-            // Функція пошуку перетинів між двома об'єктами сцени
+            // Функція для пошуку перетинів між двома об'єктами сцени
             function detectCollisionCubes(object1, object2, tipFraction = 0.1) {
                 // Ensure bounding boxes are available in local space
                 object1.geometry.computeBoundingBox();
@@ -1116,6 +1220,28 @@
                 // Transform tip box to world space (will become world AABB)
                 tipBoxLocal.applyMatrix4(object2.matrixWorld);
 
+                // --- ВІЗУАЛЬНИЙ ВІДГУК: спалах при дотику ---
+                if (box1World.intersectsBox(tipBoxLocal)) {
+                    // Короткий спалах об'єкта (зміна кольору на білий)
+                    // Не застосовуємо до альтернативного контенту - тільки до основного
+                    if (object1.material && !object1.userData.flashTimeout && !object1.userData.isAlternativeContent) {
+                        var originalColor = object1.material.color.clone();
+                        object1.material.color.set(0xffffff); // Білий спалах
+                        
+                        // Зберігаємо оригінальний колір для відновлення
+                        object1.userData.originalColor = originalColor;
+                        
+                        // Повернення початкового кольору через 500 мс (синхронно з аудіо)
+                        object1.userData.flashTimeout = setTimeout(function() {
+                            if (object1.material && object1.userData.originalColor) {
+                                object1.material.color.copy(object1.userData.originalColor);
+                            }
+                            object1.userData.flashTimeout = null;
+                        }, 500);
+                    }
+                }
+                // ------------------------------------------------
+                
                 return box1World.intersectsBox(tipBoxLocal);
             };
 
@@ -1211,22 +1337,43 @@
                                 if (shouldPlay) {
                                     // Play audio only if it hasn't been played yet for this intersection
                                     if (!markerAudioPlayed.has(markerIndex)) {
-                                        if (sound.nodeName === 'VIDEO') {
-                                            if (sound.paused) {
-                                                sound.play();
-                                                markerAudioPlayed.add(markerIndex);
-                                            }
-                                        } else {
-                                            if (!sound.isPlaying) {
-                                                sound.play();
-                                                markerAudioPlayed.add(markerIndex);
-                                            }
+                                        // --- ЗАТРИМКА АУДІО: синхронізація з появою контенту (0.5 сек) ---
+                                        // Аудіо маркера запускається одночасно з появою альтернативного контенту
+                                        // Створюємо таймер ТІЛЬКИ якщо ще немає активного таймера для цього маркера
+                                        if (!markerAudioTimeouts.has(markerIndex)) {
+                                            // Зберігаємо ID таймера для можливого скасування
+                                            var timeoutId = setTimeout(function() {
+                                                if (sound.nodeName === 'VIDEO') {
+                                                    if (sound.paused) {
+                                                        sound.play();
+                                                        markerAudioPlayed.add(markerIndex);
+                                                    }
+                                                } else {
+                                                    if (!sound.isPlaying) {
+                                                        sound.play();
+                                                        markerAudioPlayed.add(markerIndex);
+                                                    }
+                                                }
+                                                // Видаляємо таймер після виконання
+                                                markerAudioTimeouts.delete(markerIndex);
+                                            }, 500); // 500 мс = 0.5 секунди (синхронно з switchMarkerContent)
+                                            
+                                            markerAudioTimeouts.set(markerIndex, timeoutId);
                                         }
+                                        // -----------------------------------------------------------------------
                                     }
                                 } else {
                                     // Reset audio state when not intersecting
                                     markerAudioPlayed.delete(markerIndex);
                                     
+                                    // --- СКАСУВАННЯ ТАЙМЕРА АУДІО: якщо контролер віддалився ---
+                                    // Якщо контролер віддалився до завершення 0.5 сек, скасовуємо аудіо
+                                    if (markerAudioTimeouts.has(markerIndex)) {
+                                        clearTimeout(markerAudioTimeouts.get(markerIndex));
+                                        markerAudioTimeouts.delete(markerIndex);
+                                    }
+                                    // ----------------------------------------------------------------
+
                                     if (sound.nodeName === 'VIDEO') {
                                         if (!sound.paused) sound.pause();
                                     } else {
@@ -1268,18 +1415,36 @@
                                 }
 
                                 if (shouldPlay) {
-                                    if (sound.nodeName === 'VIDEO') {
-                                        if (sound.paused) sound.play();
-                                    } else {
-                                        if (!sound.isPlaying) sound.play();
+                                    // --- ЗАТРИМКА АУДІО: синхронізація з появою контенту (0.5 сек) ---
+                                    // Аудіо маркера запускається одночасно з появою альтернативного контенту
+                                    // Створюємо таймер ТІЛЬКИ якщо ще немає активного таймера для цього маркера
+                                    if (!markerAudioTimeouts.has(markerIndex)) {
+                                        var timeoutId = setTimeout(function() {
+                                            if (sound.nodeName === 'VIDEO') {
+                                                if (sound.paused) sound.play();
+                                            } else {
+                                                if (!sound.isPlaying) sound.play();
+                                            }
+                                            // Видаляємо таймер після виконання
+                                            markerAudioTimeouts.delete(markerIndex);
+                                        }, 500); // 500 мс = 0.5 секунди (синхронно з switchMarkerContent)
+                                        
+                                        markerAudioTimeouts.set(markerIndex, timeoutId);
                                     }
+                                    // -----------------------------------------------------------------------
                                 } else {
+                                    // Скасування таймера аудіо для pattern маркерів
+                                    if (markerAudioTimeouts.has(markerIndex)) {
+                                        clearTimeout(markerAudioTimeouts.get(markerIndex));
+                                        markerAudioTimeouts.delete(markerIndex);
+                                    }
+                                    
                                     if (sound.nodeName === 'VIDEO') {
                                         if (sound.paused) sound.pause();
                                     } else {
                                         if (sound.isPlaying) sound.stop();
                                     }
-                                    
+
                                     // Reset alternative content when marker is not detected
                                     if (!markerDetected && markerContentState.get(markerIndex)) {
                                         switchMarkerContent(markerIndex, false);
