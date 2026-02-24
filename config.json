@@ -1,8 +1,7 @@
 {
   "settings": {
     "resolution": "low",
-    "welcomeText": "Press here<br>to start the WebAR-BoardGame",
-    "matrixCodeType": "3x3"
+    "welcomeText": "Press here<br>to start the WebAR-BoardGame"
   },
   "markers": [
     {
