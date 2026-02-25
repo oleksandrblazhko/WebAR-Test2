@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>AR Marker Detector - Stable Version</title>
+
+  <script src="libs/polyfill.js"></script>
+  <script src="../../../js/three.js"></script>
+
+  <script src="../../src/svd.js"></script>
+  <script src="../../src/posit1.js"></script>
+  <script src="../../src/cv.js"></script>
+  <script src="../../src/aruco.js"></script>
+  <script src="../../src/dictionaries/aruco_4x4_1000.js"></script>
+
+  <style>
+    body { margin:0; overflow:hidden; }
+    #container { position:relative; width:1280px; height:720px; margin:auto; }
+    #canvas, #three_canvas {
+      position:absolute;
+      top:0; left:0;
+      width:100%; height:100%;
+    }
+    #three_canvas { pointer-events:none; }
+  </style>
+</head>
+
+<body>
+
+<div id="container">
+  <video id="video" autoplay playsinline style="display:none;"></video>
+  <canvas id="canvas"></canvas>
+  <canvas id="three_canvas"></canvas>
+</div>
+
+<script>
+
+let video, canvas, context, imageData;
+let detector, posit;
+
+let renderer, scene, camera;
+let markerRoot, cone;
+
+let smoothedPosition = new THREE.Vector3();
+let smoothedQuaternion = new THREE.Quaternion();
+let initialized = false;
+
+const SMOOTH_ALPHA = 0.5;
+const HIDE_THRESHOLD = 10;
+
+const POS_ALPHA = 0.6;
+const ROT_ALPHA = 0.25;
+
+let framesSinceLastSeen = 0;
+
+const modelSize = 30.0;
+
+function onLoad(){
+
+  video = document.getElementById("video");
+  canvas = document.getElementById("canvas");
+  context = canvas.getContext("2d");
+
+  canvas.width = 1280;
+  canvas.height = 720;
+
+  navigator.mediaDevices.getUserMedia({
+    video: { width:1280, height:720 }
+  }).then(stream=>{
+    video.srcObject = stream;
+    video.play();
+  });
+
+  detector = new AR.Detector({
+    dictionaryName:'ARUCO_4X4_1000'
+  });
+
+  posit = new POS.Posit(modelSize, canvas.width);
+
+  initThree();
+  requestAnimationFrame(tick);
+}
+
+function initThree(){
+
+  const threeCanvas = document.getElementById("three_canvas");
+
+  renderer = new THREE.WebGLRenderer({
+    canvas: threeCanvas,
+    alpha:true
+  });
+
+  renderer.setSize(canvas.width, canvas.height);
+
+  scene = new THREE.Scene();
+
+  const focalLength = canvas.width;
+  const fov = 2*Math.atan(canvas.height/(2*focalLength))*(180/Math.PI);
+
+  camera = new THREE.PerspectiveCamera(
+    fov,
+    canvas.width/canvas.height,
+    0.1,
+    2000
+  );
+
+  scene.add(camera);
+
+  scene.add(new THREE.AmbientLight(0xffffff,0.6));
+  const light = new THREE.DirectionalLight(0xffffff,0.6);
+  light.position.set(1,1,1);
+  scene.add(light);
+
+  markerRoot = new THREE.Object3D();
+  markerRoot.visible = false;
+  scene.add(markerRoot);
+
+  const geometry = new THREE.ConeGeometry(20,40,16);
+  geometry.translate(0,20,0);
+
+  const material = new THREE.MeshStandardMaterial({
+    color:0xffff00
+  });
+
+  cone = new THREE.Mesh(geometry, material);
+  markerRoot.add(cone);
+}
+
+function tick(){
+  requestAnimationFrame(tick);
+
+  if(video.readyState === video.HAVE_ENOUGH_DATA){
+
+    context.drawImage(video,0,0,canvas.width,canvas.height);
+    imageData = context.getImageData(0,0,canvas.width,canvas.height);
+
+    const markers = detector.detect(imageData);
+
+    update3D(markers);
+    renderThree();
+  }
+}
+
+function update3D(markers){
+
+  let markerFound = false;
+
+  if(markers.length > 0){
+
+    const marker = markers[0];
+    const corners = marker.corners;
+
+    const centeredCorners = [];
+
+    for(let i=0;i<corners.length;i++){
+      centeredCorners.push({
+        x: corners[i].x - canvas.width/2,
+        y: canvas.height/2 - corners[i].y
+      });
+    }
+
+    const pose = posit.pose(centeredCorners);
+
+    if(pose){
+      applyPose(pose.bestRotation, pose.bestTranslation);
+      markerFound = true;
+    }
+  }
+
+  if(markerFound){
+    markerRoot.visible = true;
+    framesSinceLastSeen = 0;
+  }else{
+    framesSinceLastSeen++;
+    if(framesSinceLastSeen > HIDE_THRESHOLD){
+      markerRoot.visible = false;
+      initialized = false;
+    }
+  }
+}
+
+function applyPose(rotation, translation){
+
+  const rotMatrix = new THREE.Matrix4();
+  rotMatrix.set(
+    rotation[0][0], rotation[0][1], rotation[0][2],0,
+    rotation[1][0], rotation[1][1], rotation[1][2],0,
+    rotation[2][0], rotation[2][1], rotation[2][2],0,
+    0,0,0,1
+  );
+
+  const correction = new THREE.Quaternion()
+    .setFromAxisAngle(new THREE.Vector3(1,0,0), -Math.PI/2);
+
+  const targetQuaternion = new THREE.Quaternion()
+    .setFromRotationMatrix(rotMatrix)
+    .multiply(correction);
+
+  const targetPosition = new THREE.Vector3(
+    translation[0],
+    translation[1],
+    -translation[2]
+  );
+
+  function clamp(x, min, max) {
+    return Math.min(Math.max(x, min), max);
+  }
+  let distance = smoothedPosition.distanceTo(targetPosition);
+  let dynamicAlpha = clamp(distance / 20, 0.3, 1.0);
+
+  if(!initialized){
+    smoothedPosition.copy(targetPosition);
+    smoothedQuaternion.copy(targetQuaternion);
+    initialized = true;
+  }else{
+    smoothedPosition.lerp(targetPosition, dynamicAlpha);
+    smoothedQuaternion.slerp(targetQuaternion, dynamicAlpha * 0.9);
+  }
+
+  markerRoot.position.copy(smoothedPosition);
+  markerRoot.quaternion.copy(smoothedQuaternion);
+}
+
+function renderThree(){
+
+  if(markerRoot.visible){
+    cone.rotation.y += 0.02;
+  }
+
+  renderer.render(scene,camera);
+}
+
+window.onload = onLoad;
+
+</script>
+
+</body>
+</html>

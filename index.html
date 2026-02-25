@@ -18,6 +18,14 @@
     <script src="threex/threex-artoolkitcontext.js"></script>
     <script src="threex/threex-arbasecontrols.js"></script>
     <script src="threex/threex-armarkercontrols.js"></script>
+
+    <!-- Додаємо js-aruco2 -->
+    <script type="text/javascript" src="js-aruco2/src/svd.js"></script>
+    <script type="text/javascript" src="js-aruco2/src/posit1.js"></script>
+    <script type="text/javascript" src="js-aruco2/src/cv.js"></script>
+    <script type="text/javascript" src="js-aruco2/src/aruco.js"></script>
+    <script type="text/javascript" src="js-aruco2/src/dictionaries/aruco_4x4_1000.js"></script>
+    <script src="js/aruco.js"></script>
 </head>
 
 <body style='margin : 0px; overflow: hidden; font-family: Monospace; user-select: none; pointer-events: none;'>
@@ -47,6 +55,15 @@
 
         // Оголошуємо глобальну змінну для конфігурації
         let config = null; // Configuration loaded from config.json
+
+        // Змінні для діагностики Тесту 2
+        let lastMarkerStates = {};
+        let lastUpdateTime = 0;
+        
+        // Змінні для тактильного відгуку (haptic feedback)
+        let hapticFeedbackEnabled = true;
+        let lastHapticTime = 0;
+        let hapticCooldown = 600; // мс між вібраціями (для 0.5 сек сигналу)
         
         // Функція оновлення привітального тексту з конфігурації
         function updateWelcomeText() {
@@ -58,6 +75,190 @@
             }
         }
 
+        // Функція перевірки наявності файлів з config.json (async)
+        async function validateConfigFiles() {
+            const missingFiles = [];
+            const warnings = [];
+
+            if (!config || !config.markers) {
+                return { missing: missingFiles, warnings: warnings };
+            }
+
+            // Створюємо масив промісів для перевірки всіх файлів
+            const checkPromises = [];
+
+            // Перевірка системних файлів
+            checkPromises.push(
+                checkFileExists('data/helvetiker_regular.typeface.json')
+                    .then(exists => {
+                        if (!exists) {
+                            missingFiles.push({ file: 'data/helvetiker_regular.typeface.json', context: 'System font file' });
+                        }
+                    })
+            );
+
+            // Перевірка кожного маркера
+            config.markers.forEach((marker, index) => {
+                const markerInfo = `Marker id:${marker.id}`;
+
+                // Перевірка аудіо файлів
+                if (marker.audioFile) {
+                    checkPromises.push(
+                        checkFileExists(marker.audioFile)
+                            .then(exists => {
+                                if (!exists) {
+                                    missingFiles.push({ file: marker.audioFile, context: `${markerInfo} - audio file` });
+                                }
+                            })
+                    );
+                }
+
+                // Перевірка файлів для primitive контенту
+                if (marker.contentType === 'primitive' && marker.primitive) {
+                    if (marker.primitive.textureFile) {
+                        checkPromises.push(
+                            checkFileExists(marker.primitive.textureFile)
+                                .then(exists => {
+                                    if (!exists) {
+                                        missingFiles.push({ file: marker.primitive.textureFile, context: `${markerInfo} - primitive texture` });
+                                    }
+                                })
+                        );
+                    }
+                }
+
+                // Перевірка файлів для image контенту
+                if (marker.contentType === 'image' && marker.contentFile) {
+                    checkPromises.push(
+                        checkFileExists(marker.contentFile)
+                            .then(exists => {
+                                if (!exists) {
+                                    missingFiles.push({ file: marker.contentFile, context: `${markerInfo} - image content` });
+                                }
+                            })
+                    );
+                }
+
+                // Перевірка файлів для video контенту
+                if (marker.contentType === 'video' && marker.contentFile) {
+                    checkPromises.push(
+                        checkFileExists(marker.contentFile)
+                            .then(exists => {
+                                if (!exists) {
+                                    missingFiles.push({ file: marker.contentFile, context: `${markerInfo} - video content` });
+                                }
+                            })
+                    );
+                }
+
+                // Перевірка файлів для model контенту
+                if (marker.contentType === 'model' && marker.contentFile) {
+                    checkPromises.push(
+                        checkFileExists(marker.contentFile)
+                            .then(exists => {
+                                if (!exists) {
+                                    missingFiles.push({ file: marker.contentFile, context: `${markerInfo} - 3D model` });
+                                }
+                            })
+                    );
+                }
+
+                // Перевірка alternative content
+                if (marker.alternativeContent) {
+                    const alt = marker.alternativeContent;
+                    const altContext = `${markerInfo} - alternative content`;
+
+                    if (alt.contentType === 'model' && alt.contentFile) {
+                        checkPromises.push(
+                            checkFileExists(alt.contentFile)
+                                .then(exists => {
+                                    if (!exists) {
+                                        missingFiles.push({ file: alt.contentFile, context: `${altContext} - 3D model` });
+                                    }
+                                })
+                        );
+                    }
+
+                    if (alt.contentType === 'primitive' && alt.primitive && alt.primitive.textureFile) {
+                        checkPromises.push(
+                            checkFileExists(alt.primitive.textureFile)
+                                .then(exists => {
+                                    if (!exists) {
+                                        missingFiles.push({ file: alt.primitive.textureFile, context: `${altContext} - primitive texture` });
+                                    }
+                                })
+                        );
+                    }
+
+                    if (alt.contentType === 'image' && alt.contentFile) {
+                        checkPromises.push(
+                            checkFileExists(alt.contentFile)
+                                .then(exists => {
+                                    if (!exists) {
+                                        missingFiles.push({ file: alt.contentFile, context: `${altContext} - image` });
+                                    }
+                                })
+                        );
+                    }
+
+                    if (alt.contentType === 'video' && alt.contentFile) {
+                        checkPromises.push(
+                            checkFileExists(alt.contentFile)
+                                .then(exists => {
+                                    if (!exists) {
+                                        missingFiles.push({ file: alt.contentFile, context: `${altContext} - video` });
+                                    }
+                                })
+                        );
+                    }
+                }
+            });
+
+            // Чекаємо завершення всіх перевірок
+            await Promise.all(checkPromises);
+
+            return { missing: missingFiles, warnings: warnings };
+        }
+
+        // Допоміжна функція для перевірки існування файлу
+        async function checkFileExists(url) {
+            try {
+                const response = await fetch(url, { method: 'HEAD' });
+                return response.ok;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // Функція відображення попереджень про відсутні файли
+        function showFileWarnings(missingFiles) {
+            if (missingFiles.length === 0) return;
+
+            let warningHTML = '<div style="position: fixed; top: 10px; right: 10px; max-width: 400px; background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 15px; font-family: Arial, sans-serif; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); z-index: 9999;">' +
+                '<strong style="color: #856404; display: block; margin-bottom: 10px; font-size: 16px;">⚠️ Missing Files Warning</strong>' +
+                '<ul style="margin: 0; padding-left: 20px; color: #856404; max-height: 300px; overflow-y: auto;">';
+
+            missingFiles.forEach(item => {
+                warningHTML += `<li style="margin-bottom: 5px;"><strong>${item.file}</strong> - ${item.context}</li>`;
+            });
+
+            warningHTML += '</ul>' +
+                '<button onclick="this.parentElement.parentElement.remove()" style="margin-top: 10px; padding: 5px 15px; background: #ffc107; border: none; border-radius: 4px; cursor: pointer; color: #856404; font-weight: bold;">Dismiss</button>' +
+                '</div>';
+
+            // Додаємо попередження до сторінки
+            const warningDiv = document.createElement('div');
+            warningDiv.innerHTML = warningHTML;
+            document.body.appendChild(warningDiv.firstChild);
+
+            // Також виводимо в консоль
+            console.warn('=== MISSING FILES WARNING ===');
+            missingFiles.forEach(item => {
+                console.warn(`File not found: ${item.file} (${item.context})`);
+            });
+            console.warn('==============================');
+        }
+
         // Завантажуємо конфігурацію з config.json при завантаженні сторінки для відображення привітального тексту
         fetch('config.json')
             .then(response => {
@@ -66,10 +267,15 @@
                 }
                 return response.json();
             })
-            .then(data => {
+            .then(async data => {
                 config = data;
                 // Оновлюємо привітальний текст з конфігурації
                 updateWelcomeText();
+                // Перевіряємо наявність файлів з config.json
+                const validationResult = await validateConfigFiles();
+                if (validationResult.missing.length > 0) {
+                    showFileWarnings(validationResult.missing);
+                }
             })
             .catch(error => {
                 console.error('Error loading config for welcome text:', error);
@@ -104,10 +310,46 @@
             let barcodeToMarkerIndex = new Map();
             let patternToMarkerIndex = new Map();
 
+            let arucoControls = [];
+
             let controller;
             
+            // Audio context для тактильного звукового відгуку
+            let audioContext = null;
+            
+            // Функція для відтворення короткого аудіо-кліку при дотику
+            function playTouchSound() {
+                // Ініціалізація AudioContext при першому виклику
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                
+                // Створення аудіо-сигналу (синусоїда 800 Гц, 500 мс)
+                var oscillator = audioContext.createOscillator();
+                var gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800; // Частота 800 Гц
+                oscillator.type = 'sine'; // Синусоїда
+                
+                // Гучність: плавне загасання протягом 0.5 сек
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5); // 500 мс
+            }
+
             // Track current content state for each marker (true = alternative content, false = first content)
             let markerContentState = new Map();
+            
+            // Track which markers have already played sound for current intersection
+            let markerSoundPlayed = new Set();
+            
+            // Store audio timeout IDs for each marker (to cancel if controller moves away)
+            let markerAudioTimeouts = new Map();
             
             // Store alternative content objects for each marker
             let markerAlternativeContent = new Map();
@@ -121,10 +363,10 @@
             // Font for text geometry
             let font = null;
             let fontLoader = new THREE.FontLoader();
-            
+
             // Load font for text geometry (load once, reuse for all text objects)
             const fontPromise = new Promise((resolve, reject) => {
-                fontLoader.load('helvetiker_regular.typeface.json', (loadedFont) => {
+                fontLoader.load('data/helvetiker_regular.typeface.json', (loadedFont) => {
                     font = loadedFont;
                     resolve(loadedFont);
                 }, undefined, (error) => {
@@ -212,12 +454,14 @@
                         );
                         break;
                     case 'ConeGeometry':
-                        geometry = new THREE.ConeGeometry(
-                            primitive.radius || 0.5, 
-                            primitive.height || 1, 
-                            primitive.radialSegments || 32
-                        );
-                        break;
+                                                                var coneHeight = primitive.height || 1;
+                                                                geometry = new THREE.ConeGeometry(
+                                                                    primitive.radius || 0.5, 
+                                                                    coneHeight, 
+                                                                    primitive.radialSegments || 32
+                                                                );
+                                                                // Зміщуємо геометрію конуса, щоб його основа була в центрі координат
+                                                                geometry.translate(0, coneHeight / 2, 0);                        break;
                     case 'TorusGeometry':
                         geometry = new THREE.TorusGeometry(
                             primitive.radius || 1, 
@@ -252,7 +496,7 @@
                 }
                 
                 if (primitive.animation) {
-                    mesh.userData.animation = primitive.animation;
+                    mesh.userData.animation = config.animation;
                 }
                 
                 mesh.userData.isAlternativeContent = true;
@@ -340,7 +584,7 @@
                     }
 
                     if (textConfig.animation) {
-                        mesh.userData.animation = textConfig.animation;
+                        mesh.userData.animation = config.animation;
                     }
 
                     mesh.userData.isAlternativeContent = true;
@@ -361,6 +605,16 @@
                     // Hide all current content (main content)
                     markerRoot.children.forEach(child => {
                         if (!(child.userData && child.userData.isController) && !child.userData.isAlternativeContent) {
+                            // --- ОЧИСТКА СПАЛАХУ: відновлюємо колір перед приховуванням ---
+                            if (child.userData.flashTimeout) {
+                                clearTimeout(child.userData.flashTimeout);
+                                child.userData.flashTimeout = null;
+                            }
+                            if (child.userData.originalColor && child.material) {
+                                child.material.color.copy(child.userData.originalColor);
+                            }
+                            // ----------------------------------------------------------------
+                            
                             child.visible = false;
                         }
                     });
@@ -402,6 +656,16 @@
                     markerRoot.children.forEach(child => {
                         if (!(child.userData && child.userData.isController)) {
                             if (child.userData.isAlternativeContent) {
+                                // --- ОЧИСТКА СПАЛАХУ: для альтернативного контенту ---
+                                if (child.userData.flashTimeout) {
+                                    clearTimeout(child.userData.flashTimeout);
+                                    child.userData.flashTimeout = null;
+                                }
+                                if (child.userData.originalColor && child.material) {
+                                    child.material.color.copy(child.userData.originalColor);
+                                }
+                                // ------------------------------------------------------------
+                                
                                 child.visible = false;
                             } else {
                                 child.visible = true;
@@ -416,16 +680,21 @@
 
             // Завантажуємо конфігурацію з config.json перед ініціалізацією
             fetch('config.json')
-                .then(response => {
+                .then(async response => {
                     if (!response.ok) {
                         throw new Error(`Config file error: ${response.status} ${response.statusText}`);
                     }
                     return response.json();
                 })
-                .then(data => {
+                .then(async data => {
                     config = data;
                     // Оновлюємо привітальний текст з конфігурації
                     updateWelcomeText();
+                    // Перевіряємо наявність файлів з config.json
+                    const validationResult = await validateConfigFiles();
+                    if (validationResult.missing.length > 0) {
+                        showFileWarnings(validationResult.missing);
+                    }
                     // Ініціалізуємо сцену та запускаємо цикл анімації
                     initialize();
                     animate();
@@ -520,8 +789,8 @@
                 arToolkitContext = new THREEx.ArToolkitContext({
                     cameraParametersUrl: 'data/camera_para.dat',
                     detectionMode: 'mono_and_matrix',
-                    matrixCodeType: "3x3",
-                    maxDetectionRate: 60,
+                    matrixCodeType: '3x3',
+                    maxDetectionRate: -1,  // Вимикаємо обмеження частоти для AR.js (детектуємо самі)
                     canvasWidth: canvasWidth,
                     canvasHeight: canvasHeight
                 });
@@ -603,20 +872,31 @@
                 for (let i = 0; i < maxMarkers; i++) {
                     mainContainer.add(markerRoots[i]);
 
-                    // Якщо поточний маркер – це баркод, створюємо AR контролер під баркод
-                    // якщо поточний маркер це патерн, аналогічно створюємо AR контролер під патерн
-                    if (patternBarcode[i] === -1) {
-                        let markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, markerRoots[i], {
-                            type: 'pattern', patternUrl: patternNames[i], size: 1 + (i + 1) / patternIdOffset
-                        })
-                        patternsID.push(patternNames[i]);
-                        patternToMarkerIndex.set(patternNames[i], i);
-                    } else {
-                        let markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, markerRoots[i], {
-                            type: "barcode", barcodeValue: patternBarcode[i],
-                        })
-                        barcodesID.push(patternBarcode[i]);
-                        barcodeToMarkerIndex.set(patternBarcode[i], i);
+                    const markerConfig = config.markers[i];
+                    // Визначаємо тип маркера і створюємо відповідний контролер
+                    if (markerConfig.type === 'pattern') {
+                        let markerControls = new THREEx.ArMarkerControls(arToolkitContext, markerRoots[i], {
+                            type: 'pattern',
+                            patternUrl: "patterns/pattern-" + markerConfig.target + ".patt",
+                        });
+                        patternsID.push(markerConfig.target);
+                        patternToMarkerIndex.set(markerConfig.target, i);
+                    } else if (markerConfig.type === 'barcode') {
+                        let markerControls = new THREEx.ArMarkerControls(arToolkitContext, markerRoots[i], {
+                            type: "barcode",
+                            barcodeValue: markerConfig.target,
+                            size: markerConfig.matrixSize
+                        });
+                        barcodesID.push(markerConfig.target);
+                        barcodeToMarkerIndex.set(markerConfig.target, i);
+                    } else if (markerConfig.type.startsWith('aruco:')) {
+                        const dictionaryName = markerConfig.type.split(':')[1];
+                        let markerControls = new ArucoMarkerControls(arToolkitContext, markerRoots[i], {
+                            id: markerConfig.target,
+                            dictionaryName: dictionaryName,
+                            modelSize: markerConfig.matrixSize || 30.0 // Розмір маркера в мм з конфігурації
+                        }, canvasWidth);
+                        arucoControls.push(markerControls);
                     }
 
                     // Create alternative content if it exists in configuration
@@ -626,7 +906,7 @@
                             contentPromises.push(alternativeContentPromise.then((alternativeContent) => {
                                 if (alternativeContent) {
                                     markerAlternativeContent.set(i, alternativeContent);
-                                    console.log(`Alternative content for marker ${i} created`);
+                                    // console.log(`Alternative content for marker ${i} created`); // Diagnostic message removed
                                 }
                             }));
                         }
@@ -636,8 +916,7 @@
                     switch (modes[i]) {
                         // Якщо контент під маркер це модель
                         case 'model':
-                            function onProgress(xhr) { console.log((xhr.loaded / xhr.total * 100) + '% loaded'); }
-                            function onError(xhr) { console.log('An error happened'); }
+                                                            function onProgress(xhr) { /* console.log((xhr.loaded / xhr.total * 100) + '% loaded'); */ }                            function onError(xhr) { /* console.log('An error happened'); */ }
 
                             contentPromises.push(new Promise((resolve) => {
                                 const test = new THREE.GLTF2Loader().load(`${modelFiles[i]}`, (response) => {
@@ -694,7 +973,7 @@
                                     resolve(modelFiles[i])
                                 }, onProgress, onError)
                             }).then((file) => {
-                                console.log(`File ${file} loaded`)
+                                // console.log(`File ${file} loaded`) // Diagnostic message removed
                             }))
                             break;
                         // Якщо контент під маркер це зображення
@@ -719,7 +998,7 @@
                                         resolve(imageFiles[i])
                                     });
                                 }).then(image => {
-                                    console.log(`File ${image} loaded`)
+                                    // console.log(`File ${image} loaded`) // Diagnostic message removed
                                 }))
                             }
                             break;
@@ -778,7 +1057,7 @@
                             if (config.markers[i] && config.markers[i].primitive) {
                                 const primitive = config.markers[i].primitive;
                                 let geometry, material, mesh;
-                                
+
                                 // Створюємо геометрію відповідно до типу
                                 switch(primitive.type) {
                                     case 'BoxGeometry':
@@ -789,49 +1068,52 @@
                                         break;
                                     case 'CylinderGeometry':
                                         geometry = new THREE.CylinderGeometry(
-                                            primitive.radiusTop || 0.5, 
-                                            primitive.radiusBottom || 0.5, 
-                                            primitive.height || 1, 
+                                            primitive.radiusTop || 0.5,
+                                            primitive.radiusBottom || 0.5,
+                                            primitive.height || 1,
                                             primitive.radialSegments || 32
                                         );
                                         break;
                                     case 'ConeGeometry':
+                                        var coneHeight = primitive.height || 1;
                                         geometry = new THREE.ConeGeometry(
-                                            primitive.radius || 0.5, 
-                                            primitive.height || 1, 
+                                            primitive.radius || 0.5,
+                                            coneHeight,
                                             primitive.radialSegments || 32
                                         );
+                                        // Зміщуємо геометрію конуса, щоб його основа була в центрі координат
+                                        geometry.translate(0, coneHeight / 2, 0);
                                         break;
                                     case 'TorusGeometry':
                                         geometry = new THREE.TorusGeometry(
-                                            primitive.radius || 1, 
-                                            primitive.tubeRadius || 0.4, 
-                                            primitive.radialSegments || 16, 
+                                            primitive.radius || 1,
+                                            primitive.tubeRadius || 0.4,
+                                            primitive.radialSegments || 16,
                                             primitive.tubularSegments || 32
                                         );
                                         break;
                                     default:
                                         geometry = new THREE.BoxGeometry(1, 1, 1);
                                 }
-                                
+
                                 // Створюємо матеріал з кольором або текстурою
                                 if (primitive.textureFile) {
                                     // Завантажуємо текстуру, якщо вона вказана
                                     let texture = new THREE.TextureLoader().load(primitive.textureFile);
-                                    material = new THREE.MeshBasicMaterial({ 
+                                    material = new THREE.MeshBasicMaterial({
                                         map: texture,
                                         color: new THREE.Color(primitive.color || '#ffffff') // Додаємо базовий колір для випадку, якщо текстура не завантажиться
                                     });
                                 } else {
                                     // Використовуємо колір, якщо текстура не вказана
-                                    material = new THREE.MeshBasicMaterial({ 
-                                        color: new THREE.Color(primitive.color || '#ffffff') 
+                                    material = new THREE.MeshBasicMaterial({
+                                        color: new THREE.Color(primitive.color || '#ffffff')
                                     });
                                 }
-                                
+
                                 // Створюємо меш
                                 mesh = new THREE.Mesh(geometry, material);
-                                
+
                                 // Застосовуємо позицію та обертання
                                 if (primitive.position) {
                                     mesh.position.set(...primitive.position);
@@ -839,15 +1121,17 @@
                                 if (primitive.rotation) {
                                     mesh.rotation.set(...primitive.rotation);
                                 }
-                                
+
                                 // Додаємо до контейнера маркера
                                 markerRoots[i].add(mesh);
-                                
+
                                 // Зберігаємо для анімації
                                 if (primitive.animation) {
                                     mesh.userData.animation = primitive.animation;
                                 }
                             }
+                            // Add a resolved promise to contentPromises for primitive content
+                            contentPromises.push(Promise.resolve());
                             break;
                         case 'text':
                             if (config.markers[i] && config.markers[i].text) {
@@ -900,7 +1184,7 @@
                                     }
 
                                     markerRoots[i].add(mesh);
-                                    console.log(`Text content for marker ${i} created`);
+                                    // console.log(`Text content for marker ${i} created`); // Diagnostic message removed
                                 }).catch((error) => {
                                     console.error(`Error creating text for marker ${i}:`, error);
                                 }));
@@ -909,23 +1193,24 @@
                         case 'controller':
                             // Create a controller composed of a green body and a red tip (last 10%)
                             const controllerGroup = new THREE.Group();
+                            const controllerConfig = markerConfig.controllerConfig;
 
                             // Long axis along local Z to match tip detection along -Z
-                            const totalLength = 3; // 3x shorter than previous total of 10
-                            const tipFraction = 0.1;
-                            const tipLength = totalLength * tipFraction;  // 10%
-                            const bodyLength = totalLength - tipLength;   // 90%
-                            const crossSection = 0.15;
+                            const totalLength = controllerConfig.totalLength;
+                            const tipFraction = controllerConfig.tipFraction;
+                            const tipLength = totalLength * tipFraction;
+                            const bodyLength = totalLength - tipLength;
+                            const crossSection = controllerConfig.crossSection;
 
                             const controllerBody = new THREE.Mesh(
                                 new THREE.BoxGeometry(crossSection, crossSection, bodyLength),
-                                new THREE.MeshBasicMaterial({ color: 'green' })
+                                new THREE.MeshBasicMaterial({ color: new THREE.Color(controllerConfig.bodyColor) })
                             );
                             controllerBody.userData.isController = true;
 
                             const controllerTip = new THREE.Mesh(
                                 new THREE.BoxGeometry(crossSection, crossSection, tipLength),
-                                new THREE.MeshBasicMaterial({ color: 'red' })
+                                new THREE.MeshBasicMaterial({ color: new THREE.Color(controllerConfig.tipColor) })
                             );
                             controllerTip.userData.isController = true;
 
@@ -938,7 +1223,7 @@
                             controllerGroup.add(controllerTip);
 
                             // Position the whole controller as before (no Y-rotation needed now)
-                            controllerGroup.position.y = 0.125;
+                            controllerGroup.position.y = controllerConfig.positionY;
                             controllerGroup.position.z = -(bodyLength / 2);
 
                             markerRoots[i].add(controllerGroup);
@@ -983,7 +1268,7 @@
                                 resolve(sound)
                             });
                         }).then((sound) => {
-                            console.log(`File ${sound.name} loaded`)
+                            // console.log(`File ${sound.name} loaded`) // Diagnostic message removed
                         }))
                     }
                 }
@@ -991,7 +1276,7 @@
                 // Ховаємо лоадер після завантаження компонентів
                 Promise.all(contentPromises)
                     .then(() => {
-                        console.log('Most of the content loaded')
+                        // console.log('Most of the content loaded') // Diagnostic message removed
                         contentInitialized = true;
                         loader.style.opacity = '0';
                     });
@@ -1026,7 +1311,33 @@
 
                     // Switch to alternative content for intersected marker if it has alternative content
                     if (intersectedMarkerIndex !== null && markerAlternativeContent.has(intersectedMarkerIndex)) {
-                        switchMarkerContent(intersectedMarkerIndex, true);
+                        // --- ТАКТИЛЬНИЙ ВІДГУК: вібрація + аудіо клік при дотику ---
+                        // Перевіряємо, чи вже був відтворений звук для цього маркера
+                        if (!markerSoundPlayed.has(intersectedMarkerIndex)) {
+                            var currentTime = performance.now();
+                            if (hapticFeedbackEnabled && currentTime - lastHapticTime > hapticCooldown) {
+                                // Вібрація для мобільних пристроїв (Vibration API)
+                                if (navigator.vibrate) {
+                                    navigator.vibrate(15); // Коротка вібрація 15 мс
+                                }
+                                
+                                // Аудіо клік (короткий сигнал)
+                                playTouchSound();
+                                
+                                lastHapticTime = currentTime;
+
+                                // Позначаємо, що звук вже відтворено для цього маркера
+                                markerSoundPlayed.add(intersectedMarkerIndex);
+                            }
+                        }
+                        // -------------------------------------------------------------
+                        
+                        // --- ЗАТРИМКА ЗМІНИ КОНТЕНТУ: чекаємо завершення аудіо (0.5 сек) ---
+                        // Альтернативний контент з'явиться після завершення звукового сигналу
+                        setTimeout(function() {
+                            switchMarkerContent(intersectedMarkerIndex, true);
+                        }, 500); // 500 мс = 0.5 секунди
+                        // ------------------------------------------------------------------
                     }
 
                     // Reset all other markers to first content when controller is active but not intersecting them
@@ -1037,6 +1348,15 @@
                         // Reset audio played state for markers that are no longer intersected
                         if (i !== intersectedMarkerIndex && markerAudioPlayed.has(i)) {
                             markerAudioPlayed.delete(i);
+                        }
+                        // Reset sound played state for markers that are no longer intersected
+                        if (i !== intersectedMarkerIndex && markerSoundPlayed.has(i)) {
+                            markerSoundPlayed.delete(i);
+                        }
+                        // Cancel audio timeout for markers that are no longer intersected
+                        if (i !== intersectedMarkerIndex && markerAudioTimeouts.has(i)) {
+                            clearTimeout(markerAudioTimeouts.get(i));
+                            markerAudioTimeouts.delete(i);
                         }
                     }
                 }
@@ -1054,11 +1374,20 @@
                         if (markerAudioPlayed.has(i)) {
                             markerAudioPlayed.delete(i);
                         }
+                        // Reset sound played state for all markers
+                        if (markerSoundPlayed.has(i)) {
+                            markerSoundPlayed.delete(i);
+                        }
+                        // Cancel audio timeout for all markers
+                        if (markerAudioTimeouts.has(i)) {
+                            clearTimeout(markerAudioTimeouts.get(i));
+                            markerAudioTimeouts.delete(i);
+                        }
                     }
                 }
             }
 
-            // Функція пошуку перетинів між двома об'єктами сцени
+            // Функція для пошуку перетинів між двома об'єктами сцени
             function detectCollisionCubes(object1, object2, tipFraction = 0.1) {
                 // Ensure bounding boxes are available in local space
                 object1.geometry.computeBoundingBox();
@@ -1084,13 +1413,96 @@
                 // Transform tip box to world space (will become world AABB)
                 tipBoxLocal.applyMatrix4(object2.matrixWorld);
 
+                // --- ВІЗУАЛЬНИЙ ВІДГУК: спалах при дотику ---
+                if (box1World.intersectsBox(tipBoxLocal)) {
+                    // Короткий спалах об'єкта (зміна кольору на білий)
+                    // Не застосовуємо до альтернативного контенту - тільки до основного
+                    if (object1.material && !object1.userData.flashTimeout && !object1.userData.isAlternativeContent) {
+                        var originalColor = object1.material.color.clone();
+                        object1.material.color.set(0xffffff); // Білий спалах
+                        
+                        // Зберігаємо оригінальний колір для відновлення
+                        object1.userData.originalColor = originalColor;
+                        
+                        // Повернення початкового кольору через 500 мс (синхронно з аудіо)
+                        object1.userData.flashTimeout = setTimeout(function() {
+                            if (object1.material && object1.userData.originalColor) {
+                                object1.material.color.copy(object1.userData.originalColor);
+                            }
+                            object1.userData.flashTimeout = null;
+                        }, 500);
+                    }
+                }
+                // ------------------------------------------------
+                
                 return box1World.intersectsBox(tipBoxLocal);
             };
+
+            // Функція для діагностики маркерів для Тесту 2
+            function trackMarkerDiagnostics(barcodeIdToTrack, currentTime, timeDelta) {
+                const markerIndexToTrack = barcodeToMarkerIndex.get(barcodeIdToTrack);
+
+                if (markerIndexToTrack !== undefined) {
+                    const markerObject = markerRoots[markerIndexToTrack];
+
+                    if (markerObject.visible) {
+                        const isFirstAppearance = !lastMarkerStates[markerIndexToTrack] || !lastMarkerStates[markerIndexToTrack].visible;
+
+                        let positionDelta = 0;
+                        let rotationAngleDelta = 0;
+
+                        if (!isFirstAppearance) {
+                            const lastState = lastMarkerStates[markerIndexToTrack];
+                            // Обчислюємо зміну позиції (дельта)
+                            positionDelta = markerObject.position.clone().sub(lastState.position).length();
+
+                            // Розрахунок зміни обертання. Порядок: q_previous_inverse * q_current
+                            const lastQuaternionClone = lastState.quaternion.clone().conjugate();
+                            const rotationDelta = lastQuaternionClone.multiply(markerObject.quaternion);
+                            const vectorLength = Math.sqrt(rotationDelta.x * rotationDelta.x + rotationDelta.y * rotationDelta.y + rotationDelta.z * rotationDelta.z);
+                            rotationAngleDelta = 2 * Math.atan2(vectorLength, rotationDelta.w) * (180 / Math.PI);
+                        }
+
+                        // Оновлюємо або ініціалізуємо останній стан
+                        if (!lastMarkerStates[markerIndexToTrack]) {
+                            lastMarkerStates[markerIndexToTrack] = {};
+                        }
+                        lastMarkerStates[markerIndexToTrack].position = markerObject.position.clone();
+                        lastMarkerStates[markerIndexToTrack].quaternion = markerObject.quaternion.clone();
+                        lastMarkerStates[markerIndexToTrack].visible = true;
+
+                    } else if (lastMarkerStates[markerIndexToTrack] && lastMarkerStates[markerIndexToTrack].visible) {
+                        // Скидаємо стан
+                        lastMarkerStates[markerIndexToTrack].visible = false;
+                    }
+                }
+            }
 
             // Оновлюємо AR контент на кожен кадр
             function update() {
                 if (arToolkitSource.ready !== false) {
                     arToolkitContext.update(arToolkitSource.domElement);
+
+                    // --- Розширена діагностика для Тесту 2: Реакція на швидкість руху ---
+                    const currentTime = performance.now();
+                    const timeDelta = currentTime - (lastUpdateTime || currentTime);
+                    lastUpdateTime = currentTime;
+
+                    trackMarkerDiagnostics(1, currentTime, timeDelta);
+                    trackMarkerDiagnostics(5, currentTime, timeDelta);
+                    // --- КІНЕЦЬ діагностики для Тесту 2 ---
+
+                    // Оновлюємо Aruco маркери (детектуємо один раз на кадр для всіх маркерів)
+                    if (arucoControls && arucoControls.length > 0) {
+                        // Детектуємо маркери один раз на кадр (як у 4x4-3d.html)
+                        var arucoMarkers = ArucoMarkerControls.detectMarkers(arToolkitSource);
+                        
+                        // Оновлюємо кожен контролер з попередньо детектованими маркерами
+                        arucoControls.forEach(controls => {
+                            controls.update(arToolkitSource, arucoMarkers);
+                        });
+                    }
+
                     if (contentInitialized) {
                         if (barcodesID.length) {
                             barcodesID.forEach((elem, index) => {
@@ -1117,22 +1529,43 @@
                                 if (shouldPlay) {
                                     // Play audio only if it hasn't been played yet for this intersection
                                     if (!markerAudioPlayed.has(markerIndex)) {
-                                        if (sound.nodeName === 'VIDEO') {
-                                            if (sound.paused) {
-                                                sound.play();
-                                                markerAudioPlayed.add(markerIndex);
-                                            }
-                                        } else {
-                                            if (!sound.isPlaying) {
-                                                sound.play();
-                                                markerAudioPlayed.add(markerIndex);
-                                            }
+                                        // --- ЗАТРИМКА АУДІО: синхронізація з появою контенту (0.5 сек) ---
+                                        // Аудіо маркера запускається одночасно з появою альтернативного контенту
+                                        // Створюємо таймер ТІЛЬКИ якщо ще немає активного таймера для цього маркера
+                                        if (!markerAudioTimeouts.has(markerIndex)) {
+                                            // Зберігаємо ID таймера для можливого скасування
+                                            var timeoutId = setTimeout(function() {
+                                                if (sound.nodeName === 'VIDEO') {
+                                                    if (sound.paused) {
+                                                        sound.play();
+                                                        markerAudioPlayed.add(markerIndex);
+                                                    }
+                                                } else {
+                                                    if (!sound.isPlaying) {
+                                                        sound.play();
+                                                        markerAudioPlayed.add(markerIndex);
+                                                    }
+                                                }
+                                                // Видаляємо таймер після виконання
+                                                markerAudioTimeouts.delete(markerIndex);
+                                            }, 500); // 500 мс = 0.5 секунди (синхронно з switchMarkerContent)
+                                            
+                                            markerAudioTimeouts.set(markerIndex, timeoutId);
                                         }
+                                        // -----------------------------------------------------------------------
                                     }
                                 } else {
                                     // Reset audio state when not intersecting
                                     markerAudioPlayed.delete(markerIndex);
                                     
+                                    // --- СКАСУВАННЯ ТАЙМЕРА АУДІО: якщо контролер віддалився ---
+                                    // Якщо контролер віддалився до завершення 0.5 сек, скасовуємо аудіо
+                                    if (markerAudioTimeouts.has(markerIndex)) {
+                                        clearTimeout(markerAudioTimeouts.get(markerIndex));
+                                        markerAudioTimeouts.delete(markerIndex);
+                                    }
+                                    // ----------------------------------------------------------------
+
                                     if (sound.nodeName === 'VIDEO') {
                                         if (!sound.paused) sound.pause();
                                     } else {
@@ -1159,7 +1592,7 @@
 
                                 // For patterns, the sound is stored by marker index, not patternID
                                 let soundData = patternsSound.get(markerIndex);
-                                if (!soundData) continue;
+                                if (!soundData) return;
 
                                 let sound = soundData.sound || soundData; // Support both old format (direct) and new format (object)
                                 let playOnControllerIntersect = soundData.playOnControllerIntersect || false;
@@ -1174,18 +1607,36 @@
                                 }
 
                                 if (shouldPlay) {
-                                    if (sound.nodeName === 'VIDEO') {
-                                        if (sound.paused) sound.play();
-                                    } else {
-                                        if (!sound.isPlaying) sound.play();
+                                    // --- ЗАТРИМКА АУДІО: синхронізація з появою контенту (0.5 сек) ---
+                                    // Аудіо маркера запускається одночасно з появою альтернативного контенту
+                                    // Створюємо таймер ТІЛЬКИ якщо ще немає активного таймера для цього маркера
+                                    if (!markerAudioTimeouts.has(markerIndex)) {
+                                        var timeoutId = setTimeout(function() {
+                                            if (sound.nodeName === 'VIDEO') {
+                                                if (sound.paused) sound.play();
+                                            } else {
+                                                if (!sound.isPlaying) sound.play();
+                                            }
+                                            // Видаляємо таймер після виконання
+                                            markerAudioTimeouts.delete(markerIndex);
+                                        }, 500); // 500 мс = 0.5 секунди (синхронно з switchMarkerContent)
+                                        
+                                        markerAudioTimeouts.set(markerIndex, timeoutId);
                                     }
+                                    // -----------------------------------------------------------------------
                                 } else {
+                                    // Скасування таймера аудіо для pattern маркерів
+                                    if (markerAudioTimeouts.has(markerIndex)) {
+                                        clearTimeout(markerAudioTimeouts.get(markerIndex));
+                                        markerAudioTimeouts.delete(markerIndex);
+                                    }
+                                    
                                     if (sound.nodeName === 'VIDEO') {
-                                        if (!sound.paused) sound.pause();
+                                        if (sound.paused) sound.pause();
                                     } else {
                                         if (sound.isPlaying) sound.stop();
                                     }
-                                    
+
                                     // Reset alternative content when marker is not detected
                                     if (!markerDetected && markerContentState.get(markerIndex)) {
                                         switchMarkerContent(markerIndex, false);

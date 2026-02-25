@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AR Marker Detector - ARUCO 4x4 3D</title>
+  <script type="text/javascript" src="libs/polyfill.js"></script>
+  <script type="text/javascript" src="../../../js/three.js"></script>
+  <script type="text/javascript" src="../../src/svd.js"></script>
+  <script type="text/javascript" src="../../src/posit1.js"></script>
+  <script type="text/javascript" src="../../src/cv.js"></script>
+  <script type="text/javascript" src="../../src/aruco.js"></script>
+  <script type="text/javascript" src="../../src/dictionaries/aruco_4x4_1000.js"></script>
+  <style>
+    body { font-family: monospace; margin: 0; overflow: hidden; }
+    #container { position: relative; width: 1280px; height: 720px; margin: 0 auto; }
+    #canvas, #three_canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+    #three_canvas { pointer-events: none; }
+    center { display: flex; flex-direction: column; align-items: center; }
+  </style>
+</head>
+<body>
+  <center>
+    <div style="margin: 10px;"><strong>-= AR Marker Detector (ARUCO 4x4) with 3D Cone =-</strong></div>
+    <div id="container">
+      <video id="video" autoplay="true" style="display:none;"></video>
+      <canvas id="canvas"></canvas>
+      <canvas id="three_canvas"></canvas>
+    </div>
+    <div style="margin: 15px;">
+      <strong>Powered by <a href="https://damianofalcioni.github.io/js-aruco2/">js-aruco2</a> and Three.js</strong>
+    </div>
+    <div style="margin: 10px; max-width: 1280px; text-align: left;">
+        <strong>Легенда:</strong><br>
+        • <span style="color: red;">Червоний</span> контур - виявлений маркер<br>
+        • <span style="color: #ffff00;">Жовтий конус</span> - 3D-об'єкт, прив'язаний до маркера
+    </div>
+  </center>
+
+  <script>
+    var video, canvas, context, imageData, detector, posit;
+    var modelSize = 30.0; // millimeters
+
+    // Three.js variables
+    var renderer, scene, camera, cone;
+
+    // Smoothing variables
+    var framesSinceLastSeen = 0;
+    const HIDE_THRESHOLD = 20;
+
+    function onLoad(){
+      video = document.getElementById("video");
+      canvas = document.getElementById("canvas");
+      context = canvas.getContext("2d");
+      canvas.width = 1280;
+      canvas.height = 720;
+
+      navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 } })
+        .then(function(stream) {
+          video.srcObject = stream;
+          video.play();
+        })
+        .catch(function(err) {
+          console.error("Помилка доступу до вебкамери:", err.name + ": " + err.message);
+          alert("Не вдалося отримати доступ до вебкамери: " + err.message);
+        });
+
+      detector = new AR.Detector({ dictionaryName: 'ARUCO_4X4_1000' });
+      posit = new POS.Posit(modelSize, canvas.width);
+      initThree();
+      requestAnimationFrame(tick);
+    }
+
+    function initThree() {
+      var threeCanvas = document.getElementById("three_canvas");
+      renderer = new THREE.WebGLRenderer({ canvas: threeCanvas, alpha: true });
+      renderer.setSize(canvas.width, canvas.height);
+      scene = new THREE.Scene();
+
+      var focalLength = canvas.width;
+      var fov = 2 * Math.atan(canvas.height / (2 * focalLength)) * (180 / Math.PI);
+      camera = new THREE.PerspectiveCamera(fov, canvas.width / canvas.height, 1, 1000);
+      scene.add(camera);
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+      var light = new THREE.DirectionalLight(0xffffff, 0.5);
+      light.position.set(1, 1, 1);
+      scene.add(light);
+      
+      var coneParams = {
+          radius: 20.0, 
+          height: 40.0,
+          radialSegments: 16, 
+          color: "#ffff00", 
+          textureFile: "../../../texture_red.jpg",
+          animation: { type: "rotation", axis: "y", speed: 0.01 }
+      };
+
+      var texture = new THREE.TextureLoader().load(coneParams.textureFile);
+      var material = new THREE.MeshStandardMaterial({
+          color: new THREE.Color(coneParams.color),
+          map: texture
+      });
+
+      var geometry = new THREE.ConeGeometry(coneParams.radius, coneParams.height, coneParams.radialSegments);
+      geometry.translate(0, coneParams.height / 2, 0);
+      cone = new THREE.Mesh(geometry, material);
+      cone.userData.animation = coneParams.animation;
+      cone.visible = false;
+      scene.add(cone);
+    }
+
+    function tick(){
+      if (video.readyState === video.HAVE_ENOUGH_DATA){
+        snapshot();
+        var markers = detector.detect(imageData);
+        drawCorners(markers);
+        update3D(markers);
+        renderThree();
+      }
+      requestAnimationFrame(tick);
+    }
+
+    function snapshot(){
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+    }
+
+    function drawCorners(markers){
+      var corners, i, j;
+      context.lineWidth = 3;
+      for (i = 0; i !== markers.length; ++i){
+        corners = markers[i].corners;
+        context.strokeStyle = "red";
+        context.beginPath();
+        for (j = 0; j !== corners.length; ++j){
+          var corner = corners[j];
+          context.moveTo(corner.x, corner.y);
+          corner = corners[(j + 1) % corners.length];
+          context.lineTo(corner.x, corner.y);
+        }
+        context.stroke();
+        context.closePath();
+      }
+    }
+
+    function update3D(markers){
+      var markerFoundAndPoseOk = false;
+      if (markers.length > 0) {
+        var marker = markers[0];
+        var corners = marker.corners;
+        var centeredCorners = corners.map(corner => ({
+          x: corner.x - (canvas.width / 2),
+          y: (canvas.height / 2) - corner.y
+        }));
+        var pose = posit.pose(centeredCorners);
+        if (pose) {
+            updateObjectPose(cone, pose.bestRotation, pose.bestTranslation);
+            markerFoundAndPoseOk = true;
+        }
+      }
+
+      if (markerFoundAndPoseOk) {
+        cone.visible = true;
+        framesSinceLastSeen = 0;
+      } else {
+        framesSinceLastSeen++;
+        if (framesSinceLastSeen > HIDE_THRESHOLD) {
+          cone.visible = false;
+        }
+      }
+    }
+
+    function updateObjectPose(object, rotation, translation) {
+      var rotMatrix = new THREE.Matrix4();
+      rotMatrix.set(
+        rotation[0][0], rotation[0][1], rotation[0][2], 0,
+        rotation[1][0], rotation[1][1], rotation[1][2], 0,
+        rotation[2][0], rotation[2][1], rotation[2][2], 0,
+        0, 0, 0, 1
+      );
+      object.quaternion.setFromRotationMatrix(rotMatrix);
+      var correction = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
+      object.quaternion.multiply(correction);
+      object.position.set(translation[0], translation[1], -translation[2]);
+    }
+    
+    function renderThree() {
+      if (cone.visible && cone.userData.animation) {
+        var anim = cone.userData.animation;
+        if (anim.axis === 'y') {
+            cone.rotation.y += anim.speed;
+        }
+      }
+      renderer.render(scene, camera);
+    }
+
+    window.onload = onLoad;
+  </script>
+</body>
+</html>
