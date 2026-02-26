@@ -1,0 +1,118 @@
+{
+  "settings": {
+    "resolution": "low",
+    "welcomeText": "Press here<br>to start the WebAR-BoardGame"
+  },
+  "markers": [
+    {
+      "id": 1,
+      "type": "barcode",
+      "target": 1,
+      "matrixSize": 35,
+      "contentType": "primitive",
+      "primitive": {
+        "type": "ConeGeometry",
+        "radius": 16,
+        "height": 32,
+        "radialSegments": 16,
+        "color": "#ffff00",
+        "textureFile": "texture_green.jpg",
+        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+      },
+      "alternativeContent": {
+        "contentType": "text",
+        "text": {
+          "content": "5-2",
+          "size": 48,
+          "height": 3,
+          "color": "#ffff00"
+        }
+      },
+      "audioFile": "question.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 2,
+      "type": "barcode",
+      "target": 4,
+      "matrixSize": 35,
+      "contentType": "text",
+      "text": {
+        "content": "3",
+        "size": 48,
+        "height": 3,
+        "color": "#00ff00"
+      },
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [38, 38, 38],          
+          "textureFile": "texture_blue.jpg",
+          "animation": { "type": "rotation", "axis": "z", "speed": 0.025 }
+        }
+      },
+      "audioFile": "correct_answer.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 3,
+      "type": "barcode",
+      "target": 5,
+      "matrixSize": 35,
+      "contentType": "text",
+      "text": {
+        "content": "1",
+        "size": 48,
+        "height": 3,
+        "color": "#0000ff"
+      },
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "CylinderGeometry",
+          "radiusTop": 9,
+          "radiusBottom": 9,
+          "height": 32,
+          "radialSegments": 16,
+
+          "textureFile": "texture_green.jpg",
+          "animation": { "type": "rotation", "axis": "z", "speed": 0.015 }
+        }
+      },
+      "audioFile": "wrong_answer.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 4,
+      "type": "barcode",
+      "target": 7,
+      "matrixSize": 35,
+      "contentType": "controller",
+      "controllerConfig": {
+        "totalLength": 90,
+        "tipFraction": 0.1,
+        "crossSection": 5,
+        "bodyColor": "#008000",
+        "tipColor": "#ff0000",
+        "positionY": 4.020
+      }
+    },
+    {
+      "id": 5,
+      "type": "aruco:ARUCO_4X4_1000",
+      "target": 5,
+      "matrixSize": 30.0,
+      "contentType": "primitive",
+      "primitive": {
+        "type": "ConeGeometry",
+        "radius": 16,
+        "height": 32,
+        "radialSegments": 16,
+        "color": "#ffff00",
+        "textureFile": "texture_green.jpg",
+        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+      }
+    }
+  ]
+}
