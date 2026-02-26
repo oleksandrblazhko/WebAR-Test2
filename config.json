@@ -1,13 +1,91 @@
 {
   "settings": {
     "resolution": "low",
-    "welcomeText": "Press here<br>to start WebAR - Barcode Test"
+    "welcomeText": "Press here<br>to start the WebAR-BoardGame"
   },
   "markers": [
     {
-      "id": 0,
+      "id": 1,
       "type": "barcode",
-      "target": 0,
+      "target": 1,
+      "matrixSize": 35,
+      "contentType": "primitive",
+      "primitive": {
+        "type": "ConeGeometry",
+        "radius": 16,
+        "height": 32,
+        "radialSegments": 16,
+        "color": "#ffff00",
+        "textureFile": "texture_green.jpg",
+        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+      },
+      "alternativeContent": {
+        "contentType": "text",
+        "text": {
+          "content": "5-2",
+          "size": 48,
+          "height": 3,
+          "color": "#ffff00"
+        }
+      },
+      "audioFile": "question.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 2,
+      "type": "barcode",
+      "target": 4,
+      "matrixSize": 35,
+      "contentType": "text",
+      "text": {
+        "content": "3",
+        "size": 48,
+        "height": 3,
+        "color": "#00ff00"
+      },
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [38, 38, 38],          
+          "textureFile": "texture_blue.jpg",
+          "animation": { "type": "rotation", "axis": "z", "speed": 0.025 }
+        }
+      },
+      "audioFile": "correct_answer.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 3,
+      "type": "barcode",
+      "target": 5,
+      "matrixSize": 35,
+      "contentType": "text",
+      "text": {
+        "content": "1",
+        "size": 48,
+        "height": 3,
+        "color": "#0000ff"
+      },
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "CylinderGeometry",
+          "radiusTop": 9,
+          "radiusBottom": 9,
+          "height": 32,
+          "radialSegments": 16,
+          "textureFile": "texture_green.jpg",
+          "animation": { "type": "rotation", "axis": "z", "speed": 0.015 }
+        }
+      },
+      "audioFile": "wrong_answer.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 4,
+      "type": "barcode",
+      "target": 7,
       "matrixSize": 35,
       "contentType": "controller",
       "controllerConfig": {
@@ -20,893 +98,18 @@
       }
     },
     {
-      "id": 1,
-      "type": "barcode",
-      "target": 1,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      },
-      "alternativeContent": {
-        "contentType": "primitive",
-        "primitive": {
-          "type": "BoxGeometry",
-          "size": [38, 38, 38],
-          "textureFile": "texture_red.jpg",
-          "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-        }
-      }
-    },
-    {
-      "id": 2,
-      "type": "barcode",
-      "target": 2,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 3,
-      "type": "barcode",
-      "target": 3,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 4,
-      "type": "barcode",
-      "target": 4,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
       "id": 5,
-      "type": "barcode",
+      "type": "aruco:ARUCO_4X4_1000",
       "target": 5,
-      "matrixSize": 35,
+      "matrixSize": 30.0,
       "contentType": "primitive",
       "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
+        "type": "ConeGeometry",
+        "radius": 16,
+        "height": 32,
+        "radialSegments": 16,
+        "color": "#ffff00",
         "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 6,
-      "type": "barcode",
-      "target": 6,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 7,
-      "type": "barcode",
-      "target": 7,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 8,
-      "type": "barcode",
-      "target": 8,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 9,
-      "type": "barcode",
-      "target": 9,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 10,
-      "type": "barcode",
-      "target": 10,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 11,
-      "type": "barcode",
-      "target": 11,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 12,
-      "type": "barcode",
-      "target": 12,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 13,
-      "type": "barcode",
-      "target": 13,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 14,
-      "type": "barcode",
-      "target": 14,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 15,
-      "type": "barcode",
-      "target": 15,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 16,
-      "type": "barcode",
-      "target": 16,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 17,
-      "type": "barcode",
-      "target": 17,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 18,
-      "type": "barcode",
-      "target": 18,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 19,
-      "type": "barcode",
-      "target": 19,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 20,
-      "type": "barcode",
-      "target": 20,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 21,
-      "type": "barcode",
-      "target": 21,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 22,
-      "type": "barcode",
-      "target": 22,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 23,
-      "type": "barcode",
-      "target": 23,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 24,
-      "type": "barcode",
-      "target": 24,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 25,
-      "type": "barcode",
-      "target": 25,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 26,
-      "type": "barcode",
-      "target": 26,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 27,
-      "type": "barcode",
-      "target": 27,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 28,
-      "type": "barcode",
-      "target": 28,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 29,
-      "type": "barcode",
-      "target": 29,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 30,
-      "type": "barcode",
-      "target": 30,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 31,
-      "type": "barcode",
-      "target": 31,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 32,
-      "type": "barcode",
-      "target": 32,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 33,
-      "type": "barcode",
-      "target": 33,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 34,
-      "type": "barcode",
-      "target": 34,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 35,
-      "type": "barcode",
-      "target": 35,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 36,
-      "type": "barcode",
-      "target": 36,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 37,
-      "type": "barcode",
-      "target": 37,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 38,
-      "type": "barcode",
-      "target": 38,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 39,
-      "type": "barcode",
-      "target": 39,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 40,
-      "type": "barcode",
-      "target": 40,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 41,
-      "type": "barcode",
-      "target": 41,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 42,
-      "type": "barcode",
-      "target": 42,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 43,
-      "type": "barcode",
-      "target": 43,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 44,
-      "type": "barcode",
-      "target": 44,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 45,
-      "type": "barcode",
-      "target": 45,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 46,
-      "type": "barcode",
-      "target": 46,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 47,
-      "type": "barcode",
-      "target": 47,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 48,
-      "type": "barcode",
-      "target": 48,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 49,
-      "type": "barcode",
-      "target": 49,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 50,
-      "type": "barcode",
-      "target": 50,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 51,
-      "type": "barcode",
-      "target": 51,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 52,
-      "type": "barcode",
-      "target": 52,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 53,
-      "type": "barcode",
-      "target": 53,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 54,
-      "type": "barcode",
-      "target": 54,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 55,
-      "type": "barcode",
-      "target": 55,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 56,
-      "type": "barcode",
-      "target": 56,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 57,
-      "type": "barcode",
-      "target": 57,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 58,
-      "type": "barcode",
-      "target": 58,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 59,
-      "type": "barcode",
-      "target": 59,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 60,
-      "type": "barcode",
-      "target": 60,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 61,
-      "type": "barcode",
-      "target": 61,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 62,
-      "type": "barcode",
-      "target": 62,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_blue.jpg",
-        "position": [0, 16, 0],
-        "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-      }
-    },
-    {
-      "id": 63,
-      "type": "barcode",
-      "target": 63,
-      "matrixSize": 35,
-      "contentType": "primitive",
-      "primitive": {
-        "type": "BoxGeometry",
-        "size": [32, 32, 32],
-        "textureFile": "texture_green.jpg",
-        "position": [0, 16, 0],
         "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
       }
     }
