@@ -15,7 +15,6 @@
         "radius": 16,
         "height": 32,
         "radialSegments": 16,
-        "color": "#ffff00",
         "textureFile": "texture_green.jpg",
         "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
       },
@@ -112,6 +111,14 @@
         "textureFile": "texture_green.jpg",
         "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
       }
+    },
+    {
+      "id": 6,
+      "type": "barcode",
+      "target": 2,
+      "matrixSize": 35,
+      "contentType": "multiplex-3D",
+      "multiplex3D": 1
     }
   ]
 }

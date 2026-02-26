@@ -163,6 +163,19 @@
                     );
                 }
 
+                // Перевірка файлів для multiplex-3D контенту
+                if (marker.contentType === 'multiplex-3D' && marker.multiplex3D) {
+                    // Додаємо перевірку config-3D-objects.json
+                    checkPromises.push(
+                        checkFileExists('config-3D-objects.json')
+                            .then(exists => {
+                                if (!exists) {
+                                    missingFiles.push({ file: 'config-3D-objects.json', context: `${markerInfo} - 3D objects config` });
+                                }
+                            })
+                    );
+                }
+
                 // Перевірка alternative content
                 if (marker.alternativeContent) {
                     const alt = marker.alternativeContent;
@@ -207,6 +220,19 @@
                                 .then(exists => {
                                     if (!exists) {
                                         missingFiles.push({ file: alt.contentFile, context: `${altContext} - video` });
+                                    }
+                                })
+                        );
+                    }
+
+                    // Перевірка файлів для multiplex-3D alternative content
+                    if (alt.contentType === 'multiplex-3D' && alt.multiplex3D) {
+                        // Додаємо перевірку config-3D-objects.json
+                        checkPromises.push(
+                            checkFileExists('config-3D-objects.json')
+                                .then(exists => {
+                                    if (!exists) {
+                                        missingFiles.push({ file: 'config-3D-objects.json', context: `${altContext} - 3D objects config` });
                                     }
                                 })
                         );
@@ -395,6 +421,8 @@
                         return createAlternativeVideoContent(markerRoot, alternativeContentConfig);
                     case 'text':
                         return createAlternativeTextContent(markerRoot, alternativeContentConfig);
+                    case 'multiplex-3D':
+                        return createAlternativeMultiplex3DContent(markerRoot, alternativeContentConfig);
                     default:
                         return null;
                 }
@@ -456,12 +484,12 @@
                     case 'ConeGeometry':
                                                                 var coneHeight = primitive.height || 1;
                                                                 geometry = new THREE.ConeGeometry(
-                                                                    primitive.radius || 0.5, 
-                                                                    coneHeight, 
+                                                                    primitive.radius || 0.5,
+                                                                    coneHeight,
                                                                     primitive.radialSegments || 32
                                                                 );
-                                                                // Зміщуємо геометрію конуса, щоб його основа була в центрі координат
-                                                                geometry.translate(0, coneHeight / 2, 0);                        break;
+                                                                // Не зміщуємо геометрію - розміщуємо через позицію меша
+                                                                break;
                     case 'TorusGeometry':
                         geometry = new THREE.TorusGeometry(
                             primitive.radius || 1, 
@@ -487,9 +515,19 @@
                 }
                 
                 mesh = new THREE.Mesh(geometry, material);
-                
+
                 if (primitive.position) {
                     mesh.position.set(...primitive.position);
+                } else {
+                    // Автоматичне зміщення для примітивів, щоб основа була на Y=0
+                    // Це запобігає візуальному зміщенню при погляді під кутом
+                    if (primitive.type === 'BoxGeometry' && primitive.size) {
+                        mesh.position.y = primitive.size[1] / 2; // половина висоти куба
+                    } else if (primitive.type === 'ConeGeometry' && primitive.height) {
+                        mesh.position.y = primitive.height / 2;
+                    } else if (primitive.type === 'CylinderGeometry' && primitive.height) {
+                        mesh.position.y = primitive.height / 2;
+                    }
                 }
                 if (primitive.rotation) {
                     mesh.rotation.set(...primitive.rotation);
@@ -590,6 +628,248 @@
                     mesh.userData.isAlternativeContent = true;
                     return mesh;
                 });
+            }
+
+            // Функція для створення складного 3D-об'єкта (multiplex-3D) з конфігурації
+            function createMultiplex3DObject(markerRoot, objectConfig) {
+                if (!objectConfig || !objectConfig.part) {
+                    return Promise.resolve(null);
+                }
+
+                const group = new THREE.Group();
+                const partsPromises = [];
+
+                // Створюємо кожну частину складного об'єкта
+                objectConfig.part.forEach(partConfig => {
+                    const partPromise = new Promise((resolve) => {
+                        let geometry, material, mesh;
+
+                        // Створюємо геометрію відповідно до типу
+                        switch(partConfig.type) {
+                            case 'BoxGeometry':
+                                geometry = new THREE.BoxGeometry(...partConfig.size);
+                                break;
+                            case 'SphereGeometry':
+                                geometry = new THREE.SphereGeometry(partConfig.radius, partConfig.widthSegments || 32, partConfig.heightSegments || 32);
+                                break;
+                            case 'CylinderGeometry':
+                                geometry = new THREE.CylinderGeometry(
+                                    partConfig.radiusTop || 0.5,
+                                    partConfig.radiusBottom || 0.5,
+                                    partConfig.height || 1,
+                                    partConfig.radialSegments || 32
+                                );
+                                break;
+                            case 'ConeGeometry':
+                                var coneHeight = partConfig.height || 1;
+                                geometry = new THREE.ConeGeometry(
+                                    partConfig.radius || 0.5,
+                                    coneHeight,
+                                    partConfig.radialSegments || 32
+                                );
+                                // Не зміщуємо геометрію - розміщуємо через позицію меша
+                                break;
+                            case 'TorusGeometry':
+                                geometry = new THREE.TorusGeometry(
+                                    partConfig.radius || 1,
+                                    partConfig.tubeRadius || 0.4,
+                                    partConfig.radialSegments || 16,
+                                    partConfig.tubularSegments || 32
+                                );
+                                break;
+                            default:
+                                geometry = new THREE.BoxGeometry(1, 1, 1);
+                        }
+
+                        // Створюємо матеріал з кольором або текстурою
+                        if (partConfig.textureFile) {
+                            // Завантажуємо текстуру, якщо вона вказана
+                            let texture = new THREE.TextureLoader().load(partConfig.textureFile);
+                            material = new THREE.MeshBasicMaterial({
+                                map: texture,
+                                color: new THREE.Color(partConfig.color || '#ffffff')
+                            });
+                        } else {
+                            // Використовуємо колір, якщо текстура не вказана
+                            material = new THREE.MeshBasicMaterial({
+                                color: new THREE.Color(partConfig.color || '#ffffff')
+                            });
+                        }
+
+                        // Створюємо меш
+                        mesh = new THREE.Mesh(geometry, material);
+
+                        // Застосовуємо позицію та обертання, якщо вказані
+                        if (partConfig.position) {
+                            mesh.position.set(...partConfig.position);
+                        }
+                        if (partConfig.rotation) {
+                            mesh.rotation.set(...partConfig.rotation);
+                        }
+
+                        // Зберігаємо анімацію для частини
+                        if (partConfig.animation) {
+                            mesh.userData.animation = partConfig.animation;
+                        }
+
+                        resolve(mesh);
+                    });
+
+                    partsPromises.push(partPromise);
+                });
+
+                // Чекаємо завершення створення всіх частин
+                return Promise.all(partsPromises).then((parts) => {
+                    parts.forEach(part => {
+                        group.add(part);
+                    });
+                    group.userData.isMultiplex3D = true;
+                    return group;
+                });
+            }
+            
+            // Функція для створення alternative multiplex-3D контенту
+            // Складний 3D-об'єкт, де кожна частина розміщується зверху попередньої
+            function createAlternativeMultiplex3DContent(markerRoot, config) {
+                // Підтримка обох форматів: multiplex3D: 1 або multiplex3D: { object_id: 1 }
+                let objectId;
+                if (typeof config.multiplex3D === 'number') {
+                    objectId = config.multiplex3D;
+                } else if (config.multiplex3D && config.multiplex3D.object_id) {
+                    objectId = config.multiplex3D.object_id;
+                } else {
+                    return Promise.resolve(null);
+                }
+
+                // Завантажуємо конфігурацію об'єкта з config-3D-objects.json
+                return fetch('config-3D-objects.json')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to load config-3D-objects.json');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Знаходимо об'єкт з потрібним object_id
+                        const objectConfig = data.objects.find(obj => obj.object_id === objectId);
+                        if (!objectConfig) {
+                            console.error(`Object with id ${objectId} not found in config-3D-objects.json`);
+                            return null;
+                        }
+
+                        const group = new THREE.Group();
+                        let currentHeight = 0; // Поточна висота для стек-розміщення
+
+                        // Створюємо кожну частину складного об'єкта
+                        // Сортуємо частини за part_id для правильного порядку
+                        const sortedParts = [...objectConfig.part].sort((a, b) => a.part_id - b.part_id);
+
+                        sortedParts.forEach(partConfig => {
+                            let geometry, material, mesh;
+
+                            // Створюємо геометрію відповідно до типу
+                            switch(partConfig.type) {
+                                case 'BoxGeometry':
+                                    geometry = new THREE.BoxGeometry(...partConfig.size);
+                                    break;
+                                case 'SphereGeometry':
+                                    geometry = new THREE.SphereGeometry(partConfig.radius, partConfig.widthSegments || 32, partConfig.heightSegments || 32);
+                                    break;
+                                case 'CylinderGeometry':
+                                    geometry = new THREE.CylinderGeometry(
+                                        partConfig.radiusTop || 0.5,
+                                        partConfig.radiusBottom || 0.5,
+                                        partConfig.height || 1,
+                                        partConfig.radialSegments || 32
+                                    );
+                                    break;
+                                case 'ConeGeometry':
+                                    var coneHeight = partConfig.height || 1;
+                                    geometry = new THREE.ConeGeometry(
+                                        partConfig.radius || 0.5,
+                                        coneHeight,
+                                        partConfig.radialSegments || 32
+                                    );
+                                    // Не зміщуємо геометрію - розміщуємо через позицію меша
+                                    break;
+                                case 'TorusGeometry':
+                                    geometry = new THREE.TorusGeometry(
+                                        partConfig.radius || 1,
+                                        partConfig.tubeRadius || 0.4,
+                                        partConfig.radialSegments || 16,
+                                        partConfig.tubularSegments || 32
+                                    );
+                                    break;
+                                default:
+                                    geometry = new THREE.BoxGeometry(1, 1, 1);
+                            }
+
+                            // Створюємо матеріал з кольором або текстурою
+                            if (partConfig.textureFile) {
+                                // Завантажуємо текстуру, якщо вона вказана
+                                let texture = new THREE.TextureLoader().load(partConfig.textureFile);
+                                material = new THREE.MeshBasicMaterial({
+                                    map: texture,
+                                    color: new THREE.Color(partConfig.color || '#ffffff')
+                                });
+                            } else {
+                                // Використовуємо колір, якщо текстура не вказана
+                                material = new THREE.MeshBasicMaterial({
+                                    color: new THREE.Color(partConfig.color || '#ffffff')
+                                });
+                            }
+
+                            // Створюємо меш
+                            mesh = new THREE.Mesh(geometry, material);
+
+                            // Розміщуємо частину на потрібній висоті (стек-розміщення)
+                            // Перша частина (part_id: 1) - на площині маркера (Y = 0)
+                            // Наступні частини - зверху попередньої
+                            // Для всіх примітивів: mesh.position.y = currentHeight + половина_висоти
+                            // currentHeight збільшується на повну висоту примітиву
+                            if (partConfig.type === 'BoxGeometry' && partConfig.size) {
+                                // Куб/прямокутник: висота = size[1] (Y-розмір)
+                                mesh.position.y = currentHeight + partConfig.size[1] / 2;
+                                currentHeight += partConfig.size[1];
+                            } else if (partConfig.type === 'CylinderGeometry' && partConfig.height) {
+                                // Циліндр: центр посередині висоти
+                                mesh.position.y = currentHeight + partConfig.height / 2;
+                                currentHeight += partConfig.height;
+                            } else if (partConfig.type === 'ConeGeometry' && partConfig.height) {
+                                // Конус: центр посередині висоти, основа на currentHeight
+                                mesh.position.y = currentHeight + partConfig.height / 2;
+                                currentHeight += partConfig.height;
+                            } else if (partConfig.type === 'SphereGeometry' && partConfig.radius) {
+                                // Сфера: центр в центрі сфери, нижня точка на currentHeight
+                                mesh.position.y = currentHeight + partConfig.radius;
+                                currentHeight += 2 * partConfig.radius; // діаметр
+                            } else if (partConfig.type === 'TorusGeometry' && partConfig.tubeRadius) {
+                                // Тор: центр в центрі тора, нижня точка на currentHeight
+                                mesh.position.y = currentHeight + partConfig.tubeRadius;
+                                currentHeight += 2 * partConfig.tubeRadius; // діаметр труби
+                            } else {
+                                // Для інших фігур або якщо висота не вказана
+                                mesh.position.y = currentHeight + 0.5;
+                                currentHeight += 1;
+                            }
+
+                            // Застосовуємо обертання, якщо вказане
+                            if (partConfig.rotation) {
+                                mesh.rotation.set(...partConfig.rotation);
+                            }
+
+                            // Зберігаємо анімацію для частини
+                            if (partConfig.animation) {
+                                mesh.userData.animation = partConfig.animation;
+                            }
+
+                            group.add(mesh);
+                        });
+
+                        group.userData.isAlternativeContent = true;
+                        group.userData.isMultiplex3D = true;
+                        return group;
+                    });
             }
             
             // Function to switch content for a specific marker
@@ -1081,8 +1361,7 @@
                                             coneHeight,
                                             primitive.radialSegments || 32
                                         );
-                                        // Зміщуємо геометрію конуса, щоб його основа була в центрі координат
-                                        geometry.translate(0, coneHeight / 2, 0);
+                                        // Не зміщуємо геометрію - розміщуємо через позицію меша
                                         break;
                                     case 'TorusGeometry':
                                         geometry = new THREE.TorusGeometry(
@@ -1117,6 +1396,16 @@
                                 // Застосовуємо позицію та обертання
                                 if (primitive.position) {
                                     mesh.position.set(...primitive.position);
+                                } else {
+                                    // Автоматичне зміщення для примітивів, щоб основа була на Y=0
+                                    // Це запобігає візуальному зміщенню при погляді під кутом
+                                    if (primitive.type === 'BoxGeometry' && primitive.size) {
+                                        mesh.position.y = primitive.size[1] / 2; // половина висоти куба
+                                    } else if (primitive.type === 'ConeGeometry' && primitive.height) {
+                                        mesh.position.y = primitive.height / 2;
+                                    } else if (primitive.type === 'CylinderGeometry' && primitive.height) {
+                                        mesh.position.y = primitive.height / 2;
+                                    }
                                 }
                                 if (primitive.rotation) {
                                     mesh.rotation.set(...primitive.rotation);
@@ -1188,6 +1477,149 @@
                                 }).catch((error) => {
                                     console.error(`Error creating text for marker ${i}:`, error);
                                 }));
+                            }
+                            break;
+                        case 'multiplex-3D':
+                            // Обробка складного 3D-об'єкта (multiplex-3D)
+                            // Підтримка обох форматів: multiplex3D: 1 або multiplex3D: { object_id: 1 }
+                            let objectId;
+                            if (typeof config.markers[i].multiplex3D === 'number') {
+                                objectId = config.markers[i].multiplex3D;
+                            } else if (config.markers[i].multiplex3D && config.markers[i].multiplex3D.object_id) {
+                                objectId = config.markers[i].multiplex3D.object_id;
+                            } else {
+                                break;
+                            }
+
+                            if (config.markers[i] && objectId) {
+
+                                contentPromises.push(
+                                    fetch('config-3D-objects.json')
+                                        .then(response => {
+                                            if (!response.ok) {
+                                                throw new Error('Failed to load config-3D-objects.json');
+                                            }
+                                            return response.json();
+                                        })
+                                        .then(data => {
+                                            // Знаходимо об'єкт з потрібним object_id
+                                            const objectConfig = data.objects.find(obj => obj.object_id === objectId);
+                                            if (!objectConfig) {
+                                                console.error(`Object with id ${objectId} not found in config-3D-objects.json`);
+                                                return;
+                                            }
+
+                                            const group = new THREE.Group();
+                                            let currentHeight = 0; // Поточна висота для стек-розміщення
+
+                                            // Сортуємо частини за part_id для правильного порядку
+                                            const sortedParts = [...objectConfig.part].sort((a, b) => a.part_id - b.part_id);
+
+                                            sortedParts.forEach(partConfig => {
+                                                let geometry, material, mesh;
+
+                                                // Створюємо геометрію відповідно до типу
+                                                switch(partConfig.type) {
+                                                    case 'BoxGeometry':
+                                                        geometry = new THREE.BoxGeometry(...partConfig.size);
+                                                        break;
+                                                    case 'SphereGeometry':
+                                                        geometry = new THREE.SphereGeometry(partConfig.radius, partConfig.widthSegments || 32, partConfig.heightSegments || 32);
+                                                        break;
+                                                    case 'CylinderGeometry':
+                                                        geometry = new THREE.CylinderGeometry(
+                                                            partConfig.radiusTop || 0.5,
+                                                            partConfig.radiusBottom || 0.5,
+                                                            partConfig.height || 1,
+                                                            partConfig.radialSegments || 32
+                                                        );
+                                                        break;
+                                                    case 'ConeGeometry':
+                                                        var coneHeight = partConfig.height || 1;
+                                                        geometry = new THREE.ConeGeometry(
+                                                            partConfig.radius || 0.5,
+                                                            coneHeight,
+                                                            partConfig.radialSegments || 32
+                                                        );
+                                                        // Не зміщуємо геометрію - розміщуємо через позицію меша
+                                                        break;
+                                                    case 'TorusGeometry':
+                                                        geometry = new THREE.TorusGeometry(
+                                                            partConfig.radius || 1,
+                                                            partConfig.tubeRadius || 0.4,
+                                                            partConfig.radialSegments || 16,
+                                                            partConfig.tubularSegments || 32
+                                                        );
+                                                        break;
+                                                    default:
+                                                        geometry = new THREE.BoxGeometry(1, 1, 1);
+                                                }
+
+                                                // Створюємо матеріал з кольором або текстурою
+                                                if (partConfig.textureFile) {
+                                                    let texture = new THREE.TextureLoader().load(partConfig.textureFile);
+                                                    material = new THREE.MeshBasicMaterial({
+                                                        map: texture,
+                                                        color: new THREE.Color(partConfig.color || '#ffffff')
+                                                    });
+                                                } else {
+                                                    material = new THREE.MeshBasicMaterial({
+                                                        color: new THREE.Color(partConfig.color || '#ffffff')
+                                                    });
+                                                }
+
+                                                // Створюємо меш
+                                                mesh = new THREE.Mesh(geometry, material);
+
+                                                // Розміщуємо частину на потрібній висоті (стек-розміщення)
+                                                // Для всіх примітивів: mesh.position.y = currentHeight + половина_висоти
+                                                // currentHeight збільшується на повну висоту примітиву
+                                                if (partConfig.type === 'BoxGeometry' && partConfig.size) {
+                                                    // Куб/прямокутник: висота = size[1] (Y-розмір)
+                                                    mesh.position.y = currentHeight + partConfig.size[1] / 2;
+                                                    currentHeight += partConfig.size[1];
+                                                } else if (partConfig.type === 'CylinderGeometry' && partConfig.height) {
+                                                    // Циліндр: центр посередині висоти
+                                                    mesh.position.y = currentHeight + partConfig.height / 2;
+                                                    currentHeight += partConfig.height;
+                                                } else if (partConfig.type === 'ConeGeometry' && partConfig.height) {
+                                                    // Конус: центр посередині висоти, основа на currentHeight
+                                                    mesh.position.y = currentHeight + partConfig.height / 2;
+                                                    currentHeight += partConfig.height;
+                                                } else if (partConfig.type === 'SphereGeometry' && partConfig.radius) {
+                                                    // Сфера: центр в центрі сфери, нижня точка на currentHeight
+                                                    mesh.position.y = currentHeight + partConfig.radius;
+                                                    currentHeight += 2 * partConfig.radius; // діаметр
+                                                } else if (partConfig.type === 'TorusGeometry' && partConfig.tubeRadius) {
+                                                    // Тор: центр в центрі тора, нижня точка на currentHeight
+                                                    mesh.position.y = currentHeight + partConfig.tubeRadius;
+                                                    currentHeight += 2 * partConfig.tubeRadius; // діаметр труби
+                                                } else {
+                                                    // Для інших фігур або якщо висота не вказана
+                                                    mesh.position.y = currentHeight + 0.5;
+                                                    currentHeight += 1;
+                                                }
+
+                                                // Застосовуємо обертання, якщо вказане
+                                                if (partConfig.rotation) {
+                                                    mesh.rotation.set(...partConfig.rotation);
+                                                }
+
+                                                // Зберігаємо анімацію для частини
+                                                if (partConfig.animation) {
+                                                    mesh.userData.animation = partConfig.animation;
+                                                }
+
+                                                group.add(mesh);
+                                            });
+
+                                            group.userData.isMultiplex3D = true;
+                                            markerRoots[i].add(group);
+                                        })
+                                        .catch(error => {
+                                            console.error(`Error loading multiplex-3D object ${objectId}:`, error);
+                                        })
+                                );
                             }
                             break;
                         case 'controller':
