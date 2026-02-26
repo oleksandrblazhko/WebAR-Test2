@@ -75,7 +75,6 @@
           "radiusBottom": 9,
           "height": 32,
           "radialSegments": 16,
-
           "textureFile": "texture_green.jpg",
           "animation": { "type": "rotation", "axis": "z", "speed": 0.015 }
         }

@@ -5,6 +5,21 @@
   },
   "markers": [
     {
+      "id": 0,
+      "type": "barcode",
+      "target": 0,
+      "matrixSize": 35,
+      "contentType": "controller",
+      "controllerConfig": {
+        "totalLength": 90,
+        "tipFraction": 0.1,
+        "crossSection": 5,
+        "bodyColor": "#008000",
+        "tipColor": "#ff0000",
+        "positionY": 4.020
+      }
+    },
+    {
       "id": 1,
       "type": "barcode",
       "target": 1,
@@ -16,6 +31,15 @@
         "textureFile": "texture_green.jpg",
         "position": [0, 16, 0],
         "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+      },
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [38, 38, 38],
+          "textureFile": "texture_red.jpg",
+          "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+        }
       }
     },
     {
