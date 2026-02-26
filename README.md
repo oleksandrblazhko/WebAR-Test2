@@ -272,6 +272,7 @@
 - `video` - відео
 - `controller` - інтерактивний контролер (зелений куб з червоним кінчиком)
 - `text` - текстовий контент
+- `multiplex-3D` - складний 3D-об'єкт з декількох примітивів
 
 ## Структура конфігурації маркерів
 Кожен маркер має наступну структуру:
@@ -420,18 +421,20 @@
   "contentType": "text",
   "text": {
     "content": "3",
-    "size": 1.5,
-    "height": 0.1,
+    "size": 48,
+    "height": 3,
     "color": "#00ff00"
   },
   "alternativeContent": {
     "contentType": "primitive",
     "primitive": {
-      "type": "BoxGeometry",
-      "size": [1.2, 1.2, 1.2],
+      "type": "SphereGeometry",
+      "radius": 16,
+      "widthSegments": 32,
+      "heightSegments": 32,
       "color": "#ff0066",
       "textureFile": "texture_blue.jpg",
-      "animation": { "type": "rotation", "axis": "z", "speed": 0.025 }
+      "animation": { "type": "rotation", "axis": "y", "speed": 0.025 }
     }
   },
   "audioFile": "correct_answer.mp3",
@@ -491,12 +494,113 @@
 - **Червоний кінчик** - активна зона для детекції колізій
 - При дотику червоного кінчика до об'єкта спрацьовує тактильний відгук
 
+## Тип контенту `multiplex-3D` (складні 3D-об'єкти)
+
+Тип контенту `multiplex-3D` дозволяє створювати складні 3D-об'єкти, що складаються з декількох примітивів, які розміщуються один над одним (стек-розміщення).
+
+### Опис функціональності:
+- Кожен складний об'єкт зберігається у файлі `config-3D-objects.json`
+- Об'єкт складається з частин (`part`), кожна з яких має унікальний `part_id`
+- Частини розміщуються послідовно зверху одна одної:
+  - `part_id: 1` - перший примітив, розташований на площині маркера
+  - `part_id: 2` - другий примітив, розташований на площині першого
+  - `part_id: 3` - третій примітив, розташований на площині другого
+  - і так далі...
+
+### Параметри складного об'єкта:
+- `object_id` - унікальний ідентифікатор об'єкта в `config-3D-objects.json`
+- `part` - масив частин об'єкта
+
+### Параметри кожної частини:
+- `part_id` - унікальний ідентифікатор частини (визначає порядок розміщення)
+- `type` - тип геометрії (BoxGeometry, SphereGeometry, CylinderGeometry, ConeGeometry, TorusGeometry)
+- `size` - розміри для BoxGeometry [ширина, висота, глибина]
+- `radius` - радіус для SphereGeometry, ConeGeometry
+- `height` - висота для ConeGeometry, CylinderGeometry
+- `tubeRadius` - радіус трубки для TorusGeometry
+- `radialSegments` - кількість сегментів для циліндричних фігур
+- `textureFile` - шлях до текстурного файлу
+- `color` - колір об'єкта (hex формат)
+- `animation` - параметри анімації для частини
+
+### Приклад конфігурації в `config.json`:
+```json
+{
+  "id": 6,
+  "type": "barcode",
+  "target": 2,
+  "matrixSize": 35,
+  "contentType": "multiplex-3D",
+  "multiplex3D": 1
+}
+```
+
+**Примітка:** `multiplex3D` може вказуватися як число (ID об'єкта) або як об'єкт `{ "object_id": 1 }`.
+
+### Приклад `config-3D-objects.json`:
+```json
+{
+  "objects": [
+    {
+      "object_id": 1,
+      "part": [
+        {
+          "part_id": 1,
+          "type": "BoxGeometry",
+          "size": [38, 38, 38],
+          "textureFile": "texture_blue.jpg",
+          "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+        },
+        {
+          "part_id": 2,
+          "type": "ConeGeometry",
+          "radius": 16,
+          "height": 32,
+          "radialSegments": 16,
+          "textureFile": "texture_green.jpg",
+          "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Алгоритм стек-розміщення:
+| Примітив | Висота | Позиція Y | Після розміщення |
+|----------|--------|-----------|------------------|
+| **BoxGeometry** | `size[1]` | `currentHeight + size[1] / 2` | `currentHeight += size[1]` |
+| **CylinderGeometry** | `height` | `currentHeight + height / 2` | `currentHeight += height` |
+| **ConeGeometry** | `height` | `currentHeight + height / 2` | `currentHeight += height` |
+| **SphereGeometry** | `2 × radius` | `currentHeight + radius` | `currentHeight += 2 × radius` |
+| **TorusGeometry** | `2 × tubeRadius` | `currentHeight + tubeRadius` | `currentHeight += 2 × tubeRadius` |
+
+### Особливості:
+- ✅ Кожна частина може мати власну текстуру та анімацію
+- ✅ Частини розміщуються щільно одна до одної без проміжків
+- ✅ Анімація застосовується незалежно до кожної частини
+- ✅ Порядок розміщення визначається `part_id` (від 1 до N)
+
+### Приклад використання:
+```
+┌─────────────────────────────────────────────────────────┐
+│  Складний об'єкт "Вежа":                                │
+│  1. Куб (синій, 38×38×38) - основа                      │
+│  2. Конус (зелений, r=16, h=32) - зверху куба          │
+│                                                         │
+│  Обидві частини обертаються навколо осі Y               │
+│  з різною швидкістю незалежно одна від одної.           │
+└─────────────────────────────────────────────────────────┘
+```
+
 ## Необхідні файли
+
 Для правильної роботи проекту необхідно мати наступні файли в кореневому каталозі:
 
 ### Обов'язкові файли:
 - `helvetiker_regular.typeface.json` - файл шрифту для відображення текстових елементів
 - `data/camera_para.dat` - параметри камери для AR
+- `config-3D-objects.json` - конфігурація складних 3D-об'єктів (для multiplex-3D)
 
 ### Файли маркерів:
 - `patterns/pattern-*.patt` - файли патернів для pattern-маркерів
