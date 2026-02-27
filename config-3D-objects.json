@@ -2,43 +2,51 @@
    "objects": [
       {
          "object_id": 1,
-         "part": [
-             {
-                "part_id": 1,
-                "type": "BoxGeometry",
-                "size": [38, 38, 38],          
-                "textureFile": "texture_green.jpg",
-                "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-             },
-             {
-                "part_id": 2,
-                "type": "CylinderGeometry",
-                "radiusTop": 9,
-                "radiusBottom": 9,
-                "height": 32,
-                "radialSegments": 16,
-                "textureFile": "texture_green.jpg",
-                "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-             },
-             {
-                "part_id": 3,  
-                "type": "SphereGeometry",
-                "radius": 16,
-                "widthSegments": 32,
-                "heightSegments": 32,
-                "textureFile": "texture_green.jpg",
-                "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-             },
-             {
-                "part_id": 4,
-                "type": "ConeGeometry",
-                "radius": 16,
-                "height": 32,
-                "radialSegments": 16,
-                "textureFile": "texture_green.jpg",
-                "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-             }
+         "part": [          
+            {
+               "part_id": 1,
+               "name_ua": "Основа",
+               "type": "CylinderGeometry",
+               "radiusTop": 12,
+               "radiusBottom": 14,
+               "height": 4,
+               "radialSegments": 16,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 2,
+               "name_ua": "Тіло (циліндр)",
+               "type": "CylinderGeometry",
+               "radiusTop": 8,
+               "radiusBottom": 10,
+               "height": 20,
+               "radialSegments": 16,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 3,
+               "name_ua": "Комір",
+               "type": "CylinderGeometry",
+               "radiusTop": 9,
+               "radiusBottom": 9,
+               "height": 4,
+               "radialSegments": 16,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 4,
+               "name_ua": "Голова (куля)",
+               "type": "SphereGeometry",
+               "radius": 7,
+               "widthSegments": 16,
+               "heightSegments": 16,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            }    
         ]
-     }
+      }
    ]
 }

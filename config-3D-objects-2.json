@@ -1,0 +1,44 @@
+{
+   "objects": [
+      {
+         "object_id": 1,
+         "part": [
+             {
+                "part_id": 1,
+                "type": "BoxGeometry",
+                "size": [38, 38, 38],          
+                "textureFile": "texture_green.jpg",
+                "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+             },
+             {
+                "part_id": 2,
+                "type": "CylinderGeometry",
+                "radiusTop": 9,
+                "radiusBottom": 9,
+                "height": 32,
+                "radialSegments": 16,
+                "textureFile": "texture_green.jpg",
+                "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+             },
+             {
+                "part_id": 3,  
+                "type": "SphereGeometry",
+                "radius": 16,
+                "widthSegments": 32,
+                "heightSegments": 32,
+                "textureFile": "texture_green.jpg",
+                "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+             },
+             {
+                "part_id": 4,
+                "type": "ConeGeometry",
+                "radius": 16,
+                "height": 32,
+                "radialSegments": 16,
+                "textureFile": "texture_green.jpg",
+                "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+             }
+        ]
+     }
+   ]
+}
