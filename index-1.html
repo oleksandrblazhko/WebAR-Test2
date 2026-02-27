@@ -757,6 +757,9 @@
                             return null;
                         }
 
+                        console.log(`Loaded object ${objectId}: ${objectConfig.name}, parts: ${objectConfig.part.length}`);
+                        console.log('Parts config:', JSON.stringify(objectConfig.part, null, 2));
+
                         const group = new THREE.Group();
                         let currentHeight = 0; // Поточна висота для стек-розміщення
 
@@ -822,12 +825,27 @@
                             // Створюємо меш
                             mesh = new THREE.Mesh(geometry, material);
 
-                            // Розміщуємо частину на потрібній висоті (стек-розміщення)
-                            // Перша частина (part_id: 1) - на площині маркера (Y = 0)
-                            // Наступні частини - зверху попередньої
-                            // Для всіх примітивів: mesh.position.y = currentHeight + половина_висоти
-                            // currentHeight збільшується на повну висоту примітиву
-                            if (partConfig.type === 'BoxGeometry' && partConfig.size) {
+                            // Розміщуємо частину на потрібній висоті
+                            // Варіант 1: Абсолютні координати (positionX, positionY, positionZ) - для складних форм
+                            // Варіант 2: Стек-розміщення (автоматичне) - для простих вертикальних структур
+                            console.log(`Part ${partConfig.part_id}: type=${partConfig.type}, positionY=${partConfig.positionY}, positionX=${partConfig.positionX}, positionZ=${partConfig.positionZ}, currentHeight=${currentHeight}`);
+                            
+                            if (partConfig.positionY !== undefined) {
+                                // Використовуємо абсолютну позицію Y з конфігурації
+                                // Додаємо половину висоти об'єкта для центрування
+                                var partHeight = 0;
+                                if (partConfig.height) {
+                                    partHeight = partConfig.height;
+                                } else if (partConfig.size && partConfig.size[1]) {
+                                    partHeight = partConfig.size[1];
+                                } else if (partConfig.radius) {
+                                    partHeight = partConfig.radius * 2;
+                                } else if (partConfig.tubeRadius) {
+                                    partHeight = partConfig.tubeRadius * 2;
+                                }
+                                mesh.position.y = partConfig.positionY + partHeight / 2;
+                                console.log(`  -> Абсолютна позиція Y: ${mesh.position.y} (positionY=${partConfig.positionY} + partHeight/2=${partHeight/2})`);
+                            } else if (partConfig.type === 'BoxGeometry' && partConfig.size) {
                                 // Куб/прямокутник: висота = size[1] (Y-розмір)
                                 mesh.position.y = currentHeight + partConfig.size[1] / 2;
                                 currentHeight += partConfig.size[1];
@@ -853,9 +871,29 @@
                                 currentHeight += 1;
                             }
 
+                            // Додаткові координати X, Z (якщо вказані)
+                            if (partConfig.positionX !== undefined) {
+                                mesh.position.x = partConfig.positionX;
+                                console.log(`  -> positionX: ${mesh.position.x}`);
+                            }
+                            if (partConfig.positionZ !== undefined) {
+                                mesh.position.z = partConfig.positionZ;
+                                console.log(`  -> positionZ: ${mesh.position.z}`);
+                            }
+
                             // Застосовуємо обертання, якщо вказане
                             if (partConfig.rotation) {
                                 mesh.rotation.set(...partConfig.rotation);
+                            }
+                            // Індивідуальні обертання по осях (якщо вказані окремо)
+                            if (partConfig.rotationX !== undefined) {
+                                mesh.rotation.x = partConfig.rotationX;
+                            }
+                            if (partConfig.rotationY !== undefined) {
+                                mesh.rotation.y = partConfig.rotationY;
+                            }
+                            if (partConfig.rotationZ !== undefined) {
+                                mesh.rotation.z = partConfig.rotationZ;
                             }
 
                             // Зберігаємо анімацію для частини
@@ -1571,10 +1609,27 @@
                                                 // Створюємо меш
                                                 mesh = new THREE.Mesh(geometry, material);
 
-                                                // Розміщуємо частину на потрібній висоті (стек-розміщення)
-                                                // Для всіх примітивів: mesh.position.y = currentHeight + половина_висоти
-                                                // currentHeight збільшується на повну висоту примітиву
-                                                if (partConfig.type === 'BoxGeometry' && partConfig.size) {
+                                                // Розміщуємо частину на потрібній висоті
+                                                // Варіант 1: Абсолютні координати (positionX, positionY, positionZ) - для складних форм
+                                                // Варіант 2: Стек-розміщення (автоматичне) - для простих вертикальних структур
+                                                console.log(`Part ${partConfig.part_id}: type=${partConfig.type}, positionY=${partConfig.positionY}, positionX=${partConfig.positionX}, positionZ=${partConfig.positionZ}, currentHeight=${currentHeight}`);
+                                                
+                                                if (partConfig.positionY !== undefined) {
+                                                    // Використовуємо абсолютну позицію Y з конфігурації
+                                                    // Додаємо половину висоти об'єкта для центрування
+                                                    var partHeight = 0;
+                                                    if (partConfig.height) {
+                                                        partHeight = partConfig.height;
+                                                    } else if (partConfig.size && partConfig.size[1]) {
+                                                        partHeight = partConfig.size[1];
+                                                    } else if (partConfig.radius) {
+                                                        partHeight = partConfig.radius * 2;
+                                                    } else if (partConfig.tubeRadius) {
+                                                        partHeight = partConfig.tubeRadius * 2;
+                                                    }
+                                                    mesh.position.y = partConfig.positionY + partHeight / 2;
+                                                    console.log(`  -> Абсолютна позиція Y: ${mesh.position.y} (positionY=${partConfig.positionY} + partHeight/2=${partHeight/2})`);
+                                                } else if (partConfig.type === 'BoxGeometry' && partConfig.size) {
                                                     // Куб/прямокутник: висота = size[1] (Y-розмір)
                                                     mesh.position.y = currentHeight + partConfig.size[1] / 2;
                                                     currentHeight += partConfig.size[1];
@@ -1600,9 +1655,29 @@
                                                     currentHeight += 1;
                                                 }
 
+                                                // Додаткові координати X, Z (якщо вказані)
+                                                if (partConfig.positionX !== undefined) {
+                                                    mesh.position.x = partConfig.positionX;
+                                                    console.log(`  -> positionX: ${mesh.position.x}`);
+                                                }
+                                                if (partConfig.positionZ !== undefined) {
+                                                    mesh.position.z = partConfig.positionZ;
+                                                    console.log(`  -> positionZ: ${mesh.position.z}`);
+                                                }
+
                                                 // Застосовуємо обертання, якщо вказане
                                                 if (partConfig.rotation) {
                                                     mesh.rotation.set(...partConfig.rotation);
+                                                }
+                                                // Індивідуальні обертання по осях (якщо вказані окремо)
+                                                if (partConfig.rotationX !== undefined) {
+                                                    mesh.rotation.x = partConfig.rotationX;
+                                                }
+                                                if (partConfig.rotationY !== undefined) {
+                                                    mesh.rotation.y = partConfig.rotationY;
+                                                }
+                                                if (partConfig.rotationZ !== undefined) {
+                                                    mesh.rotation.z = partConfig.rotationZ;
                                                 }
 
                                                 // Зберігаємо анімацію для частини
@@ -1721,18 +1796,24 @@
                 // Виконуємо перевірку тільки якщо контролер активний (видно камері)
                 if (controller && controller.parent && controller.parent.visible) {
                     let intersectedMarkerIndex = null;
-                    
+
                     mainContainer.traverse((object) => {
                         if (object.isMesh && !(object.userData && object.userData.isController)) {
                             if (detectCollisionCubes(object, controller)) {
                                 //bject.material.color.set('red');
-                                
+
                                 // Find which marker this object belongs to
-                                for (let i = 0; i < markerRoots.length; i++) {
-                                    if (markerRoots[i] && markerRoots[i].children.includes(object)) {
-                                        intersectedMarkerIndex = i;
-                                        break;
+                                // Для складних об'єктів (групи) потрібно підніматися вгору по ієрархії
+                                let parent = object.parent;
+                                while (parent) {
+                                    for (let i = 0; i < markerRoots.length; i++) {
+                                        if (markerRoots[i] === parent) {
+                                            intersectedMarkerIndex = i;
+                                            break;
+                                        }
                                     }
+                                    if (intersectedMarkerIndex !== null) break;
+                                    parent = parent.parent;
                                 }
                             }
                         }
@@ -1849,13 +1930,23 @@
                 if (box1World.intersectsBox(tipBoxLocal)) {
                     // Короткий спалах об'єкта (зміна кольору на білий)
                     // Не застосовуємо до альтернативного контенту - тільки до основного
-                    if (object1.material && !object1.userData.flashTimeout && !object1.userData.isAlternativeContent) {
+                    // Також перевіряємо батьківські об'єкти на isAlternativeContent
+                    let isAlternative = object1.userData.isAlternativeContent;
+                    let parent = object1.parent;
+                    while (parent && !isAlternative) {
+                        if (parent.userData.isAlternativeContent) {
+                            isAlternative = true;
+                        }
+                        parent = parent.parent;
+                    }
+                    
+                    if (object1.material && !object1.userData.flashTimeout && !isAlternative) {
                         var originalColor = object1.material.color.clone();
                         object1.material.color.set(0xffffff); // Білий спалах
-                        
+
                         // Зберігаємо оригінальний колір для відновлення
                         object1.userData.originalColor = originalColor;
-                        
+
                         // Повернення початкового кольору через 500 мс (синхронно з аудіо)
                         object1.userData.flashTimeout = setTimeout(function() {
                             if (object1.material && object1.userData.originalColor) {

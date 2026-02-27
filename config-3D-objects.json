@@ -1,8 +1,12 @@
 {
+   "description": "3D-моделі шахових фігур. Підтримка абсолютних координат (positionX/Y/Z) для складних форм.",
    "objects": [
       {
-         "object_id": 1,
-         "part": [          
+         "object_id": 2,
+         "name": "Rook",
+         "name_ua": "Тура (Замок)",
+         "description": "Тура у формі вежі з зубчастим завершенням. Зубці розташовані на одній висоті по колу",
+         "part": [
             {
                "part_id": 1,
                "name_ua": "Основа",
@@ -45,8 +49,75 @@
                "heightSegments": 16,
                "textureFile": "texture_blue.jpg",
                "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-            }    
-        ]
+            }
+         ]
+      },
+      {
+         "object_id": 1,
+         "name": "Knight",
+         "name_ua": "Кінь (Лицар)",
+         "description": "Фігура коня з головою та вухами. Голова нахилена вперед, вуха по боках",
+         "part": [
+            {
+               "part_id": 1,
+               "name_ua": "Основа (найширша)",
+               "type": "CylinderGeometry",
+               "radiusTop": 18,
+               "radiusBottom": 20,
+               "height": 6,
+               "radialSegments": 16,
+               "textureFile": "texture_green.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 2,
+               "name_ua": "Тіло (найдовший циліндр)",
+               "type": "CylinderGeometry",
+               "radiusTop": 11,
+               "radiusBottom": 14,
+               "height": 36,
+               "radialSegments": 16,
+               "textureFile": "texture_green.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 3,
+               "name_ua": "Комір (виражений)",
+               "type": "CylinderGeometry",
+               "radiusTop": 12,
+               "radiusBottom": 12,
+               "height": 5,
+               "radialSegments": 16,
+               "textureFile": "texture_green.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 4,
+               "name_ua": "Верхня частина (конус)",
+               "type": "ConeGeometry",
+               "radius": 10,
+               "height": 14,
+               "radialSegments": 16,
+               "textureFile": "texture_green.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 5,
+               "name_ua": "Вертикальна частина хреста",
+               "type": "BoxGeometry",
+               "size": [4, 14, 4],
+               "textureFile": "texture_green.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 6,
+               "name_ua": "Горизонтальна частина хреста",
+               "type": "BoxGeometry",
+               "size": [12, 4, 4],
+               "textureFile": "texture_green.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            }
+         ]
       }
    ]
 }
