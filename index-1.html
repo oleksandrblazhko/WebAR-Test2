@@ -1796,18 +1796,24 @@
                 // Виконуємо перевірку тільки якщо контролер активний (видно камері)
                 if (controller && controller.parent && controller.parent.visible) {
                     let intersectedMarkerIndex = null;
-                    
+
                     mainContainer.traverse((object) => {
                         if (object.isMesh && !(object.userData && object.userData.isController)) {
                             if (detectCollisionCubes(object, controller)) {
                                 //bject.material.color.set('red');
-                                
+
                                 // Find which marker this object belongs to
-                                for (let i = 0; i < markerRoots.length; i++) {
-                                    if (markerRoots[i] && markerRoots[i].children.includes(object)) {
-                                        intersectedMarkerIndex = i;
-                                        break;
+                                // Для складних об'єктів (групи) потрібно підніматися вгору по ієрархії
+                                let parent = object.parent;
+                                while (parent) {
+                                    for (let i = 0; i < markerRoots.length; i++) {
+                                        if (markerRoots[i] === parent) {
+                                            intersectedMarkerIndex = i;
+                                            break;
+                                        }
                                     }
+                                    if (intersectedMarkerIndex !== null) break;
+                                    parent = parent.parent;
                                 }
                             }
                         }
@@ -1924,13 +1930,23 @@
                 if (box1World.intersectsBox(tipBoxLocal)) {
                     // Короткий спалах об'єкта (зміна кольору на білий)
                     // Не застосовуємо до альтернативного контенту - тільки до основного
-                    if (object1.material && !object1.userData.flashTimeout && !object1.userData.isAlternativeContent) {
+                    // Також перевіряємо батьківські об'єкти на isAlternativeContent
+                    let isAlternative = object1.userData.isAlternativeContent;
+                    let parent = object1.parent;
+                    while (parent && !isAlternative) {
+                        if (parent.userData.isAlternativeContent) {
+                            isAlternative = true;
+                        }
+                        parent = parent.parent;
+                    }
+                    
+                    if (object1.material && !object1.userData.flashTimeout && !isAlternative) {
                         var originalColor = object1.material.color.clone();
                         object1.material.color.set(0xffffff); // Білий спалах
-                        
+
                         // Зберігаємо оригінальний колір для відновлення
                         object1.userData.originalColor = originalColor;
-                        
+
                         // Повернення початкового кольору через 500 мс (синхронно з аудіо)
                         object1.userData.flashTimeout = setTimeout(function() {
                             if (object1.material && object1.userData.originalColor) {

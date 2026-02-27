@@ -118,7 +118,21 @@
       "target": 2,
       "matrixSize": 35,
       "contentType": "multiplex-3D",
-      "multiplex3D": 1
+      "multiplex3D": 1,
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "CylinderGeometry",
+          "radiusTop": 9,
+          "radiusBottom": 9,
+          "height": 32,
+          "radialSegments": 16,
+          "textureFile": "texture_green.jpg",
+          "animation": { "type": "rotation", "axis": "z", "speed": 0.015 }
+        }
+      },
+      "audioFile": "wrong_answer.mp3",
+      "playOnControllerIntersect": true
     },
     {
       "id": 7,
@@ -126,7 +140,21 @@
       "target": 3,
       "matrixSize": 35,
       "contentType": "multiplex-3D",
-      "multiplex3D": 2
+      "multiplex3D": 2,
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "CylinderGeometry",
+          "radiusTop": 9,
+          "radiusBottom": 9,
+          "height": 32,
+          "radialSegments": 16,
+          "textureFile": "texture_green.jpg",
+          "animation": { "type": "rotation", "axis": "z", "speed": 0.015 }
+        }
+      },
+      "audioFile": "wrong_answer.mp3",
+      "playOnControllerIntersect": true
     }
   ]
 }
