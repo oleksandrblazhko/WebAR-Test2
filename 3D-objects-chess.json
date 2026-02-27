@@ -56,8 +56,8 @@
          "object_id": 2,
          "name": "Rook",
          "name_ua": "Тура (Замок)",
-         "description": "Тура у формі вежі з зубчастим завершенням. Складається з основи, тіла та прямокутних зубців",
-         "part": [
+         "description": "Тура у формі вежі з зубчастим завершенням. Складається з основи, тіла та прямокутних зубців. Зубці розташовані на одній висоті по колу (використовується positionY для відносного розміщення)",
+           "part": [
             {
                "part_id": 1,
                "name_ua": "Основа",
@@ -95,7 +95,10 @@
                "part_id": 4,
                "name_ua": "Зубець 1 (передній)",
                "type": "BoxGeometry",
-               "size": [8, 10, 6],
+               "size": [6, 8, 5],
+               "positionY": 36,
+               "positionX": 0,
+               "positionZ": 10,
                "textureFile": "texture_red.jpg",
                "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
             },
@@ -103,36 +106,42 @@
                "part_id": 5,
                "name_ua": "Зубець 2 (задній)",
                "type": "BoxGeometry",
-               "size": [8, 10, 6],
+               "size": [6, 8, 5],
+               "positionY": 36,
+               "positionX": 0,
+               "positionZ": -10,
                "textureFile": "texture_red.jpg",
-               "rotationZ": 3.14159,
                "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
             },
             {
                "part_id": 6,
                "name_ua": "Зубець 3 (лівий)",
                "type": "BoxGeometry",
-               "size": [6, 10, 8],
+               "size": [5, 8, 6],
+               "positionY": 36,
+               "positionX": -10,
+               "positionZ": 0,
                "textureFile": "texture_red.jpg",
-               "rotationY": 1.5708,
                "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
             },
             {
                "part_id": 7,
                "name_ua": "Зубець 4 (правий)",
                "type": "BoxGeometry",
-               "size": [6, 10, 8],
+               "size": [5, 8, 6],
+               "positionY": 36,
+               "positionX": 10,
+               "positionZ": 0,
                "textureFile": "texture_red.jpg",
-               "rotationY": -1.5708,
                "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
             }
-         ]
+         ]      
       },
       {
          "object_id": 3,
          "name": "Knight",
          "name_ua": "Кінь (Лицар)",
-         "description": "Найскладніша фігура у формі голови коня. Спрощена модель з циліндрів та конусів",
+         "description": "Найскладніша фігура у формі голови коня. Спрощена модель з циліндрів та конусів. Голова зміщена вперед і нахилена, вуха розташовані по боках голови",
          "part": [
             {
                "part_id": 1,
@@ -172,8 +181,11 @@
                "name_ua": "Голова коня (витягнутий конус)",
                "type": "ConeGeometry",
                "radius": 7,
-               "height": 14,
+               "height": 16,
                "radialSegments": 16,
+               "positionY": 51,
+               "positionZ": 10,
+               "rotationX": -1.0472,
                "textureFile": "texture_green.jpg",
                "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
             },
@@ -181,9 +193,27 @@
                "part_id": 5,
                "name_ua": "Вуха (малі конуси)",
                "type": "ConeGeometry",
-               "radius": 3,
-               "height": 6,
+               "radius": 2.5,
+               "height": 5,
                "radialSegments": 8,
+               "positionY": 56,
+               "positionX": -3,
+               "positionZ": 6,
+               "rotationX": -0.5236,
+               "textureFile": "texture_green.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 6,
+               "name_ua": "Вуха (малі конуси) - праве",
+               "type": "ConeGeometry",
+               "radius": 2.5,
+               "height": 5,
+               "radialSegments": 8,
+               "positionY": 56,
+               "positionX": 3,
+               "positionZ": 6,
+               "rotationX": -0.5236,
                "textureFile": "texture_green.jpg",
                "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
             }

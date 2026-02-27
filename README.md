@@ -561,6 +561,54 @@
           "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
         }
       ]
+    },
+    {
+      "object_id": 2,
+      "name": "Rook",
+      "part": [
+        {
+          "part_id": 1,
+          "type": "CylinderGeometry",
+          "radiusTop": 14,
+          "radiusBottom": 16,
+          "height": 5,
+          "textureFile": "texture_red.jpg"
+        },
+        {
+          "part_id": 2,
+          "type": "CylinderGeometry",
+          "radiusTop": 11,
+          "radiusBottom": 13,
+          "height": 28,
+          "textureFile": "texture_red.jpg"
+        },
+        {
+          "part_id": 3,
+          "type": "CylinderGeometry",
+          "radiusTop": 12,
+          "radiusBottom": 12,
+          "height": 8,
+          "textureFile": "texture_red.jpg"
+        },
+        {
+          "part_id": 4,
+          "type": "BoxGeometry",
+          "size": [6, 8, 5],
+          "positionY": 36,
+          "positionX": 0,
+          "positionZ": 7,
+          "textureFile": "texture_red.jpg"
+        },
+        {
+          "part_id": 5,
+          "type": "BoxGeometry",
+          "size": [6, 8, 5],
+          "positionY": 36,
+          "positionX": 0,
+          "positionZ": -7,
+          "textureFile": "texture_red.jpg"
+        }
+      ]
     }
   ]
 }
@@ -580,6 +628,31 @@
 - ✅ Частини розміщуються щільно одна до одної без проміжків
 - ✅ Анімація застосовується незалежно до кожної частини
 - ✅ Порядок розміщення визначається `part_id` (від 1 до N)
+- ✅ **Нове:** Підтримка абсолютних координат `positionX`, `positionY`, `positionZ` для складних форм (зубці, декорації)
+
+### Абсолютне розміщення (positionX, positionY, positionZ):
+Для складних об'єктів, де частини мають розташовуватися не по вертикалі, а в просторі (наприклад, зубці тури по колу), використовуються поля:
+- `positionY` - абсолютна висота по осі Y (замість стек-розміщення)
+- `positionX` - зміщення по осі X
+- `positionZ` - зміщення по осі Z
+
+**Приклад:** Зубці тури розташовані на одній висоті (`positionY: 36`) по колу з радіусом 7:
+- Зубець 1 (передній): `positionX: 0, positionZ: 7`
+- Зубець 2 (задній): `positionX: 0, positionZ: -7`
+- Зубець 3 (лівий): `positionX: -7, positionZ: 0`
+- Зубець 4 (правий): `positionX: 7, positionZ: 0`
+
+### Індивідуальне обертання (rotationX, rotationY, rotationZ):
+Також підтримується індивідуальне обертання по осях для кожної частини:
+```json
+{
+  "part_id": 5,
+  "type": "BoxGeometry",
+  "size": [6, 8, 5],
+  "rotationY": 1.5708,
+  "rotationZ": 3.14159
+}
+```
 
 ### Приклад використання:
 ```

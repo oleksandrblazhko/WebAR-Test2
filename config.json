@@ -119,6 +119,14 @@
       "matrixSize": 35,
       "contentType": "multiplex-3D",
       "multiplex3D": 1
+    },
+    {
+      "id": 7,
+      "type": "barcode",
+      "target": 3,
+      "matrixSize": 35,
+      "contentType": "multiplex-3D",
+      "multiplex3D": 2
     }
   ]
 }
