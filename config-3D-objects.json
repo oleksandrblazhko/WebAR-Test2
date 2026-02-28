@@ -56,66 +56,128 @@
          "object_id": 1,
          "name": "Knight",
          "name_ua": "Кінь (Лицар)",
-         "description": "Фігура коня з головою та вухами. Голова нахилена вперед, вуха по боках",
+         "description": "Фігура коня з головою та вухами. Голова нахилена вперед, вуха по боках. Модель відповідає силуету шахового коня",
          "part": [
             {
                "part_id": 1,
-               "name_ua": "Основа (найширша)",
+               "name_ua": "Основа",
                "type": "CylinderGeometry",
-               "radiusTop": 18,
-               "radiusBottom": 20,
-               "height": 6,
+               "radiusTop": 14,
+               "radiusBottom": 16,
+               "height": 5,
                "radialSegments": 16,
-               "textureFile": "texture_green.jpg",
-               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+               "textureFile": "texture_green.jpg"
+
             },
             {
                "part_id": 2,
-               "name_ua": "Тіло (найдовший циліндр)",
+               "name_ua": "Тіло (широкий циліндр)",
                "type": "CylinderGeometry",
-               "radiusTop": 11,
-               "radiusBottom": 14,
-               "height": 36,
+               "radiusTop": 10,
+               "radiusBottom": 12,
+               "height": 22,
                "radialSegments": 16,
-               "textureFile": "texture_green.jpg",
-               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+               "textureFile": "texture_green.jpg"
+
             },
             {
                "part_id": 3,
-               "name_ua": "Комір (виражений)",
+               "name_ua": "Шия коня (конус)",
                "type": "CylinderGeometry",
-               "radiusTop": 12,
-               "radiusBottom": 12,
-               "height": 5,
+               "radiusTop": 7,
+               "radiusBottom": 10,
+               "height": 20,
                "radialSegments": 16,
-               "textureFile": "texture_green.jpg",
-               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+               "textureFile": "texture_green.jpg"
             },
             {
                "part_id": 4,
-               "name_ua": "Верхня частина (конус)",
-               "type": "ConeGeometry",
-               "radius": 10,
-               "height": 14,
-               "radialSegments": 16,
-               "textureFile": "texture_green.jpg",
-               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+               "name_ua": "Задня частина голови (грива)",
+               "type": "CylinderGeometry",
+               "radiusTop": 5,
+               "radiusBottom": 7,
+               "height": 10,
+               "radialSegments": 8,
+               "positionY": 48,
+               "positionZ": -3,
+               "rotationX": -0.7854,
+               "textureFile": "texture_green.jpg"
             },
             {
                "part_id": 5,
-               "name_ua": "Вертикальна частина хреста",
-               "type": "BoxGeometry",
-               "size": [4, 14, 4],
-               "textureFile": "texture_green.jpg",
-               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+               "name_ua": "Голова коня (основа)",
+               "type": "CylinderGeometry",
+               "radiusTop": 5,
+               "radiusBottom": 7,
+               "height": 14,
+               "radialSegments": 8,
+               "positionY": 50,
+               "positionZ": 8,
+               "rotationX": -1.0472,
+               "textureFile": "texture_green.jpg"
             },
             {
                "part_id": 6,
-               "name_ua": "Горизонтальна частина хреста",
-               "type": "BoxGeometry",
-               "size": [12, 4, 4],
-               "textureFile": "texture_green.jpg",
-               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+               "name_ua": "Морда коня (витягнута)",
+               "type": "CylinderGeometry",
+               "radiusTop": 3,
+               "radiusBottom": 5,
+               "height": 10,
+               "radialSegments": 8,
+               "positionY": 56,
+               "positionZ": 16,
+               "rotationX": -1.0472,
+               "textureFile": "texture_green.jpg"
+            },
+            {
+               "part_id": 7,
+               "name_ua": "Ніс (малий конус)",
+               "type": "ConeGeometry",
+               "radius": 3,
+               "height": 4,
+               "radialSegments": 8,
+               "positionY": 60,
+               "positionZ": 22,
+               "rotationX": -1.0472,
+               "textureFile": "texture_green.jpg"
+            },
+            {
+               "part_id": 8,
+               "name_ua": "Вуха (малі конуси) - ліве",
+               "type": "ConeGeometry",
+               "radius": 3,
+               "height": 6,
+               "radialSegments": 8,
+               "positionY": 62,
+               "positionX": -4,
+               "positionZ": 2,
+               "rotationX": -0.5236,
+               "textureFile": "texture_green.jpg"
+            },
+            {
+               "part_id": 9,
+               "name_ua": "Вуха (малі конуси) - праве",
+               "type": "ConeGeometry",
+               "radius": 3,
+               "height": 6,
+               "radialSegments": 8,
+               "positionY": 62,
+               "positionX": 4,
+               "positionZ": 2,
+               "rotationX": -0.5236,
+               "textureFile": "texture_green.jpg"
+            },
+            {
+               "part_id": 10,
+               "name_ua": "Чуб (конус на вершині)",
+               "type": "ConeGeometry",
+               "radius": 2,
+               "height": 5,
+               "radialSegments": 8,
+               "positionY": 65,
+               "positionZ": 0,
+               "rotationX": -0.5236,
+               "textureFile": "texture_green.jpg"
             }
          ]
       }
