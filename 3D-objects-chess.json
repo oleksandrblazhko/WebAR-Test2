@@ -178,9 +178,10 @@
             },
             {
                "part_id": 4,
-               "name_ua": "Голова коня (витягнутий конус)",
-               "type": "ConeGeometry",
-               "radius": 7,
+               "name_ua": "Голова коня (тупий конус)",
+               "type": "CylinderGeometry",
+               "radiusTop": 3,
+               "radiusBottom": 7,
                "height": 16,
                "radialSegments": 16,
                "positionY": 51,
