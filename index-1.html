@@ -923,16 +923,6 @@
                     // Hide all current content (main content)
                     markerRoot.children.forEach(child => {
                         if (!(child.userData && child.userData.isController) && !child.userData.isAlternativeContent) {
-                            // --- ОЧИСТКА СПАЛАХУ: відновлюємо колір перед приховуванням ---
-                            if (child.userData.flashTimeout) {
-                                clearTimeout(child.userData.flashTimeout);
-                                child.userData.flashTimeout = null;
-                            }
-                            if (child.userData.originalColor && child.material) {
-                                child.material.color.copy(child.userData.originalColor);
-                            }
-                            // ----------------------------------------------------------------
-                            
                             child.visible = false;
                         }
                     });
@@ -974,16 +964,6 @@
                     markerRoot.children.forEach(child => {
                         if (!(child.userData && child.userData.isController)) {
                             if (child.userData.isAlternativeContent) {
-                                // --- ОЧИСТКА СПАЛАХУ: для альтернативного контенту ---
-                                if (child.userData.flashTimeout) {
-                                    clearTimeout(child.userData.flashTimeout);
-                                    child.userData.flashTimeout = null;
-                                }
-                                if (child.userData.originalColor && child.material) {
-                                    child.material.color.copy(child.userData.originalColor);
-                                }
-                                // ------------------------------------------------------------
-                                
                                 child.visible = false;
                             } else {
                                 child.visible = true;
@@ -1926,33 +1906,22 @@
                 // Transform tip box to world space (will become world AABB)
                 tipBoxLocal.applyMatrix4(object2.matrixWorld);
 
-                // --- ВІЗУАЛЬНИЙ ВІДГУК: спалах при дотику ---
+                // --- ВІЗУАЛЬНИЙ ВІДГУК: спалах кінчика контролера при дотику ---
                 if (box1World.intersectsBox(tipBoxLocal)) {
-                    // Короткий спалах об'єкта (зміна кольору на білий)
-                    // Не застосовуємо до альтернативного контенту - тільки до основного
-                    // Також перевіряємо батьківські об'єкти на isAlternativeContent
-                    let isAlternative = object1.userData.isAlternativeContent;
-                    let parent = object1.parent;
-                    while (parent && !isAlternative) {
-                        if (parent.userData.isAlternativeContent) {
-                            isAlternative = true;
-                        }
-                        parent = parent.parent;
-                    }
-                    
-                    if (object1.material && !object1.userData.flashTimeout && !isAlternative) {
-                        var originalColor = object1.material.color.clone();
-                        object1.material.color.set(0xffffff); // Білий спалах
+                    // Короткий спалах кінчика контролера (зміна кольору на білий)
+                    if (object2.material && !object2.userData.flashTimeout) {
+                        var originalColor = object2.material.color.clone();
+                        object2.material.color.set(0xffffff); // Білий спалах
 
                         // Зберігаємо оригінальний колір для відновлення
-                        object1.userData.originalColor = originalColor;
+                        object2.userData.originalColor = originalColor;
 
                         // Повернення початкового кольору через 500 мс (синхронно з аудіо)
-                        object1.userData.flashTimeout = setTimeout(function() {
-                            if (object1.material && object1.userData.originalColor) {
-                                object1.material.color.copy(object1.userData.originalColor);
+                        object2.userData.flashTimeout = setTimeout(function() {
+                            if (object2.material && object2.userData.originalColor) {
+                                object2.material.color.copy(object2.userData.originalColor);
                             }
-                            object1.userData.flashTimeout = null;
+                            object2.userData.flashTimeout = null;
                         }, 500);
                     }
                 }
