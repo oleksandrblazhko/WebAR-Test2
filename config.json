@@ -32,12 +32,12 @@
         "primitive": {
           "type": "BoxGeometry",
           "size": [32, 32, 32],
-          "textureFile": "texture_green.jpg",
+          "textureFile": "peshka.jpg",
           "position": [0, 16, 0],
           "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
         }
       },
-      "audioFile": "wrong_answer.mp3",
+      "audioFile": "peshka.mp3",
       "playOnControllerIntersect": true
     },
     {
