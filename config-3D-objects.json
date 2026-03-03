@@ -1,11 +1,11 @@
 {
-   "description": "3D-моделі шахових фігур. Підтримка абсолютних координат (positionX/Y/Z) для складних форм.",
+   "description": "3D-моделі шахових фігур у стилі Staunton. Кожна фігура складається з множини 3D-примітивів: BoxGeometry, SphereGeometry, CylinderGeometry, ConeGeometry, TorusGeometry. Фігури побудовані за принципом: широка основа + звужене тіло + характерна верхівка.",
    "objects": [
       {
-         "object_id": 2,
-         "name": "Rook",
-         "name_ua": "Тура (Замок)",
-         "description": "Тура у формі вежі з зубчастим завершенням. Зубці розташовані на одній висоті по колу",
+         "object_id": 1,
+         "name": "Pawn",
+         "name_ua": "Пішак",
+         "description": "Найменша шахова фігура з простою геометрією: основа + тіло + голова-куля",
          "part": [
             {
                "part_id": 1,
@@ -53,10 +53,95 @@
          ]
       },
       {
-         "object_id": 1,
+         "object_id": 2,
+         "name": "Rook",
+         "name_ua": "Тура (Замок)",
+         "description": "Тура у формі вежі з зубчастим завершенням. Складається з основи, тіла та прямокутних зубців. Зубці розташовані на одній висоті по колу (використовується positionY для відносного розміщення)",
+           "part": [
+            {
+               "part_id": 1,
+               "name_ua": "Основа",
+               "type": "CylinderGeometry",
+               "radiusTop": 14,
+               "radiusBottom": 16,
+               "height": 5,
+               "radialSegments": 16,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 2,
+               "name_ua": "Тіло (циліндр)",
+               "type": "CylinderGeometry",
+               "radiusTop": 11,
+               "radiusBottom": 13,
+               "height": 28,
+               "radialSegments": 16,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 3,
+               "name_ua": "Верхня платформа",
+               "type": "CylinderGeometry",
+               "radiusTop": 12,
+               "radiusBottom": 12,
+               "height": 8,
+               "radialSegments": 16,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 4,
+               "name_ua": "Зубець 1 (передній)",
+               "type": "BoxGeometry",
+               "size": [6, 8, 5],
+               "positionY": 36,
+               "positionX": 0,
+               "positionZ": 10,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 5,
+               "name_ua": "Зубець 2 (задній)",
+               "type": "BoxGeometry",
+               "size": [6, 8, 5],
+               "positionY": 36,
+               "positionX": 0,
+               "positionZ": -10,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 6,
+               "name_ua": "Зубець 3 (лівий)",
+               "type": "BoxGeometry",
+               "size": [5, 8, 6],
+               "positionY": 36,
+               "positionX": -10,
+               "positionZ": 0,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 7,
+               "name_ua": "Зубець 4 (правий)",
+               "type": "BoxGeometry",
+               "size": [5, 8, 6],
+               "positionY": 36,
+               "positionX": 10,
+               "positionZ": 0,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            }
+         ]      
+      },
+      {
+         "object_id": 3,
          "name": "Knight",
          "name_ua": "Кінь (Лицар)",
-         "description": "Фігура коня з головою та вухами. Голова нахилена вперед, вуха по боках. Модель відповідає силуету шахового коня",
+         "description": "Найскладніша фігура у формі голови коня. Спрощена модель з циліндрів та конусів. Голова зміщена вперед і нахилена, вуха розташовані по боках голови",
          "part": [
             {
                "part_id": 1,
@@ -66,8 +151,8 @@
                "radiusBottom": 16,
                "height": 5,
                "radialSegments": 16,
-               "textureFile": "texture_green.jpg"
-
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
             },
             {
                "part_id": 2,
@@ -77,107 +162,261 @@
                "radiusBottom": 12,
                "height": 22,
                "radialSegments": 16,
-               "textureFile": "texture_green.jpg"
-
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
             },
             {
                "part_id": 3,
                "name_ua": "Шия коня (конус)",
                "type": "CylinderGeometry",
-               "radiusTop": 7,
+               "radiusTop": 8,
                "radiusBottom": 10,
-               "height": 20,
+               "height": 18,
                "radialSegments": 16,
-               "textureFile": "texture_green.jpg"
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
             },
             {
                "part_id": 4,
-               "name_ua": "Задня частина голови (грива)",
+               "name_ua": "Голова коня (тупий конус)",
                "type": "CylinderGeometry",
-               "radiusTop": 5,
+               "radiusTop": 3,
                "radiusBottom": 7,
-               "height": 10,
-               "radialSegments": 8,
-               "positionY": 48,
-               "positionZ": -3,
-               "rotationX": -0.7854,
-               "textureFile": "texture_green.jpg"
+               "height": 16,
+               "radialSegments": 16,
+               "positionY": 51,
+               "positionZ": 10,
+               "rotationX": -1.0472,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
             },
             {
                "part_id": 5,
-               "name_ua": "Голова коня (основа)",
-               "type": "CylinderGeometry",
-               "radiusTop": 5,
-               "radiusBottom": 7,
-               "height": 14,
+               "name_ua": "Вуха (малі конуси)",
+               "type": "ConeGeometry",
+               "radius": 2.5,
+               "height": 5,
                "radialSegments": 8,
-               "positionY": 50,
-               "positionZ": 8,
-               "rotationX": -1.0472,
-               "textureFile": "texture_green.jpg"
+               "positionY": 56,
+               "positionX": -3,
+               "positionZ": 6,
+               "rotationX": -0.5236,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
             },
             {
                "part_id": 6,
-               "name_ua": "Морда коня (витягнута)",
-               "type": "CylinderGeometry",
-               "radiusTop": 3,
-               "radiusBottom": 5,
-               "height": 10,
-               "radialSegments": 8,
-               "positionY": 56,
-               "positionZ": 16,
-               "rotationX": -1.0472,
-               "textureFile": "texture_green.jpg"
-            },
-            {
-               "part_id": 7,
-               "name_ua": "Ніс (малий конус)",
-               "type": "ConeGeometry",
-               "radius": 3,
-               "height": 4,
-               "radialSegments": 8,
-               "positionY": 60,
-               "positionZ": 22,
-               "rotationX": -1.0472,
-               "textureFile": "texture_green.jpg"
-            },
-            {
-               "part_id": 8,
-               "name_ua": "Вуха (малі конуси) - ліве",
-               "type": "ConeGeometry",
-               "radius": 3,
-               "height": 6,
-               "radialSegments": 8,
-               "positionY": 62,
-               "positionX": -4,
-               "positionZ": 2,
-               "rotationX": -0.5236,
-               "textureFile": "texture_green.jpg"
-            },
-            {
-               "part_id": 9,
                "name_ua": "Вуха (малі конуси) - праве",
                "type": "ConeGeometry",
-               "radius": 3,
-               "height": 6,
-               "radialSegments": 8,
-               "positionY": 62,
-               "positionX": 4,
-               "positionZ": 2,
-               "rotationX": -0.5236,
-               "textureFile": "texture_green.jpg"
-            },
-            {
-               "part_id": 10,
-               "name_ua": "Чуб (конус на вершині)",
-               "type": "ConeGeometry",
-               "radius": 2,
+               "radius": 2.5,
                "height": 5,
                "radialSegments": 8,
-               "positionY": 65,
-               "positionZ": 0,
+               "positionY": 56,
+               "positionX": 3,
+               "positionZ": 6,
                "rotationX": -0.5236,
-               "textureFile": "texture_green.jpg"
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            }
+         ]
+      },
+      {
+         "object_id": 4,
+         "name": "Bishop",
+         "name_ua": "Слон (Офіцер)",
+         "description": "Фігура з митрою (єпископською шапкою) з глибоким розрізом. Використовуємо конус для мітри",
+         "part": [
+            {
+               "part_id": 1,
+               "name_ua": "Основа",
+               "type": "CylinderGeometry",
+               "radiusTop": 14,
+               "radiusBottom": 16,
+               "height": 5,
+               "radialSegments": 16,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 2,
+               "name_ua": "Тіло (звужений циліндр)",
+               "type": "CylinderGeometry",
+               "radiusTop": 8,
+               "radiusBottom": 11,
+               "height": 26,
+               "radialSegments": 16,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 3,
+               "name_ua": "Комір",
+               "type": "CylinderGeometry",
+               "radiusTop": 9,
+               "radiusBottom": 9,
+               "height": 4,
+               "radialSegments": 16,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 4,
+               "name_ua": "Митра (конус з розрізом)",
+               "type": "ConeGeometry",
+               "radius": 10,
+               "height": 18,
+               "radialSegments": 16,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 5,
+               "name_ua": "Кулька на вершині",
+               "type": "SphereGeometry",
+               "radius": 4,
+               "widthSegments": 16,
+               "heightSegments": 16,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            }
+         ]
+      },
+      {
+         "object_id": 5,
+         "name": "Queen",
+         "name_ua": "Ферзь (Королева)",
+         "description": "Друга за висотою фігура з короною, що складається з кульок. Друга за висотою після короля",
+         "part": [
+            {
+               "part_id": 1,
+               "name_ua": "Основа (широка)",
+               "type": "CylinderGeometry",
+               "radiusTop": 16,
+               "radiusBottom": 18,
+               "height": 6,
+               "radialSegments": 16,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 2,
+               "name_ua": "Тіло (довгий циліндр)",
+               "type": "CylinderGeometry",
+               "radiusTop": 10,
+               "radiusBottom": 13,
+               "height": 32,
+               "radialSegments": 16,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 3,
+               "name_ua": "Комір",
+               "type": "CylinderGeometry",
+               "radiusTop": 11,
+               "radiusBottom": 11,
+               "height": 5,
+               "radialSegments": 16,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 4,
+               "name_ua": "Корона (сфера)",
+               "type": "SphereGeometry",
+               "radius": 9,
+               "widthSegments": 16,
+               "heightSegments": 16,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 5,
+               "name_ua": "Кулька на короні",
+               "type": "SphereGeometry",
+               "radius": 5,
+               "widthSegments": 16,
+               "heightSegments": 16,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 6,
+               "name_ua": "Декоративне кільце (тор)",
+               "type": "TorusGeometry",
+               "radius": 6,
+               "tube": 2,
+               "radialSegments": 16,
+               "tubularSegments": 32,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            }
+         ]
+      },
+      {
+         "object_id": 6,
+         "name": "King",
+         "name_ua": "Король",
+         "description": "Найвища фігура з хрестом на вершині. Має найширшу основу для стабільності",
+         "part": [
+            {
+               "part_id": 1,
+               "name_ua": "Основа (найширша)",
+               "type": "CylinderGeometry",
+               "radiusTop": 18,
+               "radiusBottom": 20,
+               "height": 6,
+               "radialSegments": 16,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 2,
+               "name_ua": "Тіло (найдовший циліндр)",
+               "type": "CylinderGeometry",
+               "radiusTop": 11,
+               "radiusBottom": 14,
+               "height": 36,
+               "radialSegments": 16,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 3,
+               "name_ua": "Комір (виражений)",
+               "type": "CylinderGeometry",
+               "radiusTop": 12,
+               "radiusBottom": 12,
+               "height": 5,
+               "radialSegments": 16,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 4,
+               "name_ua": "Верхня частина (конус)",
+               "type": "ConeGeometry",
+               "radius": 10,
+               "height": 14,
+               "radialSegments": 16,
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 5,
+               "name_ua": "Вертикальна частина хреста",
+               "type": "BoxGeometry",
+               "size": [4, 14, 4],
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+            },
+            {
+               "part_id": 6,
+               "name_ua": "Горизонтальна частина хреста",
+               "type": "BoxGeometry",
+               "size": [12, 4, 4],
+               "textureFile": "texture_blue.jpg",
+               "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
             }
          ]
       }

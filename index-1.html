@@ -1700,6 +1700,8 @@
                                 new THREE.MeshBasicMaterial({ color: new THREE.Color(controllerConfig.tipColor) })
                             );
                             controllerTip.userData.isController = true;
+                            // Зберігаємо touchColor з конфігурації для використання при зіткненні
+                            controllerTip.userData.touchColor = controllerConfig.touchColor || '#ffffff';
 
                             // Arrange so that the tip sits at the negative Z end of the combined shape
                             const half = totalLength / 2;
@@ -1908,10 +1910,12 @@
 
                 // --- ВІЗУАЛЬНИЙ ВІДГУК: спалах кінчика контролера при дотику ---
                 if (box1World.intersectsBox(tipBoxLocal)) {
-                    // Короткий спалах кінчика контролера (зміна кольору на білий)
+                    // Короткий спалах кінчика контролера (зміна кольору на touchColor з конфігурації)
                     if (object2.material && !object2.userData.flashTimeout) {
                         var originalColor = object2.material.color.clone();
-                        object2.material.color.set(0xffffff); // Білий спалах
+                        // Використовуємо touchColor з конфігурації, за замовчуванням білий
+                        var touchColor = object2.userData.touchColor || '#ffffff';
+                        object2.material.color.set(touchColor);
 
                         // Зберігаємо оригінальний колір для відновлення
                         object2.userData.originalColor = originalColor;
@@ -1926,7 +1930,7 @@
                     }
                 }
                 // ------------------------------------------------
-                
+
                 return box1World.intersectsBox(tipBoxLocal);
             };
 

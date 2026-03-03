@@ -66,7 +66,7 @@
                "radiusBottom": 16,
                "height": 5,
                "radialSegments": 16,
-               "textureFile": "texture_red.jpg",
+               "textureFile": "texture_blue.jpg",
                "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
             },
             {
@@ -77,7 +77,7 @@
                "radiusBottom": 13,
                "height": 28,
                "radialSegments": 16,
-               "textureFile": "texture_red.jpg",
+               "textureFile": "texture_blue.jpg",
                "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
             },
             {
@@ -88,7 +88,7 @@
                "radiusBottom": 12,
                "height": 8,
                "radialSegments": 16,
-               "textureFile": "texture_red.jpg",
+               "textureFile": "texture_blue.jpg",
                "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
             },
             {
@@ -99,7 +99,7 @@
                "positionY": 36,
                "positionX": 0,
                "positionZ": 10,
-               "textureFile": "texture_red.jpg",
+               "textureFile": "texture_blue.jpg",
                "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
             },
             {
@@ -110,7 +110,7 @@
                "positionY": 36,
                "positionX": 0,
                "positionZ": -10,
-               "textureFile": "texture_red.jpg",
+               "textureFile": "texture_blue.jpg",
                "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
             },
             {
@@ -121,7 +121,7 @@
                "positionY": 36,
                "positionX": -10,
                "positionZ": 0,
-               "textureFile": "texture_red.jpg",
+               "textureFile": "texture_blue.jpg",
                "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
             },
             {
@@ -132,7 +132,7 @@
                "positionY": 36,
                "positionX": 10,
                "positionZ": 0,
-               "textureFile": "texture_red.jpg",
+               "textureFile": "texture_blue.jpg",
                "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
             }
          ]      
