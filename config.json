@@ -28,7 +28,7 @@
       "contentType": "multiplex-3D",
       "multiplex3D": 1,
       "alternativeContent": {
-        "contentType": "primitive",
+         "contentType": "primitive",
         "primitive": {
           "type": "BoxGeometry",
           "size": [32, 32, 32],
@@ -139,6 +139,126 @@
       },
       "audioFile": "wrong_answer.mp3",
       "playOnControllerIntersect": true
-    }
+    },
+    {
+      "id": 8,
+      "type": "barcode",
+      "target": 9,
+      "matrixSize": 35,
+      "contentType": "multiplex-3D",
+      "multiplex3D": 7,
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [32, 32, 32],
+          "textureFile": "texture_green.jpg",
+          "position": [0, 16, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+        }
+      },
+      "audioFile": "wrong_answer.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 9,
+      "type": "barcode",
+      "target": 10,
+      "matrixSize": 35,
+      "contentType": "multiplex-3D",
+      "multiplex3D": 8,
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [32, 32, 32],
+          "textureFile": "texture_green.jpg",
+          "position": [0, 16, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+        }
+      },
+      "audioFile": "wrong_answer.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 10,
+      "type": "barcode",
+      "target": 11,
+      "matrixSize": 35,
+      "contentType": "multiplex-3D",
+      "multiplex3D": 9,
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [32, 32, 32],
+          "textureFile": "texture_green.jpg",
+          "position": [0, 16, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+        }
+      },
+      "audioFile": "wrong_answer.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 11,
+      "type": "barcode",
+      "target": 12,
+      "matrixSize": 35,
+      "contentType": "multiplex-3D",
+      "multiplex3D": 10,
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [32, 32, 32],
+          "textureFile": "texture_green.jpg",
+          "position": [0, 16, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+        }
+      },
+      "audioFile": "wrong_answer.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 12,
+      "type": "barcode",
+      "target": 13,
+      "matrixSize": 35,
+      "contentType": "multiplex-3D",
+      "multiplex3D": 11,
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [32, 32, 32],
+          "textureFile": "texture_green.jpg",
+          "position": [0, 16, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+        }
+      },
+      "audioFile": "wrong_answer.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 13,
+      "type": "barcode",
+      "target": 26,
+      "matrixSize": 35,
+      "contentType": "multiplex-3D",
+      "multiplex3D": 12,
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [32, 32, 32],
+          "textureFile": "texture_green.jpg",
+          "position": [0, 16, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+        }
+      },
+      "audioFile": "wrong_answer.mp3",
+      "playOnControllerIntersect": true
+    }    
   ]
 }
