@@ -31,9 +31,9 @@
          "contentType": "primitive",
         "primitive": {
           "type": "BoxGeometry",
-          "size": [32, 32, 32],
+          "size": [50, 5, 50],
           "textureFile": "peshka.jpg",
-          "position": [0, 16, 0],
+          "position": [0, 0, 0],
           "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
         }
       },
@@ -51,13 +51,13 @@
         "contentType": "primitive",
         "primitive": {
           "type": "BoxGeometry",
-          "size": [32, 32, 32],
-          "textureFile": "texture_green.jpg",
-          "position": [0, 16, 0],
+          "size": [50, 5, 50],
+          "textureFile": "tura.jpg",
+          "position": [0, 0, 0],
           "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
         }
       },
-      "audioFile": "wrong_answer.mp3",
+      "audioFile": "tura.mp3",
       "playOnControllerIntersect": true
     },
     {
@@ -71,13 +71,13 @@
         "contentType": "primitive",
         "primitive": {
           "type": "BoxGeometry",
-          "size": [32, 32, 32],
-          "textureFile": "texture_green.jpg",
-          "position": [0, 16, 0],
+          "size": [50, 5, 50],
+          "textureFile": "kon.jpg",
+          "position": [0, 0, 0],
           "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
         }
       },
-      "audioFile": "wrong_answer.mp3",
+      "audioFile": "kon.mp3",
       "playOnControllerIntersect": true
     },
     {
@@ -91,13 +91,13 @@
         "contentType": "primitive",
         "primitive": {
           "type": "BoxGeometry",
-          "size": [32, 32, 32],
-          "textureFile": "texture_green.jpg",
-          "position": [0, 16, 0],
+          "size": [50, 5, 50],
+          "textureFile": "slon.jpg",
+          "position": [0, 0, 0],
           "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
         }
       },
-      "audioFile": "wrong_answer.mp3",
+      "audioFile": "slon.mp3",
       "playOnControllerIntersect": true
     },
     {
@@ -111,33 +111,33 @@
         "contentType": "primitive",
         "primitive": {
           "type": "BoxGeometry",
-          "size": [32, 32, 32],
-          "textureFile": "texture_green.jpg",
-          "position": [0, 16, 0],
+          "size": [50, 5, 50],
+          "textureFile": "koroleva.jpg",
+          "position": [0, 0, 0],
           "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
         }
       },
-      "audioFile": "wrong_answer.mp3",
+      "audioFile": "koroleva.mp3",
       "playOnControllerIntersect": true
     },
     {
       "id": 7,
       "type": "barcode",
-      "target": 6,
+      "target": 11,
       "matrixSize": 35,
       "contentType": "multiplex-3D",
-      "multiplex3D": 6,
+      "multiplex3D": 7,
       "alternativeContent": {
         "contentType": "primitive",
         "primitive": {
           "type": "BoxGeometry",
-          "size": [32, 32, 32],
-          "textureFile": "texture_green.jpg",
-          "position": [0, 16, 0],
+          "size": [50, 5, 50],
+          "textureFile": "peshka.jpg",
+          "position": [0, 0, 0],
           "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
         }
       },
-      "audioFile": "wrong_answer.mp3",
+      "audioFile": "peshka.mp3",
       "playOnControllerIntersect": true
     },
     {
@@ -151,13 +151,13 @@
         "contentType": "primitive",
         "primitive": {
           "type": "BoxGeometry",
-          "size": [32, 32, 32],
-          "textureFile": "texture_green.jpg",
-          "position": [0, 16, 0],
+          "size": [50, 5, 50],
+          "textureFile": "korol.jpg",
+          "position": [0, 0, 0],
           "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
         }
       },
-      "audioFile": "wrong_answer.mp3",
+      "audioFile": "korol.mp3",
       "playOnControllerIntersect": true
     },
     {
@@ -183,7 +183,7 @@
     {
       "id": 10,
       "type": "barcode",
-      "target": 11,
+      "target": 7,
       "matrixSize": 35,
       "contentType": "multiplex-3D",
       "multiplex3D": 9,
