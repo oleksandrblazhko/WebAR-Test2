@@ -29,12 +29,13 @@
       "multiplex3D": 1,
       "alternativeContent": {
          "contentType": "primitive",
-        "primitive": {
+         "primitive": {
           "type": "BoxGeometry",
           "size": [50, 5, 50],
           "textureFile": "peshka.jpg",
-          "position": [0, 0, 0],
-          "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+          "position": [0, 20, 0],
+          "rotation": [45, 0, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 30 }
         }
       },
       "audioFile": "peshka.mp3",
@@ -53,8 +54,9 @@
           "type": "BoxGeometry",
           "size": [50, 5, 50],
           "textureFile": "tura.jpg",
-          "position": [0, 0, 0],
-          "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+          "position": [0, 20, 0],
+          "rotation": [45, 0, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 30 }
         }
       },
       "audioFile": "tura.mp3",
@@ -73,8 +75,9 @@
           "type": "BoxGeometry",
           "size": [50, 5, 50],
           "textureFile": "kon.jpg",
-          "position": [0, 0, 0],
-          "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+          "position": [0, 20, 0],
+          "rotation": [45, 0, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 30 }
         }
       },
       "audioFile": "kon.mp3",
@@ -93,8 +96,9 @@
           "type": "BoxGeometry",
           "size": [50, 5, 50],
           "textureFile": "slon.jpg",
-          "position": [0, 0, 0],
-          "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+          "position": [0, 20, 0],
+          "rotation": [45, 0, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 30 }
         }
       },
       "audioFile": "slon.mp3",
@@ -113,8 +117,9 @@
           "type": "BoxGeometry",
           "size": [50, 5, 50],
           "textureFile": "koroleva.jpg",
-          "position": [0, 0, 0],
-          "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+          "position": [0, 20, 0],
+          "rotation": [45, 0, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 30 }
         }
       },
       "audioFile": "koroleva.mp3",
@@ -123,7 +128,28 @@
     {
       "id": 7,
       "type": "barcode",
-      "target": 11,
+      "target": 6,
+      "matrixSize": 35,
+      "contentType": "multiplex-3D",
+      "multiplex3D": 6,
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [50, 5, 50],
+          "textureFile": "korol.jpg",
+          "position": [0, 20, 0],
+          "rotation": [45, 0, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 30 }
+        }
+      },
+      "audioFile": "korol.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 8,
+      "type": "barcode",
+      "target": 7,
       "matrixSize": 35,
       "contentType": "multiplex-3D",
       "multiplex3D": 7,
@@ -133,37 +159,18 @@
           "type": "BoxGeometry",
           "size": [50, 5, 50],
           "textureFile": "peshka.jpg",
-          "position": [0, 0, 0],
-          "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+          "position": [0, 20, 0],
+          "rotation": [45, 0, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 30 }
         }
       },
       "audioFile": "peshka.mp3",
       "playOnControllerIntersect": true
     },
     {
-      "id": 8,
-      "type": "barcode",
-      "target": 9,
-      "matrixSize": 35,
-      "contentType": "multiplex-3D",
-      "multiplex3D": 7,
-      "alternativeContent": {
-        "contentType": "primitive",
-        "primitive": {
-          "type": "BoxGeometry",
-          "size": [50, 5, 50],
-          "textureFile": "korol.jpg",
-          "position": [0, 0, 0],
-          "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
-        }
-      },
-      "audioFile": "korol.mp3",
-      "playOnControllerIntersect": true
-    },
-    {
       "id": 9,
       "type": "barcode",
-      "target": 10,
+      "target": 9,
       "matrixSize": 35,
       "contentType": "multiplex-3D",
       "multiplex3D": 8,
@@ -173,8 +180,9 @@
           "type": "BoxGeometry",
           "size": [32, 32, 32],
           "textureFile": "texture_green.jpg",
-          "position": [0, 16, 0],
-          "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+          "position": [0, 20, 0],
+          "rotation": [45, 0, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 30 }
         }
       },
       "audioFile": "wrong_answer.mp3",
@@ -183,7 +191,7 @@
     {
       "id": 10,
       "type": "barcode",
-      "target": 7,
+      "target": 10,
       "matrixSize": 35,
       "contentType": "multiplex-3D",
       "multiplex3D": 9,
@@ -193,8 +201,9 @@
           "type": "BoxGeometry",
           "size": [32, 32, 32],
           "textureFile": "texture_green.jpg",
-          "position": [0, 16, 0],
-          "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+          "position": [0, 20, 0],
+          "rotation": [45, 0, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 30 }
         }
       },
       "audioFile": "wrong_answer.mp3",
@@ -203,7 +212,7 @@
     {
       "id": 11,
       "type": "barcode",
-      "target": 12,
+      "target": 11,
       "matrixSize": 35,
       "contentType": "multiplex-3D",
       "multiplex3D": 10,
@@ -213,8 +222,9 @@
           "type": "BoxGeometry",
           "size": [32, 32, 32],
           "textureFile": "texture_green.jpg",
-          "position": [0, 16, 0],
-          "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+          "position": [0, 20, 0],
+          "rotation": [45, 0, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 30 }
         }
       },
       "audioFile": "wrong_answer.mp3",
@@ -223,7 +233,7 @@
     {
       "id": 12,
       "type": "barcode",
-      "target": 13,
+      "target": 12,
       "matrixSize": 35,
       "contentType": "multiplex-3D",
       "multiplex3D": 11,
@@ -233,8 +243,9 @@
           "type": "BoxGeometry",
           "size": [32, 32, 32],
           "textureFile": "texture_green.jpg",
-          "position": [0, 16, 0],
-          "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+          "position": [0, 20, 0],
+          "rotation": [45, 0, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 30 }
         }
       },
       "audioFile": "wrong_answer.mp3",
@@ -243,7 +254,7 @@
     {
       "id": 13,
       "type": "barcode",
-      "target": 26,
+      "target": 13,
       "matrixSize": 35,
       "contentType": "multiplex-3D",
       "multiplex3D": 12,
@@ -253,8 +264,9 @@
           "type": "BoxGeometry",
           "size": [32, 32, 32],
           "textureFile": "texture_green.jpg",
-          "position": [0, 16, 0],
-          "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+          "position": [0, 20, 0],
+          "rotation": [45, 0, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 30 }
         }
       },
       "audioFile": "wrong_answer.mp3",

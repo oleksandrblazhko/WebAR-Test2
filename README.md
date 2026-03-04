@@ -408,7 +408,8 @@
     "size": [1, 1, 1],
     "color": "#ff0000",
     "textureFile": "texture_blue.jpg",
-    "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+    "rotation": [0, 45, 0],
+    "animation": { "type": "rotation", "axis": "y", "speed": 30 }
   }
 }
 ```
@@ -435,7 +436,8 @@
       "heightSegments": 32,
       "color": "#ff0066",
       "textureFile": "texture_blue.jpg",
-      "animation": { "type": "rotation", "axis": "y", "speed": 0.025 }
+      "rotation": [0, 0, 0],
+      "animation": { "type": "rotation", "axis": "y", "speed": 60 }
     }
   },
   "audioFile": "correct_answer.mp3",
@@ -452,15 +454,15 @@
   "contentType": "model",
   "contentFile": "cat.gltf",
   "modelScale": 0.3,
-  "rotation": { "x": 1.5708, "y": 2.5 },
-  "animation": { "type": "rotation", "axis": "z", "speed": 0.01 },
+  "rotation": { "x": 90, "y": 143 },
+  "animation": { "type": "rotation", "axis": "z", "speed": 30 },
   "alternativeContent": {
     "contentType": "model",
     "contentFile": "Bender.glb",
     "modelScale": 0.3,
     "position": { "z": -0.5 },
-    "rotation": { "y": -1.5707963267948966, "x": -1.0 },
-    "animation": { "type": "rotation", "axis": "y", "speed": 0.01 }
+    "rotation": { "y": -90, "x": -57 },
+    "animation": { "type": "rotation", "axis": "y", "speed": 30 }
   }
 }
 ```

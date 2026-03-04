@@ -402,7 +402,13 @@
             });
 
             // Використовуємо глобальну функцію updateWelcomeText(), яку ми вже визначили вище
-            
+
+            // Helper function to convert degrees to radians
+            function degToRad(degrees) {
+                if (typeof degrees !== 'number') return 0;
+                return degrees * Math.PI / 180;
+            }
+
             // Function to create alternative content object based on configuration
             function createAlternativeContent(markerIndex, alternativeContentConfig) {
                 if (!alternativeContentConfig) return null;
@@ -883,17 +889,22 @@
 
                             // Застосовуємо обертання, якщо вказане
                             if (partConfig.rotation) {
-                                mesh.rotation.set(...partConfig.rotation);
+                                const rot = partConfig.rotation;
+                                mesh.rotation.set(
+                                    degToRad(rot[0] || 0),
+                                    degToRad(rot[1] || 0),
+                                    degToRad(rot[2] || 0)
+                                );
                             }
-                            // Індивідуальні обертання по осях (якщо вказані окремо)
+                            // Індивідуальні обертання по осях (якщо вказані окремо) - у градусах
                             if (partConfig.rotationX !== undefined) {
-                                mesh.rotation.x = partConfig.rotationX;
+                                mesh.rotation.x = degToRad(partConfig.rotationX);
                             }
                             if (partConfig.rotationY !== undefined) {
-                                mesh.rotation.y = partConfig.rotationY;
+                                mesh.rotation.y = degToRad(partConfig.rotationY);
                             }
                             if (partConfig.rotationZ !== undefined) {
-                                mesh.rotation.z = partConfig.rotationZ;
+                                mesh.rotation.z = degToRad(partConfig.rotationZ);
                             }
 
                             // Зберігаємо анімацію для частини
@@ -1647,17 +1658,22 @@
 
                                                 // Застосовуємо обертання, якщо вказане
                                                 if (partConfig.rotation) {
-                                                    mesh.rotation.set(...partConfig.rotation);
+                                                    const rot = partConfig.rotation;
+                                                    mesh.rotation.set(
+                                                        degToRad(rot[0] || 0),
+                                                        degToRad(rot[1] || 0),
+                                                        degToRad(rot[2] || 0)
+                                                    );
                                                 }
-                                                // Індивідуальні обертання по осях (якщо вказані окремо)
+                                                // Індивідуальні обертання по осях (якщо вказані окремо) - у градусах
                                                 if (partConfig.rotationX !== undefined) {
-                                                    mesh.rotation.x = partConfig.rotationX;
+                                                    mesh.rotation.x = degToRad(partConfig.rotationX);
                                                 }
                                                 if (partConfig.rotationY !== undefined) {
-                                                    mesh.rotation.y = partConfig.rotationY;
+                                                    mesh.rotation.y = degToRad(partConfig.rotationY);
                                                 }
                                                 if (partConfig.rotationZ !== undefined) {
-                                                    mesh.rotation.z = partConfig.rotationZ;
+                                                    mesh.rotation.z = degToRad(partConfig.rotationZ);
                                                 }
 
                                                 // Зберігаємо анімацію для частини
@@ -2149,20 +2165,28 @@
                 renderer.render(scene, camera);
             }
 
+            // Helper function to convert degrees per second to radians per frame
+            function degPerSecToRadPerFrame(degPerSec) {
+                // Convert degrees to radians and divide by approximate FPS (60)
+                return (degPerSec * Math.PI / 180) / 60;
+            }
+
             // Функція для анімації примітивів та моделей
             function animateObjects() {
                 scene.traverse((object) => {
                     if (object.userData && object.userData.animation) {
                         const anim = object.userData.animation;
+                        // Convert speed from degrees/second to radians/frame
+                        const speedRadPerFrame = degPerSecToRadPerFrame(anim.speed);
                         switch(anim.axis) {
                             case 'x':
-                                object.rotation.x += anim.speed;
+                                object.rotation.x += speedRadPerFrame;
                                 break;
                             case 'y':
-                                object.rotation.y += anim.speed;
+                                object.rotation.y += speedRadPerFrame;
                                 break;
                             case 'z':
-                                object.rotation.z += anim.speed;
+                                object.rotation.z += speedRadPerFrame;
                                 break;
                         }
                     }
