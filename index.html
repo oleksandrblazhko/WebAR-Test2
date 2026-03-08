@@ -377,13 +377,19 @@
 
             // Використовуємо глобальну функцію updateWelcomeText(), яку ми вже визначили вище
             
+            // Helper function to convert degrees to radians
+            function degToRad(degrees) {
+                if (typeof degrees !== 'number') return 0;
+                return degrees * Math.PI / 180;
+            }
+
             // Function to create alternative content object based on configuration
             function createAlternativeContent(markerIndex, alternativeContentConfig) {
                 if (!alternativeContentConfig) return null;
-                
+
                 const markerRoot = markerRoots[markerIndex];
                 if (!markerRoot) return null;
-                
+
                 switch (alternativeContentConfig.contentType) {
                     case 'model':
                         return createAlternativeModelContent(markerRoot, alternativeContentConfig);
@@ -487,18 +493,24 @@
                 }
                 
                 mesh = new THREE.Mesh(geometry, material);
-                
+
                 if (primitive.position) {
                     mesh.position.set(...primitive.position);
                 }
                 if (primitive.rotation) {
-                    mesh.rotation.set(...primitive.rotation);
+                    // Convert degrees to radians
+                    const rot = primitive.rotation;
+                    mesh.rotation.set(
+                        degToRad(rot[0] || 0),
+                        degToRad(rot[1] || 0),
+                        degToRad(rot[2] || 0)
+                    );
                 }
-                
+
                 if (primitive.animation) {
                     mesh.userData.animation = config.animation;
                 }
-                
+
                 mesh.userData.isAlternativeContent = true;
                 return Promise.resolve(mesh);
             }
@@ -1119,7 +1131,13 @@
                                     mesh.position.set(...primitive.position);
                                 }
                                 if (primitive.rotation) {
-                                    mesh.rotation.set(...primitive.rotation);
+                                    // Convert degrees to radians
+                                    const rot = primitive.rotation;
+                                    mesh.rotation.set(
+                                        degToRad(rot[0] || 0),
+                                        degToRad(rot[1] || 0),
+                                        degToRad(rot[2] || 0)
+                                    );
                                 }
 
                                 // Додаємо до контейнера маркера
