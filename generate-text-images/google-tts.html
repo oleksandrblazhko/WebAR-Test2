@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Cloud TTS - Генератор аудіо</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .panel h2 {
+            color: #333;
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .api-section {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .api-section h3 {
+            margin-top: 0;
+            color: #856404;
+        }
+
+        .api-section code {
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #c7254e;
+        }
+
+        .config-section {
+            margin-bottom: 20px;
+        }
+
+        .config-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .config-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="number"],
+        select,
+        textarea {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #4285f4;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%);
+            color: white;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .progress {
+            margin-top: 10px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 6px;
+            text-align: center;
+            color: #666;
+        }
+
+        .word-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .word-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .word-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .word-card-text {
+            font-size: 16px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .word-card-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .status-ready {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .info-box {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-box h4 {
+            margin-top: 0;
+            color: #0c5460;
+        }
+
+        .info-box ul {
+            margin: 10px 0;
+            padding-left: 20px;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 Google Cloud TTS - Генератор аудіо</h1>
+
+        <div class="panel">
+            <h2>⚙️ Налаштування API</h2>
+
+            <div class="api-section">
+                <h3>🔑 Отримання API ключа</h3>
+                <ol>
+                    <li>Відкрийте <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a></li>
+                    <li>Створіть новий проект або виберіть існуючий</li>
+                    <li>Увімкніть <code>Cloud Text-to-Speech API</code></li>
+                    <li>Створіть облікові дані → API ключ</li>
+                    <li>Скопіюйте ключ у поле нижче</li>
+                </ol>
+            </div>
+
+            <div class="config-section">
+                <div class="config-row">
+                    <div class="config-item">
+                        <label for="apiKey">API Key:</label>
+                        <input type="password" id="apiKey" placeholder="Вставте ваш API ключ Google Cloud" />
+                    </div>
+                    <div class="config-item">
+                        <label for="language">Мова:</label>
+                        <select id="language">
+                            <option value="pt-PT">Португальська (Португалія)</option>
+                            <option value="pt-BR">Португальська (Бразилія)</option>
+                            <option value="es-ES">Іспанська (Іспанія)</option>
+                            <option value="es-MX">Іспанська (Мексика)</option>
+                            <option value="en-US">Англійська (США)</option>
+                            <option value="en-GB">Англійська (Великобританія)</option>
+                            <option value="uk-UA">Українська</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="config-row">
+                    <div class="config-item">
+                        <label for="voiceName">Голос:</label>
+                        <select id="voiceName">
+                            <option value="">Спочатку введіть API ключ</option>
+                        </select>
+                    </div>
+                    <div class="config-item">
+                        <label for="speakingRate">Швидкість (0.25-4.0):</label>
+                        <input type="number" id="speakingRate" value="1.0" min="0.25" max="4.0" step="0.1" />
+                    </div>
+                </div>
+
+                <div class="config-row">
+                    <div class="config-item">
+                        <label for="pitch">Тон (-20.0 до 20.0):</label>
+                        <input type="number" id="pitch" value="0.0" min="-20.0" max="20.0" step="0.5" />
+                    </div>
+                    <div class="config-item">
+                        <label for="audioEncoding">Формат:</label>
+                        <select id="audioEncoding">
+                            <option value="MP3">MP3</option>
+                            <option value="LINEAR16">WAV (LINEAR16)</option>
+                            <option value="OGG_OPUS">OGG Opus</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-info" onclick="loadVoices()">🔄 Завантажити голоси</button>
+            <button class="btn btn-primary" onclick="testVoice()">🔊 Тест голосу</button>
+            <span id="apiStatus" class="status-badge status-pending">API не підключено</span>
+        </div>
+
+        <div class="panel" style="margin-top: 20px;">
+            <h2>📝 Генерація аудіо для слів</h2>
+
+            <div class="config-section">
+                <label for="wordsInput">Слова (кожне з нового рядка):</label>
+                <textarea id="wordsInput" placeholder="Введіть слова, кожне з нового рядка...">Realidade
+Palavra
+Livro
+Casa
+Carro
+Água
+Comida
+Amigo
+Trabalho
+Escola</textarea>
+            </div>
+
+            <button class="btn btn-primary" onclick="generateAudio()">🎵 Створити аудіо</button>
+            <button class="btn btn-success" onclick="downloadAll()">📥 Завантажити ZIP</button>
+
+            <div class="progress" id="progress">Очікування...</div>
+
+            <div class="word-list" id="wordList"></div>
+        </div>
+    </div>
+
+    <!-- JSZip для створення ZIP-архіву -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+    <script>
+        let generatedAudio = [];
+        let availableVoices = [];
+
+        const GOOGLE_TTS_URL = 'https://texttospeech.googleapis.com/v1';
+
+        // ==================== API FUNCTIONS ====================
+        async function loadVoices() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+
+            if (!apiKey) {
+                alert('Введіть API ключ!');
+                return;
+            }
+
+            const statusEl = document.getElementById('apiStatus');
+            statusEl.textContent = 'Завантаження...';
+            statusEl.className = 'status-badge status-pending';
+
+            try {
+                const response = await fetch(`${GOOGLE_TTS_URL}/voices?key=${apiKey}`);
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error?.message || 'Помилка завантаження голосів');
+                }
+
+                const data = await response.json();
+                availableVoices = data.voices || [];
+
+                const language = document.getElementById('language').value;
+                filterAndDisplayVoices(language);
+
+                statusEl.textContent = 'API підключено';
+                statusEl.className = 'status-badge status-ready';
+
+            } catch (error) {
+                console.error('Помилка завантаження голосів:', error);
+                statusEl.textContent = 'Помилка API';
+                statusEl.className = 'status-badge status-error';
+                alert(`Помилка: ${error.message}`);
+            }
+        }
+
+        function filterAndDisplayVoices(languageCode) {
+            const voiceSelect = document.getElementById('voiceName');
+            voiceSelect.innerHTML = '';
+
+            const filteredVoices = availableVoices.filter(voice => 
+                voice.languageCodes.includes(languageCode)
+            );
+
+            if (filteredVoices.length === 0) {
+                const option = document.createElement('option');
+                option.textContent = 'Немає доступних голосів';
+                option.value = '';
+                voiceSelect.appendChild(option);
+                return;
+            }
+
+            filteredVoices.forEach(voice => {
+                const option = document.createElement('option');
+                const gender = voice.ssmlGender === 'FEMALE' ? '♀' : voice.ssmlGender === 'MALE' ? '♂' : '';
+                option.textContent = `${voice.name} ${gender} (${voice.languageCodes.join(', ')})`;
+                option.value = voice.name;
+                voiceSelect.appendChild(option);
+            });
+        }
+
+        document.getElementById('language').addEventListener('change', function() {
+            filterAndDisplayVoices(this.value);
+        });
+
+        async function testVoice() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            if (!apiKey) {
+                alert('Введіть API ключ!');
+                return;
+            }
+
+            const voiceName = document.getElementById('voiceName').value;
+            if (!voiceName) {
+                alert('Виберіть голос!');
+                return;
+            }
+
+            const text = 'Привіт! Це тест голосу.';
+            await synthesizeSpeech(text, apiKey, voiceName, (blob) => {
+                const audioUrl = URL.createObjectURL(blob);
+                const audio = new Audio(audioUrl);
+                audio.play();
+            });
+        }
+
+        async function synthesizeSpeech(text, apiKey, voiceName, callback) {
+            const language = document.getElementById('language').value;
+            const speakingRate = parseFloat(document.getElementById('speakingRate').value);
+            const pitch = parseFloat(document.getElementById('pitch').value);
+            const audioEncoding = document.getElementById('audioEncoding').value;
+
+            const requestBody = {
+                input: { text: text },
+                voice: { 
+                    name: voiceName,
+                    languageCode: language.split('-')[0] === 'pt' ? 'pt-PT' : language
+                },
+                audioConfig: { 
+                    audioEncoding: audioEncoding,
+                    speakingRate: speakingRate,
+                    pitch: pitch
+                }
+            };
+
+            const response = await fetch(`${GOOGLE_TTS_URL}/text:synthesize?key=${apiKey}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error?.message || 'Помилка синтезу');
+            }
+
+            const data = await response.json();
+            const audioContent = atob(data.audioContent);
+            const arrayBuffer = new ArrayBuffer(audioContent.length);
+            const view = new Uint8Array(arrayBuffer);
+
+            for (let i = 0; i < audioContent.length; i++) {
+                view[i] = audioContent.charCodeAt(i);
+            }
+
+            const extension = audioEncoding === 'MP3' ? 'mp3' : audioEncoding === 'LINEAR16' ? 'wav' : 'ogg';
+            const blob = new Blob([arrayBuffer], { type: `audio/${extension}` });
+            
+            callback(blob, extension);
+        }
+
+        // ==================== AUDIO GENERATOR ====================
+        async function generateAudio() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            if (!apiKey) {
+                alert('Введіть API ключ!');
+                return;
+            }
+
+            const voiceName = document.getElementById('voiceName').value;
+            if (!voiceName) {
+                alert('Виберіть голос!');
+                return;
+            }
+
+            const wordsText = document.getElementById('wordsInput').value;
+            const words = wordsText.split('\n').filter(w => w.trim() !== '');
+
+            if (words.length === 0) {
+                alert('Введіть хоча б одне слово!');
+                return;
+            }
+
+            generatedAudio = [];
+            const wordList = document.getElementById('wordList');
+            const progress = document.getElementById('progress');
+            
+            wordList.innerHTML = '';
+            progress.textContent = `Генерація: 0/${words.length}`;
+
+            const audioEncoding = document.getElementById('audioEncoding').value;
+            const extension = audioEncoding === 'MP3' ? 'mp3' : audioEncoding === 'LINEAR16' ? 'wav' : 'ogg';
+
+            for (let i = 0; i < words.length; i++) {
+                const word = words[i].trim();
+                const fileName = word.replace(/\s+/g, '_') + '.' + extension;
+                
+                progress.textContent = `Генерація: ${i + 1}/${words.length} - "${word}"`;
+
+                try {
+                    await synthesizeSpeech(word, apiKey, voiceName, (blob, ext) => {
+                        generatedAudio.push({ 
+                            name: fileName, 
+                            data: blob,
+                            text: word
+                        });
+
+                        // Додаємо картку з попереднім переглядом
+                        const audioUrl = URL.createObjectURL(blob);
+                        const wordCard = document.createElement('div');
+                        wordCard.className = 'word-card';
+                        wordCard.innerHTML = `
+                            <div class="word-card-text">${word}</div>
+                            <audio controls src="${audioUrl}"></audio>
+                            <div class="word-card-buttons">
+                                <button class="btn btn-info btn-small" onclick="downloadSingle('${fileName}', '${audioUrl}')">📥</button>
+                            </div>
+                        `;
+                        wordList.appendChild(wordCard);
+                    });
+                } catch (error) {
+                    console.error(`Помилка генерації "${word}":`, error);
+                    const wordCard = document.createElement('div');
+                    wordCard.className = 'word-card';
+                    wordCard.innerHTML = `
+                        <div class="word-card-text">${word}</div>
+                        <div style="color: red; text-align: center;">❌ Помилка: ${error.message}</div>
+                    `;
+                    wordList.appendChild(wordCard);
+                }
+            }
+
+            progress.textContent = `✅ Готово! Створено ${generatedAudio.length} аудіофайлів`;
+        }
+
+        function downloadSingle(fileName, audioUrl) {
+            const link = document.createElement('a');
+            link.download = fileName;
+            link.href = audioUrl;
+            link.click();
+        }
+
+        async function downloadAll() {
+            if (generatedAudio.length === 0) {
+                alert('Спочатку створіть аудіо!');
+                return;
+            }
+
+            const zip = new JSZip();
+            const audioFolder = zip.folder("audio");
+
+            generatedAudio.forEach(audio => {
+                audioFolder.file(audio.name, audio.data);
+            });
+
+            // Зберігаємо налаштування
+            const settings = {
+                language: document.getElementById('language').value,
+                voice: document.getElementById('voiceName').value,
+                speakingRate: parseFloat(document.getElementById('speakingRate').value),
+                pitch: parseFloat(document.getElementById('pitch').value),
+                audioEncoding: document.getElementById('audioEncoding').value,
+                generatedAt: new Date().toISOString()
+            };
+            zip.file('settings.json', JSON.stringify(settings, null, 2));
+
+            // Зберігаємо список слів
+            const wordList = generatedAudio.map(a => a.text).join('\n');
+            zip.file('words.txt', wordList);
+
+            const audioEncoding = document.getElementById('audioEncoding').value;
+            const content = await zip.generateAsync({type: "blob"});
+            saveAs(content, `text-audio-${audioEncoding.toLowerCase()}.zip`);
+        }
+
+        // Автозавантаження голосів при зміні API ключа
+        document.getElementById('apiKey').addEventListener('change', function() {
+            if (this.value.trim()) {
+                loadVoices();
+            }
+        });
+    </script>
+</body>
+</html>
