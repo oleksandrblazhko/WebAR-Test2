@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Generation and Speech Synthesis for Augmented Reality Cards</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .panel h2 {
+            color: #333;
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .config-section {
+            margin-bottom: 20px;
+        }
+
+        .config-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .config-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        input[type="color"] {
+            width: 60px;
+            height: 35px;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .value-display {
+            font-size: 12px;
+            color: #888;
+            margin-top: 3px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%);
+            color: white;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .speech-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .speech-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .inline-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .inline-controls input[type="text"] {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .preview-section {
+            margin-top: 20px;
+        }
+
+        .word-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .word-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .word-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .word-card img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+        }
+
+        .word-card-content {
+            padding: 10px;
+        }
+
+        .word-card-text {
+            font-size: 13px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .word-card-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .progress {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 6px;
+            text-align: center;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🖼️🔊 Image Generation and Speech Synthesis for Augmented Reality Cards</h1>
+
+        <div class="panel">
+            <h2>🎨 Image Settings</h2>
+
+            <div style="display: flex; gap: 20px; align-items: flex-end; flex-wrap: wrap;">
+                <div class="config-section" style="flex: 1; margin-bottom: 0;">
+                    <div class="config-row">
+                        <div class="config-item">
+                            <label for="imgWidth">Width (px):</label>
+                            <input type="number" id="imgWidth" value="400" min="100" max="2000">
+                        </div>
+                        <div class="config-item">
+                            <label for="imgHeight">Height (px):</label>
+                            <input type="number" id="imgHeight" value="300" min="100" max="2000">
+                        </div>
+                        <div class="config-item">
+                            <label for="backgroundColor">Background:</label>
+                            <input type="color" id="backgroundColor" value="#ffffff">
+                        </div>
+                        <div class="config-item">
+                            <label for="textColor">Text:</label>
+                            <input type="color" id="textColor" value="#000000">
+                        </div>
+                        <div class="config-item">
+                            <label for="fontSize">Font Size (px):</label>
+                            <input type="number" id="fontSize" value="48" min="12" max="200">
+                        </div>
+                        <div class="config-item">
+                            <label for="fontFamily">Font:</label>
+                            <select id="fontFamily">
+                                <option value="Arial">Arial</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="Georgia">Georgia</option>
+                                <option value="Verdana">Verdana</option>
+                                <option value="Impact">Impact</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; flex-shrink: 0;">
+                    <button class="btn btn-primary" onclick="generateImages()">🚀 Generate Images</button>
+                    <button class="btn btn-success" onclick="downloadAll()">📥 Download ZIP</button>
+                </div>
+            </div>
+
+            <div class="config-section">
+                <label for="wordsInput">Words (each on a new line):</label>
+                <textarea id="wordsInput" placeholder="Enter words, each on a new line...">Realidade
+Aumentada
+Mista
+Entretenimento
+Ensino
+Educação
+</textarea>
+            </div>
+
+            <div class="progress" id="progress">Waiting...</div>
+
+            <!-- Speech Synthesizer Section -->
+            <div class="speech-section">
+                <h3>🔊 Speech Synthesizer (Google TTS)</h3>
+
+                <div style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;">
+                    <div class="config-item" style="flex: 1;">
+                        <label for="languageSelect">Language:</label>
+                        <select id="languageSelect">
+                            <option value="pt-BR" selected>Portuguese (Brazil) - pt-BR</option>
+                            <option value="pt-PT">Portuguese (Portugal) - pt-PT</option>
+                            <option value="en-US">English (US) - en-US</option>
+                            <option value="en-GB">English (UK) - en-GB</option>
+                            <option value="es-ES">Spanish (Spain) - es-ES</option>
+                            <option value="fr-FR">French (France) - fr-FR</option>
+                            <option value="de-DE">German (Germany) - de-DE</option>
+                            <option value="it-IT">Italian (Italy) - it-IT</option>
+                            <option value="uk-UA">Ukrainian - uk-UA</option>
+                            <option value="ru-RU">Russian - ru-RU</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 10px; flex-shrink: 0;">
+                        <button class="btn btn-primary" onclick="generateAudio()">🎵 Generate Audio</button>
+                        <button class="btn btn-success" onclick="downloadAllAudio()">📥 Download Audio ZIP</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="preview-section">
+                <h3>🖼️ Preview:</h3>
+                <div class="word-list" id="wordList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JSZip для створення ZIP-архіву -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+    <script>
+        // ==================== CONSTANTS ====================
+        const SPEECH_RATE = 1.0;
+        const SPEECH_PITCH = 1.0;
+        
+        // Get selected language for Google TTS
+        function getSelectedLanguage() {
+            return document.getElementById('languageSelect').value;
+        }
+
+        // ==================== IMAGE GENERATOR ====================
+        let generatedImages = [];
+        let generatedAudio = [];
+
+        function getImageConfig() {
+            return {
+                width: parseInt(document.getElementById('imgWidth').value),
+                height: parseInt(document.getElementById('imgHeight').value),
+                backgroundColor: document.getElementById('backgroundColor').value,
+                textColor: document.getElementById('textColor').value,
+                fontSize: parseInt(document.getElementById('fontSize').value),
+                fontFamily: document.getElementById('fontFamily').value
+            };
+        }
+
+        function createImage(word, config) {
+            const canvas = document.createElement('canvas');
+            canvas.width = config.width;
+            canvas.height = config.height;
+            const ctx = canvas.getContext('2d');
+
+            // Заповнюємо фон
+            ctx.fillStyle = config.backgroundColor;
+            ctx.fillRect(0, 0, config.width, config.height);
+
+            // Налаштовуємо шрифт
+            ctx.font = `bold ${config.fontSize}px ${config.fontFamily}`;
+            ctx.fillStyle = config.textColor;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            // Малюємо текст
+            ctx.fillText(word.trim(), config.width / 2, config.height / 2);
+
+            return canvas;
+        }
+
+        function generateImages() {
+            const config = getImageConfig();
+            const wordsText = document.getElementById('wordsInput').value;
+            const words = wordsText.split('\n').filter(w => w.trim() !== '');
+
+            if (words.length === 0) {
+                alert('Enter at least one word!');
+                return;
+            }
+
+            generatedImages = [];
+            const wordList = document.getElementById('wordList');
+            const previewCanvas = document.getElementById('previewCanvas');
+            const progress = document.getElementById('progress');
+
+            wordList.innerHTML = '';
+            progress.textContent = `Processing words: 0/${words.length}`;
+
+            words.forEach((word, index) => {
+                const canvas = createImage(word, config);
+                const dataURL = canvas.toDataURL('image/jpeg', 0.95);
+                const fileName = word.trim().replace(/\s+/g, '_') + '.jpg';
+
+                generatedImages.push({ name: fileName, data: dataURL, text: word.trim() });
+
+                // Add preview card
+                const wordCard = document.createElement('div');
+                wordCard.className = 'word-card';
+                wordCard.dataset.word = word.trim();
+                wordCard.innerHTML = `
+                    <img src="${dataURL}" alt="${word}">
+                    <div class="word-card-content">
+                        <div class="word-card-text">${word.trim()}</div>
+                        <div class="word-card-buttons">
+                            <button class="btn btn-info btn-small" onclick="downloadSingle('${fileName}', '${dataURL}')">📥</button>
+                            <button class="btn btn-small" onclick="playWord('${word.trim()}')" disabled>🔊</button>
+                        </div>
+                    </div>
+                `;
+                wordList.appendChild(wordCard);
+
+                progress.textContent = `Processing words: ${index + 1}/${words.length}`;
+            });
+
+            progress.textContent = `✅ Done! Created ${words.length} images`;
+        }
+
+        function downloadSingle(fileName, dataURL) {
+            const link = document.createElement('a');
+            link.download = fileName;
+            link.href = dataURL;
+            link.click();
+        }
+
+        function playWord(word) {
+            // Use Google TTS for consistent audio playback
+            const language = getSelectedLanguage();
+            const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${language}&client=tw-ob&q=${encodeURIComponent(word)}`;
+            const audio = new Audio(ttsUrl);
+            audio.play().catch(error => {
+                console.error('Error playing audio:', error);
+                alert('Error playing audio. Please try again.');
+            });
+        }
+
+        async function downloadAll() {
+            if (generatedImages.length === 0) {
+                alert('Generate images first!');
+                return;
+            }
+
+            const zip = new JSZip();
+            const imgFolder = zip.folder("images");
+
+            generatedImages.forEach(img => {
+                const base64Data = img.data.split(',')[1];
+                imgFolder.file(img.name, base64Data, {base64: true});
+            });
+
+            const content = await zip.generateAsync({type: "blob"});
+            saveAs(content, "text-images.zip");
+        }
+
+        function speakAllWords() {
+            const wordsText = document.getElementById('wordsInput').value;
+            const words = wordsText.split('\n').filter(w => w.trim() !== '');
+
+            if (words.length === 0) {
+                alert('Enter at least one word!');
+                return;
+            }
+
+            let index = 0;
+            const progress = document.getElementById('progress');
+
+            function playNext() {
+                if (index >= words.length) {
+                    progress.textContent = '✅ Speech synthesis completed!';
+                    return;
+                }
+
+                const word = words[index];
+                progress.textContent = `Playing: ${index + 1}/${words.length} - "${word}"`;
+
+                const language = getSelectedLanguage();
+                const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${language}&client=tw-ob&q=${encodeURIComponent(word)}`;
+                const audio = new Audio(ttsUrl);
+
+                audio.onended = () => {
+                    index++;
+                    setTimeout(playNext, 300);
+                };
+
+                audio.onerror = (error) => {
+                    console.error(`Error playing "${word}":`, error);
+                    index++;
+                    setTimeout(playNext, 300);
+                };
+
+                audio.play();
+            }
+
+            playNext();
+        }
+
+        // ==================== AUDIO GENERATOR (Google TTS) ====================
+        
+        // Language code for Google TTS (Portuguese - Brazil)
+        const TTS_LANGUAGE = 'pt-BR';
+        
+        async function generateAudio() {
+            const wordsText = document.getElementById('wordsInput').value;
+            const words = wordsText.split('\n').filter(w => w.trim() !== '');
+
+            if (words.length === 0) {
+                alert('Enter at least one word!');
+                return;
+            }
+
+            generatedAudio = [];
+            const progress = document.getElementById('progress');
+            progress.textContent = `Generating audio: 0/${words.length}`;
+
+            for (let i = 0; i < words.length; i++) {
+                const word = words[i].trim();
+                progress.textContent = `Generating audio: ${i + 1}/${words.length} - "${word}"`;
+
+                try {
+                    const audioBlob = await fetchGoogleTTS(word);
+                    const fileName = word.replace(/\s+/g, '_') + '.mp3';
+                    generatedAudio.push({ name: fileName, data: audioBlob });
+
+                    // Enable listen button for this word
+                    const wordCard = document.querySelector(`.word-card[data-word="${word}"]`);
+                    if (wordCard) {
+                        const listenBtn = wordCard.querySelector('button[onclick^="playWord"]');
+                        if (listenBtn) {
+                            listenBtn.disabled = false;
+                            listenBtn.title = `Listen to "${word}"`;
+                        }
+                    }
+                } catch (error) {
+                    console.error(`Error generating audio for "${word}":`, error);
+                    progress.textContent = `❌ Error for "${word}": ${error.message}`;
+                }
+
+                // Small delay between words to avoid rate limiting
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+
+            progress.textContent = `✅ Audio ready! Created ${generatedAudio.length} files`;
+        }
+
+        /**
+         * Fetch audio from Google Translate TTS service
+         * @param {string} text - Text to convert to speech
+         * @returns {Promise<Blob>} - MP3 audio blob
+         */
+        function fetchGoogleTTS(text) {
+            return new Promise((resolve, reject) => {
+                // Google Translate TTS URL with selected language
+                const language = getSelectedLanguage();
+                const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${language}&client=tw-ob&q=${encodeURIComponent(text)}`;
+                
+                fetch(ttsUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.blob();
+                    })
+                    .then(blob => {
+                        // Verify it's actually audio
+                        if (blob.type.startsWith('audio/') || blob.size > 1000) {
+                            resolve(blob);
+                        } else {
+                            throw new Error('Received invalid audio data');
+                        }
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
+            });
+        }
+
+        async function downloadAllAudio() {
+            if (generatedAudio.length === 0) {
+                alert('Generate audio first!');
+                return;
+            }
+
+            const zip = new JSZip();
+            const audioFolder = zip.folder("audio");
+
+            generatedAudio.forEach(audio => {
+                audioFolder.file(audio.name, audio.data);
+            });
+
+            const content = await zip.generateAsync({type: "blob"});
+            saveAs(content, "text-audio.zip");
+        }
+
+        // Auto-generate on load
+        window.onload = () => {
+            generateImages();
+        };
+    </script>
+</body>
+</html>

@@ -339,6 +339,11 @@
             let arucoControls = [];
 
             let controller;
+
+            // Controller haptic feedback timing configuration (defaults)
+            let controllerIntersectionDelay = 500; // ms delay between intersection and audio/alternative content
+            let controllerTouchSoundDuration = 500; // ms duration of touch sound click
+            let controllerCollisionMode = '3d'; // '3d' (full 3D collision) or '2d' (ignore Z-axis)
             
             // Audio context для тактильного звукового відгуку
             let audioContext = null;
@@ -349,23 +354,24 @@
                 if (!audioContext) {
                     audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 }
-                
-                // Створення аудіо-сигналу (синусоїда 800 Гц, 500 мс)
+
+                // Створення аудіо-сигналу (синусоїда 800 Гц)
                 var oscillator = audioContext.createOscillator();
                 var gainNode = audioContext.createGain();
-                
+
                 oscillator.connect(gainNode);
                 gainNode.connect(audioContext.destination);
-                
+
                 oscillator.frequency.value = 800; // Частота 800 Гц
                 oscillator.type = 'sine'; // Синусоїда
-                
-                // Гучність: плавне загасання протягом 0.5 сек
+
+                // Гучність: плавне загасання протягом заданого часу
+                const soundDuration = controllerTouchSoundDuration / 1000; // convert ms to seconds
                 gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-                
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + soundDuration);
+
                 oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.5); // 500 мс
+                oscillator.stop(audioContext.currentTime + soundDuration);
             }
 
             // Track current content state for each marker (true = alternative content, false = first content)
@@ -402,7 +408,13 @@
             });
 
             // Використовуємо глобальну функцію updateWelcomeText(), яку ми вже визначили вище
-            
+
+            // Helper function to convert degrees to radians
+            function degToRad(degrees) {
+                if (typeof degrees !== 'number') return 0;
+                return degrees * Math.PI / 180;
+            }
+
             // Function to create alternative content object based on configuration
             function createAlternativeContent(markerIndex, alternativeContentConfig) {
                 if (!alternativeContentConfig) return null;
@@ -757,6 +769,9 @@
                             return null;
                         }
 
+                        console.log(`Loaded object ${objectId}: ${objectConfig.name}, parts: ${objectConfig.part.length}`);
+                        console.log('Parts config:', JSON.stringify(objectConfig.part, null, 2));
+
                         const group = new THREE.Group();
                         let currentHeight = 0; // Поточна висота для стек-розміщення
 
@@ -822,12 +837,27 @@
                             // Створюємо меш
                             mesh = new THREE.Mesh(geometry, material);
 
-                            // Розміщуємо частину на потрібній висоті (стек-розміщення)
-                            // Перша частина (part_id: 1) - на площині маркера (Y = 0)
-                            // Наступні частини - зверху попередньої
-                            // Для всіх примітивів: mesh.position.y = currentHeight + половина_висоти
-                            // currentHeight збільшується на повну висоту примітиву
-                            if (partConfig.type === 'BoxGeometry' && partConfig.size) {
+                            // Розміщуємо частину на потрібній висоті
+                            // Варіант 1: Абсолютні координати (positionX, positionY, positionZ) - для складних форм
+                            // Варіант 2: Стек-розміщення (автоматичне) - для простих вертикальних структур
+                            console.log(`Part ${partConfig.part_id}: type=${partConfig.type}, positionY=${partConfig.positionY}, positionX=${partConfig.positionX}, positionZ=${partConfig.positionZ}, currentHeight=${currentHeight}`);
+                            
+                            if (partConfig.positionY !== undefined) {
+                                // Використовуємо абсолютну позицію Y з конфігурації
+                                // Додаємо половину висоти об'єкта для центрування
+                                var partHeight = 0;
+                                if (partConfig.height) {
+                                    partHeight = partConfig.height;
+                                } else if (partConfig.size && partConfig.size[1]) {
+                                    partHeight = partConfig.size[1];
+                                } else if (partConfig.radius) {
+                                    partHeight = partConfig.radius * 2;
+                                } else if (partConfig.tubeRadius) {
+                                    partHeight = partConfig.tubeRadius * 2;
+                                }
+                                mesh.position.y = partConfig.positionY + partHeight / 2;
+                                console.log(`  -> Абсолютна позиція Y: ${mesh.position.y} (positionY=${partConfig.positionY} + partHeight/2=${partHeight/2})`);
+                            } else if (partConfig.type === 'BoxGeometry' && partConfig.size) {
                                 // Куб/прямокутник: висота = size[1] (Y-розмір)
                                 mesh.position.y = currentHeight + partConfig.size[1] / 2;
                                 currentHeight += partConfig.size[1];
@@ -853,9 +883,34 @@
                                 currentHeight += 1;
                             }
 
+                            // Додаткові координати X, Z (якщо вказані)
+                            if (partConfig.positionX !== undefined) {
+                                mesh.position.x = partConfig.positionX;
+                                console.log(`  -> positionX: ${mesh.position.x}`);
+                            }
+                            if (partConfig.positionZ !== undefined) {
+                                mesh.position.z = partConfig.positionZ;
+                                console.log(`  -> positionZ: ${mesh.position.z}`);
+                            }
+
                             // Застосовуємо обертання, якщо вказане
                             if (partConfig.rotation) {
-                                mesh.rotation.set(...partConfig.rotation);
+                                const rot = partConfig.rotation;
+                                mesh.rotation.set(
+                                    degToRad(rot[0] || 0),
+                                    degToRad(rot[1] || 0),
+                                    degToRad(rot[2] || 0)
+                                );
+                            }
+                            // Індивідуальні обертання по осях (якщо вказані окремо) - у градусах
+                            if (partConfig.rotationX !== undefined) {
+                                mesh.rotation.x = degToRad(partConfig.rotationX);
+                            }
+                            if (partConfig.rotationY !== undefined) {
+                                mesh.rotation.y = degToRad(partConfig.rotationY);
+                            }
+                            if (partConfig.rotationZ !== undefined) {
+                                mesh.rotation.z = degToRad(partConfig.rotationZ);
                             }
 
                             // Зберігаємо анімацію для частини
@@ -885,16 +940,6 @@
                     // Hide all current content (main content)
                     markerRoot.children.forEach(child => {
                         if (!(child.userData && child.userData.isController) && !child.userData.isAlternativeContent) {
-                            // --- ОЧИСТКА СПАЛАХУ: відновлюємо колір перед приховуванням ---
-                            if (child.userData.flashTimeout) {
-                                clearTimeout(child.userData.flashTimeout);
-                                child.userData.flashTimeout = null;
-                            }
-                            if (child.userData.originalColor && child.material) {
-                                child.material.color.copy(child.userData.originalColor);
-                            }
-                            // ----------------------------------------------------------------
-                            
                             child.visible = false;
                         }
                     });
@@ -936,16 +981,6 @@
                     markerRoot.children.forEach(child => {
                         if (!(child.userData && child.userData.isController)) {
                             if (child.userData.isAlternativeContent) {
-                                // --- ОЧИСТКА СПАЛАХУ: для альтернативного контенту ---
-                                if (child.userData.flashTimeout) {
-                                    clearTimeout(child.userData.flashTimeout);
-                                    child.userData.flashTimeout = null;
-                                }
-                                if (child.userData.originalColor && child.material) {
-                                    child.material.color.copy(child.userData.originalColor);
-                                }
-                                // ------------------------------------------------------------
-                                
                                 child.visible = false;
                             } else {
                                 child.visible = true;
@@ -1571,10 +1606,27 @@
                                                 // Створюємо меш
                                                 mesh = new THREE.Mesh(geometry, material);
 
-                                                // Розміщуємо частину на потрібній висоті (стек-розміщення)
-                                                // Для всіх примітивів: mesh.position.y = currentHeight + половина_висоти
-                                                // currentHeight збільшується на повну висоту примітиву
-                                                if (partConfig.type === 'BoxGeometry' && partConfig.size) {
+                                                // Розміщуємо частину на потрібній висоті
+                                                // Варіант 1: Абсолютні координати (positionX, positionY, positionZ) - для складних форм
+                                                // Варіант 2: Стек-розміщення (автоматичне) - для простих вертикальних структур
+                                                console.log(`Part ${partConfig.part_id}: type=${partConfig.type}, positionY=${partConfig.positionY}, positionX=${partConfig.positionX}, positionZ=${partConfig.positionZ}, currentHeight=${currentHeight}`);
+                                                
+                                                if (partConfig.positionY !== undefined) {
+                                                    // Використовуємо абсолютну позицію Y з конфігурації
+                                                    // Додаємо половину висоти об'єкта для центрування
+                                                    var partHeight = 0;
+                                                    if (partConfig.height) {
+                                                        partHeight = partConfig.height;
+                                                    } else if (partConfig.size && partConfig.size[1]) {
+                                                        partHeight = partConfig.size[1];
+                                                    } else if (partConfig.radius) {
+                                                        partHeight = partConfig.radius * 2;
+                                                    } else if (partConfig.tubeRadius) {
+                                                        partHeight = partConfig.tubeRadius * 2;
+                                                    }
+                                                    mesh.position.y = partConfig.positionY + partHeight / 2;
+                                                    console.log(`  -> Абсолютна позиція Y: ${mesh.position.y} (positionY=${partConfig.positionY} + partHeight/2=${partHeight/2})`);
+                                                } else if (partConfig.type === 'BoxGeometry' && partConfig.size) {
                                                     // Куб/прямокутник: висота = size[1] (Y-розмір)
                                                     mesh.position.y = currentHeight + partConfig.size[1] / 2;
                                                     currentHeight += partConfig.size[1];
@@ -1600,9 +1652,34 @@
                                                     currentHeight += 1;
                                                 }
 
+                                                // Додаткові координати X, Z (якщо вказані)
+                                                if (partConfig.positionX !== undefined) {
+                                                    mesh.position.x = partConfig.positionX;
+                                                    console.log(`  -> positionX: ${mesh.position.x}`);
+                                                }
+                                                if (partConfig.positionZ !== undefined) {
+                                                    mesh.position.z = partConfig.positionZ;
+                                                    console.log(`  -> positionZ: ${mesh.position.z}`);
+                                                }
+
                                                 // Застосовуємо обертання, якщо вказане
                                                 if (partConfig.rotation) {
-                                                    mesh.rotation.set(...partConfig.rotation);
+                                                    const rot = partConfig.rotation;
+                                                    mesh.rotation.set(
+                                                        degToRad(rot[0] || 0),
+                                                        degToRad(rot[1] || 0),
+                                                        degToRad(rot[2] || 0)
+                                                    );
+                                                }
+                                                // Індивідуальні обертання по осях (якщо вказані окремо) - у градусах
+                                                if (partConfig.rotationX !== undefined) {
+                                                    mesh.rotation.x = degToRad(partConfig.rotationX);
+                                                }
+                                                if (partConfig.rotationY !== undefined) {
+                                                    mesh.rotation.y = degToRad(partConfig.rotationY);
+                                                }
+                                                if (partConfig.rotationZ !== undefined) {
+                                                    mesh.rotation.z = degToRad(partConfig.rotationZ);
                                                 }
 
                                                 // Зберігаємо анімацію для частини
@@ -1623,45 +1700,85 @@
                             }
                             break;
                         case 'controller':
-                            // Create a controller composed of a green body and a red tip (last 10%)
+                            // Create a controller composed of a green body and a red tip
                             const controllerGroup = new THREE.Group();
                             const controllerConfig = markerConfig.controllerConfig;
 
-                            // Long axis along local Z to match tip detection along -Z
-                            const totalLength = controllerConfig.totalLength;
-                            const tipFraction = controllerConfig.tipFraction;
-                            const tipLength = totalLength * tipFraction;
-                            const bodyLength = totalLength - tipLength;
-                            const crossSection = controllerConfig.crossSection;
+                            // Support both new (bodySize, tipSize) and old (totalLength, tipFraction, crossSection) formats
+                            let bodySize, tipSize, bodyLength, tipLength, totalLength;
+                            
+                            if (controllerConfig.bodySize && controllerConfig.tipSize) {
+                                // New format: explicit sizes [width, height, depth]
+                                bodySize = controllerConfig.bodySize;
+                                tipSize = controllerConfig.tipSize;
+                                bodyLength = bodySize[2];
+                                tipLength = tipSize[2];
+                                totalLength = bodyLength + tipLength;
+                            } else {
+                                // Old format: calculate from totalLength, tipFraction, crossSection
+                                totalLength = controllerConfig.totalLength || 90;
+                                tipFraction = controllerConfig.tipFraction || 0.1;
+                                tipLength = totalLength * tipFraction;
+                                bodyLength = totalLength - tipLength;
+                                const crossSection = controllerConfig.crossSection || 5;
+                                bodySize = [crossSection, crossSection, bodyLength];
+                                tipSize = [crossSection, crossSection, tipLength];
+                            }
 
                             const controllerBody = new THREE.Mesh(
-                                new THREE.BoxGeometry(crossSection, crossSection, bodyLength),
-                                new THREE.MeshBasicMaterial({ color: new THREE.Color(controllerConfig.bodyColor) })
+                                new THREE.BoxGeometry(bodySize[0], bodySize[1], bodySize[2]),
+                                new THREE.MeshBasicMaterial({ color: new THREE.Color(controllerConfig.bodyColor || '#008000') })
                             );
                             controllerBody.userData.isController = true;
 
                             const controllerTip = new THREE.Mesh(
-                                new THREE.BoxGeometry(crossSection, crossSection, tipLength),
-                                new THREE.MeshBasicMaterial({ color: new THREE.Color(controllerConfig.tipColor) })
+                                new THREE.BoxGeometry(tipSize[0], tipSize[1], tipSize[2]),
+                                new THREE.MeshBasicMaterial({ color: new THREE.Color(controllerConfig.tipColor || '#ff0000') })
                             );
                             controllerTip.userData.isController = true;
+                            // Зберігаємо touchColor з конфігурації для використання при зіткненні
+                            controllerTip.userData.touchColor = controllerConfig.touchColor || '#ffffff';
 
                             // Arrange so that the tip sits at the negative Z end of the combined shape
-                            const half = totalLength / 2;
-                            controllerTip.position.z = -half + tipLength / 2; // center of tip segment
-                            controllerBody.position.z = tipLength / 2;        // center of body segment
+                            controllerTip.position.z = -totalLength / 2 + tipLength / 2; // center of tip segment
+                            controllerBody.position.z = tipLength / 2;                   // center of body segment
 
                             controllerGroup.add(controllerBody);
                             controllerGroup.add(controllerTip);
 
-                            // Position the whole controller as before (no Y-rotation needed now)
-                            controllerGroup.position.y = controllerConfig.positionY;
-                            controllerGroup.position.z = -(bodyLength / 2);
+                            // Position the whole controller
+                            if (controllerConfig.position) {
+                                controllerGroup.position.set(
+                                    controllerConfig.position[0] || 0,
+                                    controllerConfig.position[1] || 0,
+                                    controllerConfig.position[2] || 0
+                                );
+                            } else {
+                                // Fallback to old positionY format
+                                controllerGroup.position.y = controllerConfig.positionY || 4.020;
+                                controllerGroup.position.z = -(bodyLength / 2);
+                            }
+
+                            // Apply rotation if specified
+                            if (controllerConfig.rotation) {
+                                controllerGroup.rotation.set(
+                                    degToRad(controllerConfig.rotation[0] || 0),
+                                    degToRad(controllerConfig.rotation[1] || 0),
+                                    degToRad(controllerConfig.rotation[2] || 0)
+                                );
+                            }
 
                             markerRoots[i].add(controllerGroup);
 
                             // Use the tip mesh for collision checks
                             controller = controllerTip;
+
+                            // Load controller timing configuration (defaults: 500ms delay, 500ms sound duration)
+                            controllerIntersectionDelay = controllerConfig.intersectionDelay || 500;
+                            controllerTouchSoundDuration = controllerConfig.touchSoundDuration || 500;
+                            
+                            // Load collision mode configuration (default: '3d')
+                            controllerCollisionMode = controllerConfig.collisionMode || '3d';
                             break;
                         default:
                             // Якщо жодного контенту не додано, додаємо білу площину.
@@ -1721,18 +1838,24 @@
                 // Виконуємо перевірку тільки якщо контролер активний (видно камері)
                 if (controller && controller.parent && controller.parent.visible) {
                     let intersectedMarkerIndex = null;
-                    
+
                     mainContainer.traverse((object) => {
                         if (object.isMesh && !(object.userData && object.userData.isController)) {
                             if (detectCollisionCubes(object, controller)) {
                                 //bject.material.color.set('red');
-                                
+
                                 // Find which marker this object belongs to
-                                for (let i = 0; i < markerRoots.length; i++) {
-                                    if (markerRoots[i] && markerRoots[i].children.includes(object)) {
-                                        intersectedMarkerIndex = i;
-                                        break;
+                                // Для складних об'єктів (групи) потрібно підніматися вгору по ієрархії
+                                let parent = object.parent;
+                                while (parent) {
+                                    for (let i = 0; i < markerRoots.length; i++) {
+                                        if (markerRoots[i] === parent) {
+                                            intersectedMarkerIndex = i;
+                                            break;
+                                        }
                                     }
+                                    if (intersectedMarkerIndex !== null) break;
+                                    parent = parent.parent;
                                 }
                             }
                         }
@@ -1764,11 +1887,11 @@
                         }
                         // -------------------------------------------------------------
                         
-                        // --- ЗАТРИМКА ЗМІНИ КОНТЕНТУ: чекаємо завершення аудіо (0.5 сек) ---
+                        // --- ЗАТРИМКА ЗМІНИ КОНТЕНТУ: чекаємо завершення аудіо ---
                         // Альтернативний контент з'явиться після завершення звукового сигналу
                         setTimeout(function() {
                             switchMarkerContent(intersectedMarkerIndex, true);
-                        }, 500); // 500 мс = 0.5 секунди
+                        }, controllerIntersectionDelay);
                         // ------------------------------------------------------------------
                     }
 
@@ -1845,29 +1968,54 @@
                 // Transform tip box to world space (will become world AABB)
                 tipBoxLocal.applyMatrix4(object2.matrixWorld);
 
-                // --- ВІЗУАЛЬНИЙ ВІДГУК: спалах при дотику ---
-                if (box1World.intersectsBox(tipBoxLocal)) {
-                    // Короткий спалах об'єкта (зміна кольору на білий)
-                    // Не застосовуємо до альтернативного контенту - тільки до основного
-                    if (object1.material && !object1.userData.flashTimeout && !object1.userData.isAlternativeContent) {
-                        var originalColor = object1.material.color.clone();
-                        object1.material.color.set(0xffffff); // Білий спалах
-                        
+                // --- Check collision based on mode ---
+                let isColliding = false;
+                
+                if (controllerCollisionMode === '2d') {
+                    // 2D mode: Project boxes to XY plane (ignore Z-axis)
+                    const box1XY = new THREE.Box2();
+                    const box2XY = new THREE.Box2();
+                    
+                    box1XY.setFromPoints([
+                        new THREE.Vector2(box1World.min.x, box1World.min.y),
+                        new THREE.Vector2(box1World.max.x, box1World.max.y)
+                    ]);
+                    
+                    box2XY.setFromPoints([
+                        new THREE.Vector2(tipBoxLocal.min.x, tipBoxLocal.min.y),
+                        new THREE.Vector2(tipBoxLocal.max.x, tipBoxLocal.max.y)
+                    ]);
+                    
+                    isColliding = box1XY.intersectsBox(box2XY);
+                } else {
+                    // 3D mode: Full 3D bounding box intersection
+                    isColliding = box1World.intersectsBox(tipBoxLocal);
+                }
+
+                // --- ВІЗУАЛЬНИЙ ВІДГУК: спалах кінчика контролера при дотику ---
+                if (isColliding) {
+                    // Короткий спалах кінчика контролера (зміна кольору на touchColor з конфігурації)
+                    if (object2.material && !object2.userData.flashTimeout) {
+                        var originalColor = object2.material.color.clone();
+                        // Використовуємо touchColor з конфігурації, за замовчуванням білий
+                        var touchColor = object2.userData.touchColor || '#ffffff';
+                        object2.material.color.set(touchColor);
+
                         // Зберігаємо оригінальний колір для відновлення
-                        object1.userData.originalColor = originalColor;
-                        
+                        object2.userData.originalColor = originalColor;
+
                         // Повернення початкового кольору через 500 мс (синхронно з аудіо)
-                        object1.userData.flashTimeout = setTimeout(function() {
-                            if (object1.material && object1.userData.originalColor) {
-                                object1.material.color.copy(object1.userData.originalColor);
+                        object2.userData.flashTimeout = setTimeout(function() {
+                            if (object2.material && object2.userData.originalColor) {
+                                object2.material.color.copy(object2.userData.originalColor);
                             }
-                            object1.userData.flashTimeout = null;
-                        }, 500);
+                            object2.userData.flashTimeout = null;
+                        }, controllerTouchSoundDuration);
                     }
                 }
                 // ------------------------------------------------
-                
-                return box1World.intersectsBox(tipBoxLocal);
+
+                return isColliding;
             };
 
             // Функція для діагностики маркерів для Тесту 2
@@ -1980,8 +2128,8 @@
                                                 }
                                                 // Видаляємо таймер після виконання
                                                 markerAudioTimeouts.delete(markerIndex);
-                                            }, 500); // 500 мс = 0.5 секунди (синхронно з switchMarkerContent)
-                                            
+                                            }, controllerIntersectionDelay);
+
                                             markerAudioTimeouts.set(markerIndex, timeoutId);
                                         }
                                         // -----------------------------------------------------------------------
@@ -2085,20 +2233,28 @@
                 renderer.render(scene, camera);
             }
 
+            // Helper function to convert degrees per second to radians per frame
+            function degPerSecToRadPerFrame(degPerSec) {
+                // Convert degrees to radians and divide by approximate FPS (60)
+                return (degPerSec * Math.PI / 180) / 60;
+            }
+
             // Функція для анімації примітивів та моделей
             function animateObjects() {
                 scene.traverse((object) => {
                     if (object.userData && object.userData.animation) {
                         const anim = object.userData.animation;
+                        // Convert speed from degrees/second to radians/frame
+                        const speedRadPerFrame = degPerSecToRadPerFrame(anim.speed);
                         switch(anim.axis) {
                             case 'x':
-                                object.rotation.x += anim.speed;
+                                object.rotation.x += speedRadPerFrame;
                                 break;
                             case 'y':
-                                object.rotation.y += anim.speed;
+                                object.rotation.y += speedRadPerFrame;
                                 break;
                             case 'z':
-                                object.rotation.z += anim.speed;
+                                object.rotation.z += speedRadPerFrame;
                                 break;
                         }
                     }

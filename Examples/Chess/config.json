@@ -1,0 +1,276 @@
+{
+  "settings": {
+    "resolution": "high",
+    "welcomeText": "Press here<br>to start the WebAR-BoardGame"
+  },
+  "markers": [
+    {
+      "id": 1,
+      "type": "barcode",
+      "target": 8,
+      "matrixSize": 35,
+      "contentType": "controller",
+      "controllerConfig": {
+        "totalLength": 90,
+        "tipFraction": 0.1,
+        "crossSection": 5,
+        "bodyColor": "#008000",
+        "tipColor": "#ff0000",
+        "touchColor": "#ffffff",
+        "positionY": 4.020
+      }
+    },    
+    {
+      "id": 2,
+      "type": "barcode",
+      "target": 1,
+      "matrixSize": 35,
+      "contentType": "multiplex-3D",
+      "multiplex3D": 1,
+      "alternativeContent": {
+         "contentType": "primitive",
+         "primitive": {
+          "type": "BoxGeometry",
+          "size": [50, 5, 50],
+          "textureFile": "peshka.jpg",
+          "position": [0, 20, 0],
+          "rotation": [45, 0, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 30 }
+        }
+      },
+      "audioFile": "peshka.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 3,
+      "type": "barcode",
+      "target": 2,
+      "matrixSize": 35,
+      "contentType": "multiplex-3D",
+      "multiplex3D": 2,
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [50, 5, 50],
+          "textureFile": "tura.jpg",
+          "position": [0, 20, 0],
+          "rotation": [45, 0, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 30 }
+        }
+      },
+      "audioFile": "tura.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 4,
+      "type": "barcode",
+      "target": 3,
+      "matrixSize": 35,
+      "contentType": "multiplex-3D",
+      "multiplex3D": 3,
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [50, 5, 50],
+          "textureFile": "kon.jpg",
+          "position": [0, 20, 0],
+          "rotation": [45, 0, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 30 }
+        }
+      },
+      "audioFile": "kon.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 5,
+      "type": "barcode",
+      "target": 4,
+      "matrixSize": 35,
+      "contentType": "multiplex-3D",
+      "multiplex3D": 4,
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [50, 5, 50],
+          "textureFile": "slon.jpg",
+          "position": [0, 20, 0],
+          "rotation": [45, 0, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 30 }
+        }
+      },
+      "audioFile": "slon.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 6,
+      "type": "barcode",
+      "target": 5,
+      "matrixSize": 35,
+      "contentType": "multiplex-3D",
+      "multiplex3D": 5,
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [50, 5, 50],
+          "textureFile": "koroleva.jpg",
+          "position": [0, 20, 0],
+          "rotation": [45, 0, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 30 }
+        }
+      },
+      "audioFile": "koroleva.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 7,
+      "type": "barcode",
+      "target": 6,
+      "matrixSize": 35,
+      "contentType": "multiplex-3D",
+      "multiplex3D": 6,
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [50, 5, 50],
+          "textureFile": "korol.jpg",
+          "position": [0, 20, 0],
+          "rotation": [45, 0, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 30 }
+        }
+      },
+      "audioFile": "korol.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 8,
+      "type": "barcode",
+      "target": 7,
+      "matrixSize": 35,
+      "contentType": "multiplex-3D",
+      "multiplex3D": 7,
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [50, 5, 50],
+          "textureFile": "peshka.jpg",
+          "position": [0, 20, 0],
+          "rotation": [45, 0, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 30 }
+        }
+      },
+      "audioFile": "peshka.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 9,
+      "type": "barcode",
+      "target": 9,
+      "matrixSize": 35,
+      "contentType": "multiplex-3D",
+      "multiplex3D": 8,
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [32, 32, 32],
+          "textureFile": "texture_green.jpg",
+          "position": [0, 20, 0],
+          "rotation": [45, 0, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 30 }
+        }
+      },
+      "audioFile": "wrong_answer.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 10,
+      "type": "barcode",
+      "target": 10,
+      "matrixSize": 35,
+      "contentType": "multiplex-3D",
+      "multiplex3D": 9,
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [32, 32, 32],
+          "textureFile": "texture_green.jpg",
+          "position": [0, 20, 0],
+          "rotation": [45, 0, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 30 }
+        }
+      },
+      "audioFile": "wrong_answer.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 11,
+      "type": "barcode",
+      "target": 11,
+      "matrixSize": 35,
+      "contentType": "multiplex-3D",
+      "multiplex3D": 10,
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [32, 32, 32],
+          "textureFile": "texture_green.jpg",
+          "position": [0, 20, 0],
+          "rotation": [45, 0, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 30 }
+        }
+      },
+      "audioFile": "wrong_answer.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 12,
+      "type": "barcode",
+      "target": 12,
+      "matrixSize": 35,
+      "contentType": "multiplex-3D",
+      "multiplex3D": 11,
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [32, 32, 32],
+          "textureFile": "texture_green.jpg",
+          "position": [0, 20, 0],
+          "rotation": [45, 0, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 30 }
+        }
+      },
+      "audioFile": "wrong_answer.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 13,
+      "type": "barcode",
+      "target": 13,
+      "matrixSize": 35,
+      "contentType": "multiplex-3D",
+      "multiplex3D": 12,
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [32, 32, 32],
+          "textureFile": "texture_green.jpg",
+          "position": [0, 20, 0],
+          "rotation": [45, 0, 0],
+          "animation": { "type": "rotation", "axis": "y", "speed": 30 }
+        }
+      },
+      "audioFile": "wrong_answer.mp3",
+      "playOnControllerIntersect": true
+    }    
+  ]
+}
