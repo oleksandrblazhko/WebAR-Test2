@@ -305,22 +305,26 @@ Educação
 
             <!-- Speech Synthesizer Section -->
             <div class="speech-section">
-                <h3>🔊 Speech Synthesizer (Google TTS)</h3>
+                <h3>🔊 Speech Synthesizer (VoiceRSS API)</h3>
 
                 <div style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;">
                     <div class="config-item" style="flex: 1;">
+                        <label for="apiKeyInput">VoiceRSS API Key:</label>
+                        <input type="text" id="apiKeyInput" placeholder="Enter your VoiceRSS API key" value="">
+                    </div>
+                    <div class="config-item">
                         <label for="languageSelect">Language:</label>
                         <select id="languageSelect">
-                            <option value="pt-BR" selected>Portuguese (Brazil) - pt-BR</option>
-                            <option value="pt-PT">Portuguese (Portugal) - pt-PT</option>
-                            <option value="en-US">English (US) - en-US</option>
-                            <option value="en-GB">English (UK) - en-GB</option>
-                            <option value="es-ES">Spanish (Spain) - es-ES</option>
-                            <option value="fr-FR">French (France) - fr-FR</option>
-                            <option value="de-DE">German (Germany) - de-DE</option>
-                            <option value="it-IT">Italian (Italy) - it-IT</option>
-                            <option value="uk-UA">Ukrainian - uk-UA</option>
-                            <option value="ru-RU">Russian - ru-RU</option>
+                            <option value="pt-br" selected>Portuguese (Brazil) - pt-br</option>
+                            <option value="pt-pt">Portuguese (Portugal) - pt-pt</option>
+                            <option value="en-us">English (US) - en-us</option>
+                            <option value="en-gb">English (UK) - en-gb</option>
+                            <option value="es-es">Spanish (Spain) - es-es</option>
+                            <option value="fr-fr">French (France) - fr-fr</option>
+                            <option value="de-de">German (Germany) - de-de</option>
+                            <option value="it-it">Italian (Italy) - it-it</option>
+                            <option value="uk-ua">Ukrainian - uk-ua</option>
+                            <option value="ru-ru">Russian - ru-ru</option>
                         </select>
                     </div>
                     <div style="display: flex; gap: 10px; flex-shrink: 0;">
@@ -328,6 +332,9 @@ Educação
                         <button class="btn btn-success" onclick="downloadAllAudio()">📥 Download Audio ZIP</button>
                     </div>
                 </div>
+                <p style="font-size: 12px; color: #666; margin-top: 10px;">
+                    💡 Get your free API key at <a href="https://www.voicerss.org/" target="_blank">voicerss.org</a> (500 free requests/day)
+                </p>
             </div>
 
             <div class="preview-section">
@@ -346,7 +353,7 @@ Educação
         const SPEECH_RATE = 1.0;
         const SPEECH_PITCH = 1.0;
         
-        // Get selected language for Google TTS
+        // Get selected language for VoiceRSS
         function getSelectedLanguage() {
             return document.getElementById('languageSelect').value;
         }
@@ -443,13 +450,19 @@ Educação
         }
 
         function playWord(word) {
-            // Use Google TTS for consistent audio playback
+            // Use VoiceRSS API for consistent audio playback
+            const apiKey = document.getElementById('apiKeyInput').value.trim();
+            if (!apiKey) {
+                alert('Please enter your VoiceRSS API key first!');
+                return;
+            }
+            
             const language = getSelectedLanguage();
-            const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${language}&client=tw-ob&q=${encodeURIComponent(word)}`;
-            const audio = new Audio(ttsUrl);
+            const voiceRSSUrl = `https://api.voicerss.org/?key=${apiKey}&hl=${language}&src=${encodeURIComponent(word)}&f=22khz_16bit_stereo&c=mp3`;
+            const audio = new Audio(voiceRSSUrl);
             audio.play().catch(error => {
                 console.error('Error playing audio:', error);
-                alert('Error playing audio. Please try again.');
+                alert('Error playing audio. Please check your API key and try again.');
             });
         }
 
@@ -479,6 +492,12 @@ Educação
                 alert('Enter at least one word!');
                 return;
             }
+            
+            const apiKey = document.getElementById('apiKeyInput').value.trim();
+            if (!apiKey) {
+                alert('Please enter your VoiceRSS API key first!');
+                return;
+            }
 
             let index = 0;
             const progress = document.getElementById('progress');
@@ -493,8 +512,8 @@ Educação
                 progress.textContent = `Playing: ${index + 1}/${words.length} - "${word}"`;
 
                 const language = getSelectedLanguage();
-                const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${language}&client=tw-ob&q=${encodeURIComponent(word)}`;
-                const audio = new Audio(ttsUrl);
+                const voiceRSSUrl = `https://api.voicerss.org/?key=${apiKey}&hl=${language}&src=${encodeURIComponent(word)}&f=22khz_16bit_stereo&c=mp3`;
+                const audio = new Audio(voiceRSSUrl);
 
                 audio.onended = () => {
                     index++;
@@ -536,7 +555,7 @@ Educação
                 progress.textContent = `Generating audio: ${i + 1}/${words.length} - "${word}"`;
 
                 try {
-                    const audioBlob = await fetchGoogleTTS(word);
+                    const audioBlob = await fetchVoiceRSS(word);
                     const fileName = word.replace(/\s+/g, '_') + '.mp3';
                     generatedAudio.push({ name: fileName, data: audioBlob });
 
@@ -562,29 +581,36 @@ Educação
         }
 
         /**
-         * Fetch audio from Google Translate TTS service
+         * Fetch audio from VoiceRSS API
          * @param {string} text - Text to convert to speech
          * @returns {Promise<Blob>} - MP3 audio blob
          */
-        function fetchGoogleTTS(text) {
+        function fetchVoiceRSS(text) {
             return new Promise((resolve, reject) => {
-                // Google Translate TTS URL with selected language
-                const language = getSelectedLanguage();
-                const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${language}&client=tw-ob&q=${encodeURIComponent(text)}`;
+                const apiKey = document.getElementById('apiKeyInput').value.trim();
                 
-                fetch(ttsUrl)
+                if (!apiKey) {
+                    reject(new Error('Please enter your VoiceRSS API key'));
+                    return;
+                }
+                
+                // VoiceRSS API URL
+                const language = getSelectedLanguage();
+                const voiceRSSUrl = `https://api.voicerss.org/?key=${apiKey}&hl=${language}&src=${encodeURIComponent(text)}&f=22khz_16bit_stereo&c=mp3`;
+                
+                fetch(voiceRSSUrl)
                     .then(response => {
                         if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
+                            throw new Error(`VoiceRSS API error! status: ${response.status}`);
                         }
                         return response.blob();
                     })
                     .then(blob => {
                         // Verify it's actually audio
-                        if (blob.type.startsWith('audio/') || blob.size > 1000) {
+                        if (blob.size > 1000) {
                             resolve(blob);
                         } else {
-                            throw new Error('Received invalid audio data');
+                            throw new Error('Received invalid audio data - file too small');
                         }
                     })
                     .catch(error => {
