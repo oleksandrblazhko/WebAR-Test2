@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Генератор зображень + Speech Synthesizer</title>
+    <title>Image Generation and Speech Synthesis for Augmented Reality Cards</title>
     <style>
         * {
             box-sizing: border-box;
@@ -18,7 +18,7 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -49,10 +49,11 @@
         }
 
         .config-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
             gap: 15px;
             margin-bottom: 15px;
+            flex-wrap: wrap;
+            align-items: flex-end;
         }
 
         .config-item {
@@ -148,6 +149,12 @@
             font-size: 12px;
         }
 
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .speech-section {
             background: #f8f9fa;
             padding: 15px;
@@ -174,14 +181,6 @@
 
         .preview-section {
             margin-top: 20px;
-        }
-
-        .preview-canvas {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            display: block;
-            max-width: 100%;
         }
 
         .word-list {
@@ -244,103 +243,82 @@
 </head>
 <body>
     <div class="container">
-        <h1>🖼️🔊 Генератор зображень + Speech Synthesizer</h1>
+        <h1>🖼️🔊 Image Generation and Speech Synthesis for Augmented Reality Cards</h1>
 
         <div class="panel">
-            <h2>🎨 Налаштування зображень</h2>
+            <h2>🎨 Image Settings</h2>
 
-            <div class="config-section">
-                <div class="config-row">
-                    <div class="config-item">
-                        <label for="imgWidth">Ширина (px):</label>
-                        <input type="number" id="imgWidth" value="400" min="100" max="2000">
-                    </div>
-                    <div class="config-item">
-                        <label for="imgHeight">Висота (px):</label>
-                        <input type="number" id="imgHeight" value="300" min="100" max="2000">
+            <div style="display: flex; gap: 20px; align-items: flex-end; flex-wrap: wrap;">
+                <div class="config-section" style="flex: 1; margin-bottom: 0;">
+                    <div class="config-row">
+                        <div class="config-item">
+                            <label for="imgWidth">Width (px):</label>
+                            <input type="number" id="imgWidth" value="400" min="100" max="2000">
+                        </div>
+                        <div class="config-item">
+                            <label for="imgHeight">Height (px):</label>
+                            <input type="number" id="imgHeight" value="300" min="100" max="2000">
+                        </div>
+                        <div class="config-item">
+                            <label for="backgroundColor">Background:</label>
+                            <input type="color" id="backgroundColor" value="#ffffff">
+                        </div>
+                        <div class="config-item">
+                            <label for="textColor">Text:</label>
+                            <input type="color" id="textColor" value="#000000">
+                        </div>
+                        <div class="config-item">
+                            <label for="fontSize">Font Size (px):</label>
+                            <input type="number" id="fontSize" value="48" min="12" max="200">
+                        </div>
+                        <div class="config-item">
+                            <label for="fontFamily">Font:</label>
+                            <select id="fontFamily">
+                                <option value="Arial">Arial</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="Georgia">Georgia</option>
+                                <option value="Verdana">Verdana</option>
+                                <option value="Impact">Impact</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-
-                <div class="config-row">
-                    <div class="config-item">
-                        <label for="backgroundColor">Фон:</label>
-                        <input type="color" id="backgroundColor" value="#ffffff">
-                    </div>
-                    <div class="config-item">
-                        <label for="textColor">Текст:</label>
-                        <input type="color" id="textColor" value="#000000">
-                    </div>
-                </div>
-
-                <div class="config-row">
-                    <div class="config-item">
-                        <label for="fontSize">Розмір шрифту (px):</label>
-                        <input type="number" id="fontSize" value="48" min="12" max="200">
-                    </div>
-                    <div class="config-item">
-                        <label for="fontFamily">Шрифт:</label>
-                        <select id="fontFamily">
-                            <option value="Arial">Arial</option>
-                            <option value="Times New Roman">Times New Roman</option>
-                            <option value="Courier New">Courier New</option>
-                            <option value="Georgia">Georgia</option>
-                            <option value="Verdana">Verdana</option>
-                            <option value="Impact">Impact</option>
-                        </select>
-                    </div>
+                <div style="display: flex; gap: 10px; flex-shrink: 0;">
+                    <button class="btn btn-primary" onclick="generateImages()">🚀 Generate Images</button>
+                    <button class="btn btn-success" onclick="downloadAll()">📥 Download ZIP</button>
                 </div>
             </div>
 
             <div class="config-section">
-                <label for="wordsInput">Слова (кожне з нового рядка):</label>
-                <textarea id="wordsInput" placeholder="Введіть слова, кожне з нового рядка...">Realidade
-Palavra
-Livro
-Casa
-Carro
-Água
-Comida
-Amigo
-Trabalho
-Escola</textarea>
+                <label for="wordsInput">Words (each on a new line):</label>
+                <textarea id="wordsInput" placeholder="Enter words, each on a new line...">Realidade
+Aumentada
+Mista
+Entretenimento
+Ensino</textarea>
             </div>
 
-            <button class="btn btn-primary" onclick="generateImages()">🚀 Створити зображення</button>
-            <button class="btn btn-success" onclick="downloadAll()">📥 Завантажити ZIP</button>
-            <button class="btn btn-info" onclick="speakAllWords()">🔊 Озвучити всі</button>
-            <button class="btn btn-primary" onclick="generateAudio()">🎵 Створити аудіо</button>
-            <button class="btn btn-success" onclick="downloadAllAudio()">📥 Завантажити аудіо ZIP</button>
-
-            <div class="progress" id="progress">Очікування...</div>
+            <div class="progress" id="progress">Waiting...</div>
 
             <!-- Speech Synthesizer Section -->
             <div class="speech-section">
                 <h3>🔊 Speech Synthesizer</h3>
 
-                <div class="config-row">
-                    <div class="config-item">
-                        <label for="voiceSelect">Голос:</label>
+                <div style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;">
+                    <div class="config-item" style="flex: 1;">
+                        <label for="voiceSelect">Voice:</label>
                         <select id="voiceSelect"></select>
                     </div>
-                </div>
-
-                <div class="config-row">
-                    <div class="config-item">
-                        <label for="rate">Швидкість:</label>
-                        <input type="range" id="rate" min="0.5" max="2" value="1" step="0.1" />
-                        <span class="value-display" id="rateValue">1.0</span>
-                    </div>
-                    <div class="config-item">
-                        <label for="pitch">Тон:</label>
-                        <input type="range" id="pitch" min="0.5" max="2" value="1" step="0.1" />
-                        <span class="value-display" id="pitchValue">1.0</span>
+                    <div style="display: flex; gap: 10px; flex-shrink: 0;">
+                        <button class="btn btn-primary" onclick="generateAudio()">🎵 Generate Audio</button>
+                        <button class="btn btn-success" onclick="downloadAllAudio()">📥 Download Audio ZIP</button>
                     </div>
                 </div>
             </div>
 
             <div class="preview-section">
-                <h3>🖼️ Попередній перегляд:</h3>
-                <canvas id="previewCanvas" class="preview-canvas" width="400" height="300"></canvas>
+                <h3>🖼️ Preview:</h3>
                 <div class="word-list" id="wordList"></div>
             </div>
         </div>
@@ -351,6 +329,10 @@ Escola</textarea>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
     <script>
+        // ==================== CONSTANTS ====================
+        const SPEECH_RATE = 1.0;
+        const SPEECH_PITCH = 1.0;
+
         // ==================== IMAGE GENERATOR ====================
         let generatedImages = [];
         let generatedAudio = [];
@@ -394,7 +376,7 @@ Escola</textarea>
             const words = wordsText.split('\n').filter(w => w.trim() !== '');
 
             if (words.length === 0) {
-                alert('Введіть хоча б одне слово!');
+                alert('Enter at least one word!');
                 return;
             }
 
@@ -402,44 +384,37 @@ Escola</textarea>
             const wordList = document.getElementById('wordList');
             const previewCanvas = document.getElementById('previewCanvas');
             const progress = document.getElementById('progress');
-            
-            wordList.innerHTML = '';
-            progress.textContent = `Обробка слів: 0/${words.length}`;
 
-            // Оновлюємо попередній перегляд першим словом
-            if (words.length > 0) {
-                const firstCanvas = createImage(words[0], config);
-                previewCanvas.width = config.width;
-                previewCanvas.height = config.height;
-                const ctx = previewCanvas.getContext('2d');
-                ctx.drawImage(firstCanvas, 0, 0);
-            }
+            wordList.innerHTML = '';
+            progress.textContent = `Processing words: 0/${words.length}`;
 
             words.forEach((word, index) => {
                 const canvas = createImage(word, config);
                 const dataURL = canvas.toDataURL('image/jpeg', 0.95);
                 const fileName = word.trim().replace(/\s+/g, '_') + '.jpg';
-                
+
                 generatedImages.push({ name: fileName, data: dataURL, text: word.trim() });
 
-                // Додаємо картку з попереднім переглядом
+                // Add preview card
                 const wordCard = document.createElement('div');
                 wordCard.className = 'word-card';
+                wordCard.dataset.word = word.trim();
                 wordCard.innerHTML = `
                     <img src="${dataURL}" alt="${word}">
                     <div class="word-card-content">
                         <div class="word-card-text">${word.trim()}</div>
                         <div class="word-card-buttons">
                             <button class="btn btn-info btn-small" onclick="downloadSingle('${fileName}', '${dataURL}')">📥</button>
+                            <button class="btn btn-small" onclick="playWord('${word.trim()}')" disabled>🔊</button>
                         </div>
                     </div>
                 `;
                 wordList.appendChild(wordCard);
 
-                progress.textContent = `Обробка слів: ${index + 1}/${words.length}`;
+                progress.textContent = `Processing words: ${index + 1}/${words.length}`;
             });
 
-            progress.textContent = `✅ Готово! Створено ${words.length} зображень`;
+            progress.textContent = `✅ Done! Created ${words.length} images`;
         }
 
         function downloadSingle(fileName, dataURL) {
@@ -449,9 +424,20 @@ Escola</textarea>
             link.click();
         }
 
+        function playWord(word) {
+            const utterance = new SpeechSynthesisUtterance(word);
+            const selectedVoiceIndex = voiceSelect.value;
+            if (voices[selectedVoiceIndex]) {
+                utterance.voice = voices[selectedVoiceIndex];
+            }
+            utterance.rate = SPEECH_RATE;
+            utterance.pitch = SPEECH_PITCH;
+            speechSynthesis.speak(utterance);
+        }
+
         async function downloadAll() {
             if (generatedImages.length === 0) {
-                alert('Спочатку створіть зображення!');
+                alert('Generate images first!');
                 return;
             }
 
@@ -473,10 +459,6 @@ Escola</textarea>
         let userHasSelected = false;
 
         const voiceSelect = document.getElementById('voiceSelect');
-        const rateSlider = document.getElementById('rate');
-        const pitchSlider = document.getElementById('pitch');
-        const rateValue = document.getElementById('rateValue');
-        const pitchValue = document.getElementById('pitchValue');
 
         function loadVoices() {
             const currentSelection = voiceSelect.value;
@@ -496,10 +478,10 @@ Escola</textarea>
                     voiceSelect.value = restoredIndex;
                 }
             } else if (!userHasSelected) {
-                const spanishVoiceIndex = voices.findIndex(v => v.lang.startsWith('es'));
-                if (spanishVoiceIndex !== -1) {
-                    voiceSelect.value = spanishVoiceIndex;
-                    selectedVoiceName = voices[spanishVoiceIndex].name;
+                const portugueseVoiceIndex = voices.findIndex(v => v.lang.startsWith('pt'));
+                if (portugueseVoiceIndex !== -1) {
+                    voiceSelect.value = portugueseVoiceIndex;
+                    selectedVoiceName = voices[portugueseVoiceIndex].name;
                 }
             }
         }
@@ -514,43 +496,35 @@ Escola</textarea>
             selectedVoiceName = voices[voiceSelect.value].name;
         });
 
-        rateSlider.addEventListener('input', () => {
-            rateValue.textContent = rateSlider.value;
-        });
-
-        pitchSlider.addEventListener('input', () => {
-            pitchValue.textContent = pitchSlider.value;
-        });
-
         function speakAllWords() {
             const wordsText = document.getElementById('wordsInput').value;
             const words = wordsText.split('\n').filter(w => w.trim() !== '');
 
             if (words.length === 0) {
-                alert('Введіть хоча б одне слово!');
+                alert('Enter at least one word!');
                 return;
             }
 
             let index = 0;
-            
+
             function speakNext() {
                 if (index >= words.length) {
-                    document.getElementById('progress').textContent = '✅ Озвучення завершено!';
+                    document.getElementById('progress').textContent = '✅ Speech synthesis completed!';
                     return;
                 }
 
                 const word = words[index];
-                document.getElementById('progress').textContent = `Озвучення: ${index + 1}/${words.length} - "${word}"`;
+                document.getElementById('progress').textContent = `Speaking: ${index + 1}/${words.length} - "${word}"`;
 
                 const utterance = new SpeechSynthesisUtterance(word);
-                
+
                 const selectedVoiceIndex = voiceSelect.value;
                 if (voices[selectedVoiceIndex]) {
                     utterance.voice = voices[selectedVoiceIndex];
                 }
 
-                utterance.rate = parseFloat(rateSlider.value);
-                utterance.pitch = parseFloat(pitchSlider.value);
+                utterance.rate = SPEECH_RATE;
+                utterance.pitch = SPEECH_PITCH;
 
                 utterance.onend = () => {
                     index++;
@@ -569,37 +543,47 @@ Escola</textarea>
             const words = wordsText.split('\n').filter(w => w.trim() !== '');
 
             if (words.length === 0) {
-                alert('Введіть хоча б одне слово!');
+                alert('Enter at least one word!');
                 return;
             }
 
             generatedAudio = [];
             const progress = document.getElementById('progress');
-            progress.textContent = `Генерація аудіо: 0/${words.length}`;
+            progress.textContent = `Generating audio: 0/${words.length}`;
 
-            // Перевірка підтримки MediaRecorder
+            // Check MediaRecorder support
             if (!window.MediaRecorder) {
-                alert('Ваш браузер не підтримує запис аудіо. Спробуйте Chrome або Firefox.');
+                alert('Your browser does not support audio recording. Try Chrome or Firefox.');
                 return;
             }
 
             for (let i = 0; i < words.length; i++) {
                 const word = words[i].trim();
-                progress.textContent = `Генерація аудіо: ${i + 1}/${words.length} - "${word}"`;
+                progress.textContent = `Generating audio: ${i + 1}/${words.length} - "${word}"`;
 
                 try {
                     const audioBlob = await recordSpeech(word);
                     const fileName = word.replace(/\s+/g, '_') + '.mp3';
                     generatedAudio.push({ name: fileName, data: audioBlob });
+                    
+                    // Enable listen button for this word
+                    const wordCard = document.querySelector(`.word-card[data-word="${word}"]`);
+                    if (wordCard) {
+                        const listenBtn = wordCard.querySelector('button[onclick^="playWord"]');
+                        if (listenBtn) {
+                            listenBtn.disabled = false;
+                            listenBtn.title = `Listen to "${word}"`;
+                        }
+                    }
                 } catch (error) {
-                    console.error(`Помилка запису "${word}":`, error);
+                    console.error(`Error recording "${word}":`, error);
                 }
 
-                // Невелика затримка між словами
+                // Small delay between words
                 await new Promise(resolve => setTimeout(resolve, 500));
             }
 
-            progress.textContent = `✅ Аудіо готово! Створено ${generatedAudio.length} файлів`;
+            progress.textContent = `✅ Audio ready! Created ${generatedAudio.length} files`;
         }
 
         function recordSpeech(text) {
@@ -611,19 +595,19 @@ Escola</textarea>
                     utterance.voice = voices[selectedVoiceIndex];
                 }
 
-                utterance.rate = parseFloat(rateSlider.value);
-                utterance.pitch = parseFloat(pitchSlider.value);
+                utterance.rate = SPEECH_RATE;
+                utterance.pitch = SPEECH_PITCH;
 
-                // Використовуємо AudioContext для запису системного аудіо
-                // Примітка: це працює обмежено через політику безпеки браузерів
-                // Альтернатива - зберігаємо параметри для відтворення
+                // Using AudioContext to record system audio
+                // Note: this works limited due to browser security policies
+                // Alternative - save parameters for playback
 
-                // Оскільки пряме записування speechSynthesis неможливе,
-                // зберігаємо текст і параметри для відтворення
+                // Since direct speechSynthesis recording is not possible,
+                // save text and parameters for playback
                 speechSynthesis.speak(utterance);
 
                 utterance.onend = () => {
-                    // Повертаємо текст як "заглушку" - реальне записування вимагає сервера
+                    // Return text as "placeholder" - actual recording requires server
                     resolve(new Blob(['Audio for: ' + text], { type: 'text/plain' }));
                 };
 
@@ -635,7 +619,7 @@ Escola</textarea>
 
         async function downloadAllAudio() {
             if (generatedAudio.length === 0) {
-                alert('Спочатку створіть аудіо!');
+                alert('Generate audio first!');
                 return;
             }
 
@@ -650,7 +634,7 @@ Escola</textarea>
             saveAs(content, "text-audio.zip");
         }
 
-        // Автогенерація при завантаженні
+        // Auto-generate on load
         window.onload = () => {
             generateImages();
         };

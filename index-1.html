@@ -339,6 +339,11 @@
             let arucoControls = [];
 
             let controller;
+
+            // Controller haptic feedback timing configuration (defaults)
+            let controllerIntersectionDelay = 500; // ms delay between intersection and audio/alternative content
+            let controllerTouchSoundDuration = 500; // ms duration of touch sound click
+            let controllerCollisionMode = '3d'; // '3d' (full 3D collision) or '2d' (ignore Z-axis)
             
             // Audio context для тактильного звукового відгуку
             let audioContext = null;
@@ -349,23 +354,24 @@
                 if (!audioContext) {
                     audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 }
-                
-                // Створення аудіо-сигналу (синусоїда 800 Гц, 500 мс)
+
+                // Створення аудіо-сигналу (синусоїда 800 Гц)
                 var oscillator = audioContext.createOscillator();
                 var gainNode = audioContext.createGain();
-                
+
                 oscillator.connect(gainNode);
                 gainNode.connect(audioContext.destination);
-                
+
                 oscillator.frequency.value = 800; // Частота 800 Гц
                 oscillator.type = 'sine'; // Синусоїда
-                
-                // Гучність: плавне загасання протягом 0.5 сек
+
+                // Гучність: плавне загасання протягом заданого часу
+                const soundDuration = controllerTouchSoundDuration / 1000; // convert ms to seconds
                 gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-                
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + soundDuration);
+
                 oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.5); // 500 мс
+                oscillator.stop(audioContext.currentTime + soundDuration);
             }
 
             // Track current content state for each marker (true = alternative content, false = first content)
@@ -1694,47 +1700,85 @@
                             }
                             break;
                         case 'controller':
-                            // Create a controller composed of a green body and a red tip (last 10%)
+                            // Create a controller composed of a green body and a red tip
                             const controllerGroup = new THREE.Group();
                             const controllerConfig = markerConfig.controllerConfig;
 
-                            // Long axis along local Z to match tip detection along -Z
-                            const totalLength = controllerConfig.totalLength;
-                            const tipFraction = controllerConfig.tipFraction;
-                            const tipLength = totalLength * tipFraction;
-                            const bodyLength = totalLength - tipLength;
-                            const crossSection = controllerConfig.crossSection;
+                            // Support both new (bodySize, tipSize) and old (totalLength, tipFraction, crossSection) formats
+                            let bodySize, tipSize, bodyLength, tipLength, totalLength;
+                            
+                            if (controllerConfig.bodySize && controllerConfig.tipSize) {
+                                // New format: explicit sizes [width, height, depth]
+                                bodySize = controllerConfig.bodySize;
+                                tipSize = controllerConfig.tipSize;
+                                bodyLength = bodySize[2];
+                                tipLength = tipSize[2];
+                                totalLength = bodyLength + tipLength;
+                            } else {
+                                // Old format: calculate from totalLength, tipFraction, crossSection
+                                totalLength = controllerConfig.totalLength || 90;
+                                tipFraction = controllerConfig.tipFraction || 0.1;
+                                tipLength = totalLength * tipFraction;
+                                bodyLength = totalLength - tipLength;
+                                const crossSection = controllerConfig.crossSection || 5;
+                                bodySize = [crossSection, crossSection, bodyLength];
+                                tipSize = [crossSection, crossSection, tipLength];
+                            }
 
                             const controllerBody = new THREE.Mesh(
-                                new THREE.BoxGeometry(crossSection, crossSection, bodyLength),
-                                new THREE.MeshBasicMaterial({ color: new THREE.Color(controllerConfig.bodyColor) })
+                                new THREE.BoxGeometry(bodySize[0], bodySize[1], bodySize[2]),
+                                new THREE.MeshBasicMaterial({ color: new THREE.Color(controllerConfig.bodyColor || '#008000') })
                             );
                             controllerBody.userData.isController = true;
 
                             const controllerTip = new THREE.Mesh(
-                                new THREE.BoxGeometry(crossSection, crossSection, tipLength),
-                                new THREE.MeshBasicMaterial({ color: new THREE.Color(controllerConfig.tipColor) })
+                                new THREE.BoxGeometry(tipSize[0], tipSize[1], tipSize[2]),
+                                new THREE.MeshBasicMaterial({ color: new THREE.Color(controllerConfig.tipColor || '#ff0000') })
                             );
                             controllerTip.userData.isController = true;
                             // Зберігаємо touchColor з конфігурації для використання при зіткненні
                             controllerTip.userData.touchColor = controllerConfig.touchColor || '#ffffff';
 
                             // Arrange so that the tip sits at the negative Z end of the combined shape
-                            const half = totalLength / 2;
-                            controllerTip.position.z = -half + tipLength / 2; // center of tip segment
-                            controllerBody.position.z = tipLength / 2;        // center of body segment
+                            controllerTip.position.z = -totalLength / 2 + tipLength / 2; // center of tip segment
+                            controllerBody.position.z = tipLength / 2;                   // center of body segment
 
                             controllerGroup.add(controllerBody);
                             controllerGroup.add(controllerTip);
 
-                            // Position the whole controller as before (no Y-rotation needed now)
-                            controllerGroup.position.y = controllerConfig.positionY;
-                            controllerGroup.position.z = -(bodyLength / 2);
+                            // Position the whole controller
+                            if (controllerConfig.position) {
+                                controllerGroup.position.set(
+                                    controllerConfig.position[0] || 0,
+                                    controllerConfig.position[1] || 0,
+                                    controllerConfig.position[2] || 0
+                                );
+                            } else {
+                                // Fallback to old positionY format
+                                controllerGroup.position.y = controllerConfig.positionY || 4.020;
+                                controllerGroup.position.z = -(bodyLength / 2);
+                            }
+
+                            // Apply rotation if specified
+                            if (controllerConfig.rotation) {
+                                controllerGroup.rotation.set(
+                                    degToRad(controllerConfig.rotation[0] || 0),
+                                    degToRad(controllerConfig.rotation[1] || 0),
+                                    degToRad(controllerConfig.rotation[2] || 0)
+                                );
+                            }
 
                             markerRoots[i].add(controllerGroup);
 
                             // Use the tip mesh for collision checks
                             controller = controllerTip;
+
+                            // Load controller timing configuration (defaults: 500ms delay, 500ms sound duration)
+                            controllerIntersectionDelay = controllerConfig.intersectionDelay || 500;
+                            controllerTouchSoundDuration = controllerConfig.touchSoundDuration || 500;
+                            
+                            // Load collision mode configuration (default: '3d')
+                            controllerCollisionMode = controllerConfig.collisionMode || '3d';
                             break;
                         default:
                             // Якщо жодного контенту не додано, додаємо білу площину.
@@ -1843,11 +1887,11 @@
                         }
                         // -------------------------------------------------------------
                         
-                        // --- ЗАТРИМКА ЗМІНИ КОНТЕНТУ: чекаємо завершення аудіо (0.5 сек) ---
+                        // --- ЗАТРИМКА ЗМІНИ КОНТЕНТУ: чекаємо завершення аудіо ---
                         // Альтернативний контент з'явиться після завершення звукового сигналу
                         setTimeout(function() {
                             switchMarkerContent(intersectedMarkerIndex, true);
-                        }, 500); // 500 мс = 0.5 секунди
+                        }, controllerIntersectionDelay);
                         // ------------------------------------------------------------------
                     }
 
@@ -1924,8 +1968,32 @@
                 // Transform tip box to world space (will become world AABB)
                 tipBoxLocal.applyMatrix4(object2.matrixWorld);
 
+                // --- Check collision based on mode ---
+                let isColliding = false;
+                
+                if (controllerCollisionMode === '2d') {
+                    // 2D mode: Project boxes to XY plane (ignore Z-axis)
+                    const box1XY = new THREE.Box2();
+                    const box2XY = new THREE.Box2();
+                    
+                    box1XY.setFromPoints([
+                        new THREE.Vector2(box1World.min.x, box1World.min.y),
+                        new THREE.Vector2(box1World.max.x, box1World.max.y)
+                    ]);
+                    
+                    box2XY.setFromPoints([
+                        new THREE.Vector2(tipBoxLocal.min.x, tipBoxLocal.min.y),
+                        new THREE.Vector2(tipBoxLocal.max.x, tipBoxLocal.max.y)
+                    ]);
+                    
+                    isColliding = box1XY.intersectsBox(box2XY);
+                } else {
+                    // 3D mode: Full 3D bounding box intersection
+                    isColliding = box1World.intersectsBox(tipBoxLocal);
+                }
+
                 // --- ВІЗУАЛЬНИЙ ВІДГУК: спалах кінчика контролера при дотику ---
-                if (box1World.intersectsBox(tipBoxLocal)) {
+                if (isColliding) {
                     // Короткий спалах кінчика контролера (зміна кольору на touchColor з конфігурації)
                     if (object2.material && !object2.userData.flashTimeout) {
                         var originalColor = object2.material.color.clone();
@@ -1942,12 +2010,12 @@
                                 object2.material.color.copy(object2.userData.originalColor);
                             }
                             object2.userData.flashTimeout = null;
-                        }, 500);
+                        }, controllerTouchSoundDuration);
                     }
                 }
                 // ------------------------------------------------
 
-                return box1World.intersectsBox(tipBoxLocal);
+                return isColliding;
             };
 
             // Функція для діагностики маркерів для Тесту 2
@@ -2060,8 +2128,8 @@
                                                 }
                                                 // Видаляємо таймер після виконання
                                                 markerAudioTimeouts.delete(markerIndex);
-                                            }, 500); // 500 мс = 0.5 секунди (синхронно з switchMarkerContent)
-                                            
+                                            }, controllerIntersectionDelay);
+
                                             markerAudioTimeouts.set(markerIndex, timeoutId);
                                         }
                                         // -----------------------------------------------------------------------
