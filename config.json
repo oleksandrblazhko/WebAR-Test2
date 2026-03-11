@@ -46,7 +46,7 @@
           "rotation": [45, 0, 0]
         }
       },
-      "audioFile": "1-Realidade.mp3",
+      "audioFile": "Realidade.mp3",
       "playOnControllerIntersect": true
     },
     {
@@ -58,7 +58,7 @@
       "primitive": {
         "type": "BoxGeometry",
         "size": [35, 5, 35],
-        "textureFile": "Питання.jpg",
+        "textureFile": "In_English.jpg",
         "position": [0, 20, 10],
         "rotation": [45, 0, 0]
       },
@@ -67,12 +67,12 @@
         "primitive": {
           "type": "BoxGeometry",
           "size": [35, 5, 35],
-          "textureFile": "Реальність.jpg",
+          "textureFile": "Reality.jpg",
           "position": [0, 20, 10],
           "rotation": [45, 0, 0]
         }
       },
-      "audioFile": "Реальність.mp3",
+      "audioFile": "Reality.mp3",
       "playOnControllerIntersect": true
     } 
   ]

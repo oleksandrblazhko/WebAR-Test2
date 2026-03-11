@@ -296,19 +296,32 @@
 Aumentada
 Mista
 Entretenimento
-Ensino</textarea>
+Ensino
+Educação
+</textarea>
             </div>
 
             <div class="progress" id="progress">Waiting...</div>
 
             <!-- Speech Synthesizer Section -->
             <div class="speech-section">
-                <h3>🔊 Speech Synthesizer</h3>
+                <h3>🔊 Speech Synthesizer (Google TTS)</h3>
 
                 <div style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;">
                     <div class="config-item" style="flex: 1;">
-                        <label for="voiceSelect">Voice:</label>
-                        <select id="voiceSelect"></select>
+                        <label for="languageSelect">Language:</label>
+                        <select id="languageSelect">
+                            <option value="pt-BR" selected>Portuguese (Brazil) - pt-BR</option>
+                            <option value="pt-PT">Portuguese (Portugal) - pt-PT</option>
+                            <option value="en-US">English (US) - en-US</option>
+                            <option value="en-GB">English (UK) - en-GB</option>
+                            <option value="es-ES">Spanish (Spain) - es-ES</option>
+                            <option value="fr-FR">French (France) - fr-FR</option>
+                            <option value="de-DE">German (Germany) - de-DE</option>
+                            <option value="it-IT">Italian (Italy) - it-IT</option>
+                            <option value="uk-UA">Ukrainian - uk-UA</option>
+                            <option value="ru-RU">Russian - ru-RU</option>
+                        </select>
                     </div>
                     <div style="display: flex; gap: 10px; flex-shrink: 0;">
                         <button class="btn btn-primary" onclick="generateAudio()">🎵 Generate Audio</button>
@@ -332,6 +345,11 @@ Ensino</textarea>
         // ==================== CONSTANTS ====================
         const SPEECH_RATE = 1.0;
         const SPEECH_PITCH = 1.0;
+        
+        // Get selected language for Google TTS
+        function getSelectedLanguage() {
+            return document.getElementById('languageSelect').value;
+        }
 
         // ==================== IMAGE GENERATOR ====================
         let generatedImages = [];
@@ -425,14 +443,14 @@ Ensino</textarea>
         }
 
         function playWord(word) {
-            const utterance = new SpeechSynthesisUtterance(word);
-            const selectedVoiceIndex = voiceSelect.value;
-            if (voices[selectedVoiceIndex]) {
-                utterance.voice = voices[selectedVoiceIndex];
-            }
-            utterance.rate = SPEECH_RATE;
-            utterance.pitch = SPEECH_PITCH;
-            speechSynthesis.speak(utterance);
+            // Use Google TTS for consistent audio playback
+            const language = getSelectedLanguage();
+            const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${language}&client=tw-ob&q=${encodeURIComponent(word)}`;
+            const audio = new Audio(ttsUrl);
+            audio.play().catch(error => {
+                console.error('Error playing audio:', error);
+                alert('Error playing audio. Please try again.');
+            });
         }
 
         async function downloadAll() {
@@ -453,49 +471,6 @@ Ensino</textarea>
             saveAs(content, "text-images.zip");
         }
 
-        // ==================== SPEECH SYNTHESIZER ====================
-        let voices = [];
-        let selectedVoiceName = null;
-        let userHasSelected = false;
-
-        const voiceSelect = document.getElementById('voiceSelect');
-
-        function loadVoices() {
-            const currentSelection = voiceSelect.value;
-            voices = speechSynthesis.getVoices();
-            voiceSelect.innerHTML = '';
-
-            voices.forEach((voice, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = `${voice.name} (${voice.lang})`;
-                voiceSelect.appendChild(option);
-            });
-
-            if (userHasSelected && selectedVoiceName) {
-                const restoredIndex = voices.findIndex(v => v.name === selectedVoiceName);
-                if (restoredIndex !== -1) {
-                    voiceSelect.value = restoredIndex;
-                }
-            } else if (!userHasSelected) {
-                const portugueseVoiceIndex = voices.findIndex(v => v.lang.startsWith('pt'));
-                if (portugueseVoiceIndex !== -1) {
-                    voiceSelect.value = portugueseVoiceIndex;
-                    selectedVoiceName = voices[portugueseVoiceIndex].name;
-                }
-            }
-        }
-
-        loadVoices();
-        if (speechSynthesis.onvoiceschanged !== undefined) {
-            speechSynthesis.onvoiceschanged = loadVoices;
-        }
-
-        voiceSelect.addEventListener('change', () => {
-            userHasSelected = true;
-            selectedVoiceName = voices[voiceSelect.value].name;
-        });
-
         function speakAllWords() {
             const wordsText = document.getElementById('wordsInput').value;
             const words = wordsText.split('\n').filter(w => w.trim() !== '');
@@ -506,38 +481,43 @@ Ensino</textarea>
             }
 
             let index = 0;
+            const progress = document.getElementById('progress');
 
-            function speakNext() {
+            function playNext() {
                 if (index >= words.length) {
-                    document.getElementById('progress').textContent = '✅ Speech synthesis completed!';
+                    progress.textContent = '✅ Speech synthesis completed!';
                     return;
                 }
 
                 const word = words[index];
-                document.getElementById('progress').textContent = `Speaking: ${index + 1}/${words.length} - "${word}"`;
+                progress.textContent = `Playing: ${index + 1}/${words.length} - "${word}"`;
 
-                const utterance = new SpeechSynthesisUtterance(word);
+                const language = getSelectedLanguage();
+                const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${language}&client=tw-ob&q=${encodeURIComponent(word)}`;
+                const audio = new Audio(ttsUrl);
 
-                const selectedVoiceIndex = voiceSelect.value;
-                if (voices[selectedVoiceIndex]) {
-                    utterance.voice = voices[selectedVoiceIndex];
-                }
-
-                utterance.rate = SPEECH_RATE;
-                utterance.pitch = SPEECH_PITCH;
-
-                utterance.onend = () => {
+                audio.onended = () => {
                     index++;
-                    setTimeout(speakNext, 300);
+                    setTimeout(playNext, 300);
                 };
 
-                speechSynthesis.speak(utterance);
+                audio.onerror = (error) => {
+                    console.error(`Error playing "${word}":`, error);
+                    index++;
+                    setTimeout(playNext, 300);
+                };
+
+                audio.play();
             }
 
-            speakNext();
+            playNext();
         }
 
-        // ==================== AUDIO GENERATOR ====================
+        // ==================== AUDIO GENERATOR (Google TTS) ====================
+        
+        // Language code for Google TTS (Portuguese - Brazil)
+        const TTS_LANGUAGE = 'pt-BR';
+        
         async function generateAudio() {
             const wordsText = document.getElementById('wordsInput').value;
             const words = wordsText.split('\n').filter(w => w.trim() !== '');
@@ -551,21 +531,15 @@ Ensino</textarea>
             const progress = document.getElementById('progress');
             progress.textContent = `Generating audio: 0/${words.length}`;
 
-            // Check MediaRecorder support
-            if (!window.MediaRecorder) {
-                alert('Your browser does not support audio recording. Try Chrome or Firefox.');
-                return;
-            }
-
             for (let i = 0; i < words.length; i++) {
                 const word = words[i].trim();
                 progress.textContent = `Generating audio: ${i + 1}/${words.length} - "${word}"`;
 
                 try {
-                    const audioBlob = await recordSpeech(word);
+                    const audioBlob = await fetchGoogleTTS(word);
                     const fileName = word.replace(/\s+/g, '_') + '.mp3';
                     generatedAudio.push({ name: fileName, data: audioBlob });
-                    
+
                     // Enable listen button for this word
                     const wordCard = document.querySelector(`.word-card[data-word="${word}"]`);
                     if (wordCard) {
@@ -576,44 +550,46 @@ Ensino</textarea>
                         }
                     }
                 } catch (error) {
-                    console.error(`Error recording "${word}":`, error);
+                    console.error(`Error generating audio for "${word}":`, error);
+                    progress.textContent = `❌ Error for "${word}": ${error.message}`;
                 }
 
-                // Small delay between words
-                await new Promise(resolve => setTimeout(resolve, 500));
+                // Small delay between words to avoid rate limiting
+                await new Promise(resolve => setTimeout(resolve, 300));
             }
 
             progress.textContent = `✅ Audio ready! Created ${generatedAudio.length} files`;
         }
 
-        function recordSpeech(text) {
+        /**
+         * Fetch audio from Google Translate TTS service
+         * @param {string} text - Text to convert to speech
+         * @returns {Promise<Blob>} - MP3 audio blob
+         */
+        function fetchGoogleTTS(text) {
             return new Promise((resolve, reject) => {
-                const utterance = new SpeechSynthesisUtterance(text);
-
-                const selectedVoiceIndex = voiceSelect.value;
-                if (voices[selectedVoiceIndex]) {
-                    utterance.voice = voices[selectedVoiceIndex];
-                }
-
-                utterance.rate = SPEECH_RATE;
-                utterance.pitch = SPEECH_PITCH;
-
-                // Using AudioContext to record system audio
-                // Note: this works limited due to browser security policies
-                // Alternative - save parameters for playback
-
-                // Since direct speechSynthesis recording is not possible,
-                // save text and parameters for playback
-                speechSynthesis.speak(utterance);
-
-                utterance.onend = () => {
-                    // Return text as "placeholder" - actual recording requires server
-                    resolve(new Blob(['Audio for: ' + text], { type: 'text/plain' }));
-                };
-
-                utterance.onerror = (error) => {
-                    reject(error);
-                };
+                // Google Translate TTS URL with selected language
+                const language = getSelectedLanguage();
+                const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${language}&client=tw-ob&q=${encodeURIComponent(text)}`;
+                
+                fetch(ttsUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.blob();
+                    })
+                    .then(blob => {
+                        // Verify it's actually audio
+                        if (blob.type.startsWith('audio/') || blob.size > 1000) {
+                            resolve(blob);
+                        } else {
+                            throw new Error('Received invalid audio data');
+                        }
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
             });
         }
 
