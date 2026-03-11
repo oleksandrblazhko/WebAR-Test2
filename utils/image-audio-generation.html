@@ -445,11 +445,22 @@ Educação
         function playWord(word) {
             // Use Google TTS for consistent audio playback
             const language = getSelectedLanguage();
+            // For playback, we can use direct URL in Audio element (CORS not required for playback)
             const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${language}&client=tw-ob&q=${encodeURIComponent(word)}`;
             const audio = new Audio(ttsUrl);
             audio.play().catch(error => {
                 console.error('Error playing audio:', error);
-                alert('Error playing audio. Please try again.');
+                // Fallback: try with proxy
+                fetchGoogleTTS(word)
+                    .then(blob => {
+                        const blobUrl = URL.createObjectURL(blob);
+                        const fallbackAudio = new Audio(blobUrl);
+                        fallbackAudio.play();
+                    })
+                    .catch(err => {
+                        console.error('Fallback also failed:', err);
+                        alert('Error playing audio. Please try again.');
+                    });
             });
         }
 
@@ -503,8 +514,22 @@ Educação
 
                 audio.onerror = (error) => {
                     console.error(`Error playing "${word}":`, error);
-                    index++;
-                    setTimeout(playNext, 300);
+                    // Fallback: try with proxy
+                    fetchGoogleTTS(word)
+                        .then(blob => {
+                            const blobUrl = URL.createObjectURL(blob);
+                            const fallbackAudio = new Audio(blobUrl);
+                            fallbackAudio.onended = () => {
+                                index++;
+                                setTimeout(playNext, 300);
+                            };
+                            fallbackAudio.play();
+                        })
+                        .catch(err => {
+                            console.error('Fallback also failed:', err);
+                            index++;
+                            setTimeout(playNext, 300);
+                        });
                 };
 
                 audio.play();
@@ -562,7 +587,7 @@ Educação
         }
 
         /**
-         * Fetch audio from Google Translate TTS service
+         * Fetch audio from Google Translate TTS service via CORS proxy
          * @param {string} text - Text to convert to speech
          * @returns {Promise<Blob>} - MP3 audio blob
          */
@@ -572,19 +597,29 @@ Educação
                 const language = getSelectedLanguage();
                 const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${language}&client=tw-ob&q=${encodeURIComponent(text)}`;
                 
-                fetch(ttsUrl)
+                // Use CORS proxy to bypass browser restrictions
+                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(ttsUrl)}`;
+                
+                fetch(proxyUrl)
                     .then(response => {
                         if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
+                            throw new Error(`Proxy error! status: ${response.status}`);
                         }
-                        return response.blob();
+                        return response.json();
                     })
-                    .then(blob => {
-                        // Verify it's actually audio
-                        if (blob.type.startsWith('audio/') || blob.size > 1000) {
+                    .then(data => {
+                        // Convert base64 from proxy to blob
+                        if (data && data.contents) {
+                            // The contents is base64 encoded
+                            const binary = atob(data.contents);
+                            const array = [];
+                            for (let i = 0; i < binary.length; i++) {
+                                array.push(binary.charCodeAt(i));
+                            }
+                            const blob = new Blob([new Uint8Array(array)], { type: 'audio/mpeg' });
                             resolve(blob);
                         } else {
-                            throw new Error('Received invalid audio data');
+                            throw new Error('No audio data received');
                         }
                     })
                     .catch(error => {
