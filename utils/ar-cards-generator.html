@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dual-Marker-Based Multimodal Bilingual Augmented Reality Flashcard Generator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .panel h2 {
+            color: #333;
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .panel h3 {
+            color: #555;
+            margin-top: 20px;
+        }
+
+        .config-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .config-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        input[type="color"] {
+            width: 60px;
+            height: 35px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .speech-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .speech-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .icon-search-section {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .icon-search-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .icon-item {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .icon-item:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .icon-item.selected {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .icon-item span.material-symbols-outlined {
+            font-size: 32px;
+        }
+
+        .icon-item i.ti {
+            font-size: 32px;
+        }
+
+        .icon-item-label {
+            font-size: 10px;
+            color: #666;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        .layout-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .layout-option {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .layout-option:hover {
+            border-color: #667eea;
+        }
+
+        .layout-option.selected {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .layout-option svg {
+            width: 60px;
+            height: 40px;
+            border: 1px solid #999;
+            margin-bottom: 5px;
+        }
+
+        .preview-section {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .preview-canvas {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .word-lists-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .word-lists-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .word-list-panel {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .word-list-panel h3 {
+            margin-top: 0;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .word-list-panel textarea {
+            width: 100%;
+            height: 200px;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .word-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+            max-height: 600px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .word-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .word-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .word-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .word-card-content {
+            padding: 12px;
+        }
+
+        .word-card-text {
+            font-size: 14px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .word-card-bilingual {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .word-card-bilingual .lang-word {
+            flex: 1;
+            text-align: center;
+            padding: 5px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .word-card-bilingual .en-word {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .word-card-bilingual .target-word {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        .word-card-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .progress {
+            margin-top: 10px;
+            padding: 12px;
+            background: #f0f0f0;
+            border-radius: 6px;
+            text-align: center;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background: #667eea;
+            color: white;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-left: 5px;
+        }
+
+        .api-info {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        .api-info a {
+            color: #667eea;
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .mode-option {
+            flex: 1;
+            max-width: 300px;
+            padding: 15px;
+            border: 3px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .mode-option:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .mode-option.selected {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .mode-option h4 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+
+        .mode-option p {
+            margin: 0;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+
+    <!-- Google Material Symbols -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <!-- Tabler Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🎨🔊 Dual-Marker-Based Multimodal Bilingual Augmented Reality Flashcard Generator</h1>
+
+        <!-- Mode Selector -->
+        <div class="panel">
+            <h2>📋 Select Generation Mode</h2>
+            <div class="mode-selector">
+                <div class="mode-option selected" data-mode="bilingual" onclick="selectMode('bilingual')">
+                    <h4>🔤 Bilingual (English + Target Language)</h4>
+                    <p>Two parallel word lists - cards show both languages</p>
+                </div>
+                <div class="mode-option" data-mode="single" onclick="selectMode('single')">
+                    <h4>📝 Single Language</h4>
+                    <p>One word list - standard cards</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bilingual Word Lists Panel -->
+        <div class="panel" id="bilingualPanel">
+            <h2>📝 Bilingual Word Lists</h2>
+            <div class="word-lists-container">
+                <div class="word-list-panel">
+                    <h3>
+                        <span style="font-size: 24px;">🇬🇧</span>
+                        English Words
+                        <span class="badge">Auto TTS: en-us</span>
+                    </h3>
+                    <textarea id="enWordsInput" placeholder="Enter English words, each on a new line...">Education
+Entertainment
+Reality
+Augmented
+Mixed
+Teaching</textarea>
+                    <p style="font-size: 12px; color: #666; margin-top: 8px;">
+                        💡 Icons will be searched based on these English words
+                    </p>
+                </div>
+                <div class="word-list-panel">
+                    <h3>
+                        <span style="font-size: 24px;">🌍</span>
+                        Target Language Words
+                        <select id="targetLanguageSelect" style="margin-left: 10px; font-size: 13px;">
+                            <option value="pt-br" selected>Portuguese (Brazil) - pt-br</option>
+                            <option value="pt-pt">Portuguese (Portugal) - pt-pt</option>
+                            <option value="uk-ua">Ukrainian - uk-ua</option>
+                            <option value="es-es">Spanish (Spain) - es-es</option>
+                            <option value="fr-fr">French (France) - fr-fr</option>
+                            <option value="de-de">German (Germany) - de-de</option>
+                            <option value="it-it">Italian (Italy) - it-it</option>
+                            <option value="ru-ru">Russian - ru-ru</option>
+                        </select>
+                    </h3>
+                    <textarea id="targetWordsInput" placeholder="Enter target language words, each on a new line...">Educação
+Entretenimento
+Realidade
+Aumentada
+Mista
+Ensino</textarea>
+                    <p style="font-size: 12px; color: #666; margin-top: 8px;">
+                        💡 Must have same number of words as English list
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Single Language Word List Panel (hidden by default) -->
+        <div class="panel" id="singlePanel" style="display: none;">
+            <h2>📝 Word List</h2>
+            <div class="config-item">
+                <label for="wordsInput">Words (each on a new line):</label>
+                <textarea id="wordsInput" placeholder="Enter words, each on a new line..." style="height: 150px;">Realidade
+Aumentada
+Mista
+Entretenimento
+Ensino
+Educação</textarea>
+            </div>
+        </div>
+
+        <!-- Image Settings Panel -->
+        <div class="panel">
+            <h2>🎨 Image Settings</h2>
+
+            <div class="config-row">
+                <div class="config-item">
+                    <label for="imgWidth">Width (px):</label>
+                    <input type="number" id="imgWidth" value="400" min="100" max="2000">
+                </div>
+                <div class="config-item">
+                    <label for="imgHeight">Height (px):</label>
+                    <input type="number" id="imgHeight" value="300" min="100" max="2000">
+                </div>
+                <div class="config-item">
+                    <label for="backgroundColor">Background:</label>
+                    <input type="color" id="backgroundColor" value="#ffffff">
+                </div>
+                <div class="config-item">
+                    <label for="textColor">Text:</label>
+                    <input type="color" id="textColor" value="#000000">
+                </div>
+                <div class="config-item">
+                    <label for="iconColor">Icon:</label>
+                    <input type="color" id="iconColor" value="#667eea">
+                </div>
+                <div class="config-item">
+                    <label for="fontSize">Font Size (px):</label>
+                    <input type="number" id="fontSize" value="48" min="12" max="200">
+                </div>
+                <div class="config-item">
+                    <label for="iconSize">Icon Size (px):</label>
+                    <input type="number" id="iconSize" value="100" min="20" max="500">
+                </div>
+            </div>
+
+            <div class="layout-options">
+                <div class="layout-option selected" data-layout="top" onclick="selectLayout('top')">
+                    <svg viewBox="0 0 60 40">
+                        <rect x="22" y="5" width="15" height="12" fill="#667eea" />
+                        <text x="30" y="30" font-size="8" fill="#333" text-anchor="middle">WORD</text>
+                    </svg>
+                    <div>Icon Top</div>
+                </div>
+                <div class="layout-option" data-layout="left" onclick="selectLayout('left')">
+                    <svg viewBox="0 0 60 40">
+                        <rect x="5" y="10" width="12" height="20" fill="#667eea" />
+                        <text x="40" y="25" font-size="8" fill="#333" text-anchor="middle">WORD</text>
+                    </svg>
+                    <div>Icon Left</div>
+                </div>
+                <div class="layout-option" data-layout="bottom" onclick="selectLayout('bottom')">
+                    <svg viewBox="0 0 60 40">
+                        <text x="30" y="15" font-size="8" fill="#333" text-anchor="middle">WORD</text>
+                        <rect x="22" y="20" width="15" height="12" fill="#667eea" />
+                    </svg>
+                    <div>Icon Bottom</div>
+                </div>
+                <div class="layout-option" data-layout="right" onclick="selectLayout('right')">
+                    <svg viewBox="0 0 60 40">
+                        <text x="25" y="25" font-size="8" fill="#333" text-anchor="middle">WORD</text>
+                        <rect x="42" y="10" width="12" height="20" fill="#667eea" />
+                    </svg>
+                    <div>Icon Right</div>
+                </div>
+            </div>
+
+            <div class="icon-search-section">
+                <h3>🔍 Icon Source & Preview</h3>
+                <div class="config-row" style="margin-bottom: 10px;">
+                    <div class="config-item" style="flex: 1;">
+                        <label for="iconSource">Icon Library:</label>
+                        <select id="iconSource" onchange="updateIconSource()">
+                            <option value="material">Google Material Symbols (100,000+)</option>
+                            <option value="tabler">Tabler Icons (4,800+)</option>
+                        </select>
+                    </div>
+                    <div class="config-item" style="flex: 1;">
+                        <label for="previewWord">Test search with word:</label>
+                        <input type="text" id="previewWord" placeholder="Enter word to test icon search..." value="Education">
+                    </div>
+                </div>
+                <p style="color: #666; font-size: 13px; margin-bottom: 10px;">
+                    🔎 Each word from your list will automatically get its own relevant icon. Use this preview to test how icon search works.
+                </p>
+                <div class="icon-grid" id="iconGrid"></div>
+                <div class="progress" id="iconProgress">Enter a word to search for icons</div>
+            </div>
+
+            <div class="preview-section">
+                <h3>🖼️ Layout Preview:</h3>
+                <canvas id="previewCanvas" class="preview-canvas" width="400" height="300"></canvas>
+                <p style="color: #888; font-size: 12px; margin-top: 10px;">
+                    Preview shows how a card will look. Each word gets its own icon automatically.
+                </p>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <button class="btn btn-primary" onclick="generateAllImages()">🚀 Generate All Bilingual Images</button>
+                <button class="btn btn-success" onclick="downloadAllImages()" id="downloadImagesBtn" disabled>📥 Download Images ZIP</button>
+            </div>
+
+            <div class="progress" id="imageProgress">Ready to generate bilingual images</div>
+            <div class="progress-bar">
+                <div class="progress-bar-fill" id="imageProgressBar"></div>
+            </div>
+        </div>
+
+        <!-- Audio Settings Panel -->
+        <div class="panel">
+            <h2>🔊 Audio Settings (VoiceRSS API)</h2>
+
+            <div class="speech-section">
+                <div class="config-row">
+                    <div class="config-item" style="flex: 1;">
+                        <label for="apiKeyInput">VoiceRSS API Key:</label>
+                        <input type="text" id="apiKeyInput" placeholder="Enter your VoiceRSS API key" value="">
+                    </div>
+                    <div class="config-item" id="singleLangSelector">
+                        <label for="languageSelect">Language (Single Mode):</label>
+                        <select id="languageSelect">
+                            <option value="pt-br" selected>Portuguese (Brazil) - pt-br</option>
+                            <option value="pt-pt">Portuguese (Portugal) - pt-pt</option>
+                            <option value="en-us">English (US) - en-us</option>
+                            <option value="en-gb">English (UK) - en-gb</option>
+                            <option value="es-es">Spanish (Spain) - es-es</option>
+                            <option value="fr-fr">French (France) - fr-fr</option>
+                            <option value="de-de">German (Germany) - de-de</option>
+                            <option value="it-it">Italian (Italy) - it-it</option>
+                            <option value="uk-ua">Ukrainian - uk-ua</option>
+                            <option value="ru-ru">Russian - ru-ru</option>
+                        </select>
+                    </div>
+                </div>
+                <p class="api-info">
+                    💡 Bilingual mode: English (en-us) + Target Language | Single mode: Selected language only<br>
+                    🔗 Get your free API key at <a href="https://www.voicerss.org/" target="_blank">voicerss.org</a> (500 free requests/day)
+                </p>
+            </div>
+
+            <div>
+                <button class="btn btn-primary" onclick="generateAllAudio()">🎵 Generate All Audio</button>
+                <button class="btn btn-success" onclick="downloadAllAudio()" id="downloadAudioBtn" disabled>📥 Download Audio ZIP</button>
+                <button class="btn btn-info" onclick="playAllWords()">▶️ Play All</button>
+            </div>
+
+            <div class="progress" id="audioProgress">Ready to generate audio</div>
+            <div class="progress-bar">
+                <div class="progress-bar-fill" id="audioProgressBar"></div>
+            </div>
+        </div>
+
+        <!-- Results Panel -->
+        <div class="panel">
+            <h2>📋 Generated Cards <span class="badge" id="cardsCount">0</span></h2>
+            <div class="word-list" id="wordList"></div>
+        </div>
+    </div>
+
+    <!-- JSZip for creating ZIP archives -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+    <script>
+        // ==================== CONSTANTS ====================
+        let selectedIcon = 'school';
+        let selectedLayout = 'top';
+        let selectedIconSource = 'material';
+        let generatedImages = [];
+        let generatedAudio = [];
+        let currentMode = 'bilingual'; // 'bilingual' or 'single'
+
+        // Iconify API collections
+        const ICON_COLLECTIONS = {
+            'material': 'material-symbols',
+            'tabler': 'tabler'
+        };
+
+        // Material Symbols icon mapping (English word → icon name)
+        const iconMapping = {
+            'education': ['school', 'menu_book', 'graduation_cap', 'library_books'],
+            'school': ['school', 'graduation_cap', 'menu_book'],
+            'learning': ['psychology', 'lightbulb', 'menu_book'],
+            'teaching': ['cast_for_education', 'school', 'menu_book'],
+            'home': ['home', 'cottage', 'house'],
+            'user': ['person', 'face', 'emoji_people'],
+            'person': ['person', 'face', 'walking'],
+            'man': ['man', 'person', 'face'],
+            'woman': ['woman', 'person', 'face'],
+            'people': ['group', 'people', 'diversity'],
+            'boy': ['boy', 'person', 'face'],
+            'girl': ['girl', 'person', 'face'],
+            'face': ['face', 'emoji_emotions', 'sentiment_satisfied'],
+            'walking': ['directions_walk', 'walking', 'pedestrian'],
+            'settings': ['settings', 'tune', 'sliders'],
+            'search': ['search', 'find_in_page', 'magnify'],
+            'entertainment': ['theater_comedy', 'movie', 'music_note'],
+            'music': ['music_note', 'headphones', 'radio'],
+            'video': ['videocam', 'movie', 'play_arrow'],
+            'game': ['sports_esports', 'casino', 'toys'],
+            'book': ['menu_book', 'library_books', 'description'],
+            'file': ['description', 'insert_drive_file', 'draft'],
+            'folder': ['folder', 'folder_open', 'create_new_folder'],
+            'image': ['image', 'photo', 'picture_as_pdf'],
+            'photo': ['photo', 'photo_camera', 'image'],
+            'camera': ['photo_camera', 'camera_alt', 'videocam'],
+            'mail': ['mail', 'email', 'markunread'],
+            'message': ['message', 'chat', 'forum'],
+            'phone': ['phone', 'call', 'smartphone'],
+            'location': ['location_on', 'place', 'map'],
+            'map': ['map', 'terrain', 'language'],
+            'time': ['schedule', 'timer', 'access_time'],
+            'calendar': ['calendar_today', 'event', 'month'],
+            'date': ['calendar_today', 'event', 'today'],
+            'shopping': ['shopping_cart', 'shopping_bag', 'store'],
+            'cart': ['shopping_cart', 'add_shopping_cart', 'remove_shopping_cart'],
+            'store': ['store', 'storefront', 'shop'],
+            'money': ['attach_money', 'payments', 'account_balance'],
+            'payment': ['payments', 'credit_card', 'account_balance'],
+            'security': ['security', 'shield', 'lock'],
+            'lock': ['lock', 'lock_outline', 'security'],
+            'unlock': ['lock_open', 'unlock', 'vpn_key'],
+            'key': ['vpn_key', 'key', 'password'],
+            'star': ['star', 'star_rate', 'grade'],
+            'favorite': ['favorite', 'favorite_border', 'heart'],
+            'heart': ['favorite', 'favorite_border', 'self_improvement'],
+            'check': ['check', 'done', 'check_circle'],
+            'close': ['close', 'cancel', 'highlight_off'],
+            'delete': ['delete', 'delete_outline', 'remove_circle'],
+            'add': ['add', 'add_circle', 'plus'],
+            'edit': ['edit', 'edit_note', 'create'],
+            'save': ['save', 'save_alt', 'download'],
+            'download': ['download', 'file_download', 'get_app'],
+            'upload': ['upload', 'file_upload', 'publish'],
+            'share': ['share', 'ios_share', 'screen_share'],
+            'link': ['link', 'insert_link', 'anchor'],
+            'cloud': ['cloud', 'cloud_queue', 'weather_hail'],
+            'weather': ['wb_sunny', 'cloud', 'umbrella'],
+            'sun': ['wb_sunny', 'light_mode', 'sunny'],
+            'moon': ['dark_mode', 'nightlight', 'bedtime'],
+            'food': ['restaurant', 'lunch_dining', 'brunch_dining'],
+            'restaurant': ['restaurant', 'dinner_dining', 'ramen_dining'],
+            'drink': ['local_drink', 'wine_bar', 'liquor'],
+            'coffee': ['local_cafe', 'coffee', 'free_breakfast'],
+            'car': ['directions_car', 'local_taxi', 'commute'],
+            'transport': ['directions_bus', 'directions_train', 'airport_shuttle'],
+            'flight': ['flight', 'flight_takeoff', 'flight_land'],
+            'travel': ['flight', 'beach_access', 'travel_explore'],
+            'sport': ['sports_soccer', 'sports_basketball', 'fitness_center'],
+            'fitness': ['fitness_center', 'self_improvement', 'directions_run'],
+            'medical': ['local_hospital', 'medical_services', 'healing'],
+            'health': ['favorite', 'self_improvement', 'local_hospital'],
+            'nature': ['eco', 'nature', 'park'],
+            'animal': ['pets', 'paw', 'bird'],
+            'dog': ['pets', 'guide_dog', 'service_toolbox'],
+            'cat': ['pets', 'cat'],
+            'tree': ['nature', 'forest', 'park'],
+            'flower': ['local_florist', 'flower', 'yard'],
+            'technology': ['computer', 'laptop', 'desktop_mac'],
+            'computer': ['computer', 'laptop', 'desktop_mac'],
+            'wifi': ['wifi', 'wifi_tethering', 'router'],
+            'battery': ['battery_full', 'battery_charging_full', 'power'],
+            'power': ['power', 'electric_bolt', 'battery_full']
+        };
+
+        // ==================== ICONIFY API SEARCH ====================
+
+        async function searchIconifyAPI(query, collection, limit = 50) {
+            try {
+                const url = `https://api.iconify.design/search?query=${encodeURIComponent(query)}&collection=${collection}&limit=${limit}`;
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.icons && Array.isArray(data.icons)) {
+                    return data.icons;
+                }
+                
+                return [];
+            } catch (error) {
+                console.error('Iconify API search error:', error);
+                throw error;
+            }
+        }
+
+        async function getSuggestedIcons(word, source) {
+            const lowerWord = word.toLowerCase();
+            
+            if (iconMapping[lowerWord]) {
+                return iconMapping[lowerWord];
+            }
+            
+            const collection = ICON_COLLECTIONS[source];
+            try {
+                const icons = await searchIconifyAPI(lowerWord, collection, 50);
+                return icons.length > 0 ? icons : getFallbackIcons(source);
+            } catch (error) {
+                return getFallbackIcons(source);
+            }
+        }
+
+        function getFallbackIcons(source) {
+            const fallback = {
+                'material': [
+                    'home', 'person', 'settings', 'search', 'favorite', 'star',
+                    'check', 'close', 'add', 'edit', 'delete', 'save',
+                    'download', 'upload', 'share', 'lock', 'cloud', 'image',
+                    'music_note', 'videocam', 'mail', 'phone', 'location_on',
+                    'calendar_today', 'schedule', 'shopping_cart', 'payments', 'school', 'book'
+                ],
+                'tabler': [
+                    'home', 'user', 'settings', 'search', 'heart', 'star',
+                    'check', 'x', 'plus', 'edit', 'trash', 'download',
+                    'upload', 'share', 'lock', 'cloud', 'photo', 'music',
+                    'video', 'mail', 'phone', 'map-pin', 'calendar', 'clock',
+                    'shopping-cart', 'credit-card', 'school', 'book'
+                ]
+            };
+            return fallback[source] || fallback['material'];
+        }
+
+        // ==================== MODE SELECTION ====================
+
+        function selectMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            document.querySelector(`[data-mode="${mode}"]`).classList.add('selected');
+
+            if (mode === 'bilingual') {
+                document.getElementById('bilingualPanel').style.display = 'block';
+                document.getElementById('singlePanel').style.display = 'none';
+                document.getElementById('singleLangSelector').style.display = 'none';
+            } else {
+                document.getElementById('bilingualPanel').style.display = 'none';
+                document.getElementById('singlePanel').style.display = 'block';
+                document.getElementById('singleLangSelector').style.display = 'flex';
+            }
+        }
+
+        // ==================== ICON SEARCH UI ====================
+
+        function updateIconSource() {
+            selectedIconSource = document.getElementById('iconSource').value;
+            searchIcons();
+        }
+
+        async function searchIcons() {
+            const word = document.getElementById('previewWord').value.trim();
+            const iconGrid = document.getElementById('iconGrid');
+            const progress = document.getElementById('iconProgress');
+
+            if (!word) {
+                progress.textContent = 'Enter a word to search for icons';
+                iconGrid.innerHTML = '';
+                return;
+            }
+
+            progress.textContent = `🔄 Searching ${selectedIconSource === 'material' ? 'Material Symbols' : 'Tabler Icons'}...`;
+            iconGrid.innerHTML = '';
+
+            try {
+                const matchingIcons = await getSuggestedIcons(word, selectedIconSource);
+
+                if (matchingIcons.length === 0) {
+                    progress.textContent = `⚠️ No icons found. Showing popular icons:`;
+                } else {
+                    progress.textContent = `✅ Found ${matchingIcons.length} icon(s)`;
+                }
+
+                matchingIcons.slice(0, 30).forEach((icon) => {
+                    const iconItem = document.createElement('div');
+                    iconItem.className = 'icon-item' + (icon === selectedIcon ? ' selected' : '');
+                    iconItem.onclick = () => selectIcon(icon);
+                    
+                    if (selectedIconSource === 'material') {
+                        iconItem.innerHTML = `
+                            <span class="material-symbols-outlined">${icon}</span>
+                            <div class="icon-item-label">${icon}</div>
+                        `;
+                    } else {
+                        const tablerIconName = icon.replace(/_/g, '-');
+                        iconItem.innerHTML = `
+                            <i class="ti ti-${tablerIconName}"></i>
+                            <div class="icon-item-label">${tablerIconName}</div>
+                        `;
+                    }
+                    iconGrid.appendChild(iconItem);
+                });
+
+                if (!selectedIcon || !matchingIcons.includes(selectedIcon)) {
+                    selectedIcon = matchingIcons[0];
+                }
+
+            } catch (error) {
+                console.error('Search error:', error);
+                progress.textContent = `❌ Error searching icons`;
+                
+                const fallbackIcons = getFallbackIcons(selectedIconSource);
+                fallbackIcons.forEach(icon => {
+                    const iconItem = document.createElement('div');
+                    iconItem.className = 'icon-item';
+                    iconItem.onclick = () => selectIcon(icon);
+                    
+                    if (selectedIconSource === 'material') {
+                        iconItem.innerHTML = `
+                            <span class="material-symbols-outlined">${icon}</span>
+                            <div class="icon-item-label">${icon}</div>
+                        `;
+                    } else {
+                        const tablerIconName = icon.replace(/_/g, '-');
+                        iconItem.innerHTML = `
+                            <i class="ti ti-${tablerIconName}"></i>
+                            <div class="icon-item-label">${tablerIconName}</div>
+                        `;
+                    }
+                    iconGrid.appendChild(iconItem);
+                });
+            }
+        }
+
+        function selectIcon(icon) {
+            selectedIcon = icon;
+            document.querySelectorAll('.icon-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            generatePreview();
+        }
+
+        // ==================== LAYOUT ====================
+
+        function selectLayout(layout) {
+            selectedLayout = layout;
+            document.querySelectorAll('.layout-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            document.querySelector(`[data-layout="${layout}"]`).classList.add('selected');
+            generatePreview();
+        }
+
+        // ==================== IMAGE GENERATION ====================
+
+        function getImageConfig() {
+            return {
+                width: parseInt(document.getElementById('imgWidth').value),
+                height: parseInt(document.getElementById('imgHeight').value),
+                backgroundColor: document.getElementById('backgroundColor').value,
+                textColor: document.getElementById('textColor').value,
+                iconColor: document.getElementById('iconColor').value,
+                fontSize: parseInt(document.getElementById('fontSize').value),
+                iconSize: parseInt(document.getElementById('iconSize').value)
+            };
+        }
+
+        function loadIcon(iconName, source, color, size) {
+            if (source === 'tabler') {
+                return loadTablerIcon(iconName, color, size);
+            } else {
+                return loadMaterialIcon(iconName, color, size);
+            }
+        }
+
+        function loadTablerIcon(iconName, color, size) {
+            return new Promise((resolve, reject) => {
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = size;
+                tempCanvas.height = size;
+                const ctx = tempCanvas.getContext('2d');
+
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                const svgUrl = `https://api.iconify.design/tabler/${iconName}.svg?color=${encodeURIComponent(color)}`;
+                
+                img.onload = () => {
+                    ctx.drawImage(img, 0, 0, size, size);
+                    resolve(tempCanvas.toDataURL('image/png'));
+                };
+                img.onerror = () => {
+                    ctx.fillStyle = color;
+                    ctx.beginPath();
+                    ctx.arc(size/2, size/2, size/2 - 4, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = `bold ${size/2}px Arial`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(iconName[0].toUpperCase(), size/2, size/2);
+                    resolve(tempCanvas.toDataURL('image/png'));
+                };
+                img.src = svgUrl;
+            });
+        }
+
+        function loadMaterialIcon(iconName, color, size) {
+            return new Promise((resolve, reject) => {
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = size;
+                tempCanvas.height = size;
+                const ctx = tempCanvas.getContext('2d');
+
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                const svgUrl = `https://api.iconify.design/material-symbols/${iconName.replace(/_/g, '-')}.svg?color=${encodeURIComponent(color)}`;
+                
+                img.onload = () => {
+                    ctx.drawImage(img, 0, 0, size, size);
+                    resolve(tempCanvas.toDataURL('image/png'));
+                };
+                img.onerror = () => {
+                    ctx.fillStyle = color;
+                    ctx.font = `${size}px Material Symbols Outlined`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    const codepoint = getMaterialIconCodepoint(iconName);
+                    ctx.fillText(codepoint, size/2, size/2);
+                    resolve(tempCanvas.toDataURL('image/png'));
+                };
+                img.src = svgUrl;
+            });
+        }
+
+        function getMaterialIconCodepoint(iconName) {
+            const codepoints = {
+                'school': '\ue3af', 'home': '\ue88a', 'person': '\ue7fd',
+                'man': '\ue4eb', 'woman': '\ue839', 'face': '\ue87c',
+                'settings': '\ue8b8', 'search': '\ue8b6', 'star': '\ue838',
+                'favorite': '\ue87d', 'check': '\ue5ca', 'close': '\ue5cd',
+                'add': '\ue145', 'edit': '\ue3c9', 'delete': '\ue872',
+                'lock': '\ue897', 'cloud': '\ue2bd', 'image': '\ue3f4',
+                'music_note': '\ue405', 'mail': '\ue158', 'phone': '\ue0cd'
+            };
+            return codepoints[iconName] || '\ue88a';
+        }
+
+        async function generatePreview() {
+            const word = document.getElementById('previewWord').value.trim();
+            if (!word) return;
+
+            const config = getImageConfig();
+            const canvas = document.getElementById('previewCanvas');
+            canvas.width = config.width;
+            canvas.height = config.height;
+            const ctx = canvas.getContext('2d');
+
+            ctx.fillStyle = config.backgroundColor;
+            ctx.fillRect(0, 0, config.width, config.height);
+
+            try {
+                const iconDataURL = await loadIcon(selectedIcon, selectedIconSource, config.iconColor, config.iconSize);
+                const iconImg = new Image();
+                iconImg.src = iconDataURL;
+                
+                await new Promise((resolve, reject) => {
+                    iconImg.onload = resolve;
+                    iconImg.onerror = reject;
+                });
+
+                let iconX, iconY, textX, textY;
+                const padding = 20;
+
+                switch (selectedLayout) {
+                    case 'left':
+                        iconX = padding;
+                        iconY = (config.height - config.iconSize) / 2;
+                        textX = config.iconSize + padding * 2;
+                        textY = config.height / 2;
+                        break;
+                    case 'top':
+                        iconX = (config.width - config.iconSize) / 2;
+                        iconY = padding;
+                        textX = config.width / 2;
+                        textY = config.height / 2 + config.iconSize / 2;
+                        break;
+                    case 'right':
+                        iconX = config.width - config.iconSize - padding;
+                        iconY = (config.height - config.iconSize) / 2;
+                        textX = config.width - config.iconSize - padding * 2;
+                        textY = config.height / 2;
+                        break;
+                    case 'bottom':
+                        iconX = (config.width - config.iconSize) / 2;
+                        iconY = config.height - config.iconSize - padding;
+                        textX = config.width / 2;
+                        textY = config.height / 2 - config.iconSize / 2;
+                        break;
+                }
+
+                ctx.drawImage(iconImg, iconX, iconY, config.iconSize, config.iconSize);
+                ctx.font = `bold ${config.fontSize}px Arial`;
+                ctx.fillStyle = config.textColor;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(word, textX, textY);
+
+            } catch (error) {
+                console.error('Error generating preview:', error);
+            }
+        }
+
+        async function generateImageForWord(word, iconSearchWord) {
+            const config = getImageConfig();
+            const canvas = document.createElement('canvas');
+            canvas.width = config.width;
+            canvas.height = config.height;
+            const ctx = canvas.getContext('2d');
+
+            ctx.fillStyle = config.backgroundColor;
+            ctx.fillRect(0, 0, config.width, config.height);
+
+            // Search for icon based on ENGLISH word (iconSearchWord)
+            let iconToUse = selectedIcon;
+            try {
+                const icons = await getSuggestedIcons(iconSearchWord, selectedIconSource);
+                if (icons.length > 0) {
+                    iconToUse = icons[0];
+                }
+            } catch (error) {
+                console.warn(`Could not find icon for "${iconSearchWord}", using default`);
+            }
+
+            try {
+                const iconDataURL = await loadIcon(iconToUse, selectedIconSource, config.iconColor, config.iconSize);
+                const iconImg = new Image();
+                iconImg.src = iconDataURL;
+                
+                await new Promise((resolve, reject) => {
+                    iconImg.onload = resolve;
+                    iconImg.onerror = reject;
+                });
+
+                let iconX, iconY, textX, textY;
+                const padding = 20;
+
+                switch (selectedLayout) {
+                    case 'left':
+                        iconX = padding;
+                        iconY = (config.height - config.iconSize) / 2;
+                        textX = config.iconSize + padding * 2;
+                        textY = config.height / 2;
+                        break;
+                    case 'top':
+                        iconX = (config.width - config.iconSize) / 2;
+                        iconY = padding;
+                        textX = config.width / 2;
+                        textY = config.height / 2 + config.iconSize / 2;
+                        break;
+                    case 'right':
+                        iconX = config.width - config.iconSize - padding;
+                        iconY = (config.height - config.iconSize) / 2;
+                        textX = config.width - config.iconSize - padding * 2;
+                        textY = config.height / 2;
+                        break;
+                    case 'bottom':
+                        iconX = (config.width - config.iconSize) / 2;
+                        iconY = config.height - config.iconSize - padding;
+                        textX = config.width / 2;
+                        textY = config.height / 2 - config.iconSize / 2;
+                        break;
+                }
+
+                ctx.drawImage(iconImg, iconX, iconY, config.iconSize, config.iconSize);
+                ctx.font = `bold ${config.fontSize}px Arial`;
+                ctx.fillStyle = config.textColor;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+                // Draw SINGLE word
+                ctx.fillText(word, textX, textY);
+
+                return canvas.toDataURL('image/jpeg', 0.95);
+            } catch (error) {
+                console.error(`Error generating image for "${word}":`, error);
+                ctx.font = `bold ${config.fontSize}px Arial`;
+                ctx.fillStyle = config.textColor;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(word, config.width / 2, config.height / 2);
+                return canvas.toDataURL('image/jpeg', 0.95);
+            }
+        }
+
+        async function generateAllImages() {
+            let enWords = [];
+            let targetWords = [];
+
+            if (currentMode === 'bilingual') {
+                const enWordsText = document.getElementById('enWordsInput').value;
+                const targetWordsText = document.getElementById('targetWordsInput').value;
+                
+                enWords = enWordsText.split('\n').filter(w => w.trim() !== '');
+                targetWords = targetWordsText.split('\n').filter(w => w.trim() !== '');
+
+                if (enWords.length === 0 || targetWords.length === 0) {
+                    alert('Enter at least one word in both lists!');
+                    return;
+                }
+
+                if (enWords.length !== targetWords.length) {
+                    alert(`Word count mismatch! English: ${enWords.length}, Target: ${targetWords.length}. Please make them equal.`);
+                    return;
+                }
+            } else {
+                const wordsText = document.getElementById('wordsInput').value;
+                enWords = wordsText.split('\n').filter(w => w.trim() !== '');
+                targetWords = enWords; // Same word for both
+
+                if (enWords.length === 0) {
+                    alert('Enter at least one word!');
+                    return;
+                }
+            }
+
+            generatedImages = [];
+            const wordList = document.getElementById('wordList');
+            const progress = document.getElementById('imageProgress');
+            const progressBar = document.getElementById('imageProgressBar');
+
+            wordList.innerHTML = '';
+            const totalCards = enWords.length + targetWords.length;
+            let cardCount = 0;
+            progress.textContent = `Generating images: 0/${totalCards}`;
+            progressBar.style.width = '0%';
+
+            // Generate cards for ENGLISH words (using English word for icon search)
+            for (let i = 0; i < enWords.length; i++) {
+                const enWord = enWords[i].trim();
+                progress.textContent = `Generating English card ${i + 1}/${enWords.length}: "${enWord}"`;
+                progressBar.style.width = `${((cardCount + 1) / totalCards) * 100}%`;
+
+                try {
+                    // Search icon based on English word
+                    const dataURL = await generateImageForWord(enWord, enWord);
+                    const fileName = `en_${enWord.replace(/\s+/g, '_')}.jpg`;
+                    generatedImages.push({ 
+                        name: fileName, 
+                        data: dataURL, 
+                        word: enWord,
+                        lang: 'en'
+                    });
+                    cardCount++;
+
+                    // Add card to list
+                    const wordCard = document.createElement('div');
+                    wordCard.className = 'word-card';
+                    wordCard.innerHTML = `
+                        <img src="${dataURL}" alt="${enWord}">
+                        <div class="word-card-content">
+                            <div class="word-card-text">🇬🇧 ${enWord}</div>
+                            <div class="word-card-buttons">
+                                <button class="btn btn-info btn-small" onclick="downloadSingleImage('${fileName}', '${dataURL}')">📥</button>
+                                <button class="btn btn-small" onclick="playWord('${enWord}', 'en-us')" ${!document.getElementById('apiKeyInput').value.trim() ? 'disabled' : ''}>🔊</button>
+                            </div>
+                        </div>
+                    `;
+                    wordList.appendChild(wordCard);
+                } catch (error) {
+                    console.error(`Error for "${enWord}":`, error);
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+
+            // Generate cards for TARGET language words (using English word for icon search)
+            for (let i = 0; i < targetWords.length; i++) {
+                const targetWord = targetWords[i].trim();
+                const enWordForIcon = enWords[i]; // Use corresponding English word for icon search
+                progress.textContent = `Generating ${document.getElementById('targetLanguageSelect').value} card ${i + 1}/${targetWords.length}: "${targetWord}"`;
+                progressBar.style.width = `${((cardCount + 1) / totalCards) * 100}%`;
+
+                try {
+                    // Search icon based on ENGLISH word, but display TARGET word
+                    const dataURL = await generateImageForWord(targetWord, enWordForIcon);
+                    const fileName = `${document.getElementById('targetLanguageSelect').value}_${targetWord.replace(/\s+/g, '_')}.jpg`;
+                    generatedImages.push({ 
+                        name: fileName, 
+                        data: dataURL, 
+                        word: targetWord,
+                        lang: document.getElementById('targetLanguageSelect').value
+                    });
+                    cardCount++;
+
+                    // Add card to list
+                    const wordCard = document.createElement('div');
+                    wordCard.className = 'word-card';
+                    wordCard.innerHTML = `
+                        <img src="${dataURL}" alt="${targetWord}">
+                        <div class="word-card-content">
+                            <div class="word-card-text">🌍 ${targetWord}</div>
+                            <div class="word-card-buttons">
+                                <button class="btn btn-info btn-small" onclick="downloadSingleImage('${fileName}', '${dataURL}')">📥</button>
+                                <button class="btn btn-small" onclick="playWord('${targetWord}', '${document.getElementById('targetLanguageSelect').value}')" ${!document.getElementById('apiKeyInput').value.trim() ? 'disabled' : ''}>🔊</button>
+                            </div>
+                        </div>
+                    `;
+                    wordList.appendChild(wordCard);
+                } catch (error) {
+                    console.error(`Error for "${targetWord}":`, error);
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+
+            progress.textContent = `✅ Images ready! Created ${generatedImages.length} cards (${enWords.length} EN + ${targetWords.length} Target)`;
+            document.getElementById('downloadImagesBtn').disabled = false;
+            document.getElementById('cardsCount').textContent = generatedImages.length;
+        }
+
+        function downloadSingleImage(fileName, dataURL) {
+            const link = document.createElement('a');
+            link.download = fileName;
+            link.href = dataURL;
+            link.click();
+        }
+
+        async function downloadAllImages() {
+            if (generatedImages.length === 0) {
+                alert('Generate images first!');
+                return;
+            }
+
+            const zip = new JSZip();
+            const imgFolder = zip.folder("images");
+
+            generatedImages.forEach(img => {
+                const base64Data = img.data.split(',')[1];
+                imgFolder.file(img.name, base64Data, {base64: true});
+            });
+
+            const content = await zip.generateAsync({type: "blob"});
+            saveAs(content, "ar-cards-images.zip");
+        }
+
+        // ==================== AUDIO GENERATION ====================
+
+        function getSelectedLanguage() {
+            return document.getElementById('languageSelect').value;
+        }
+
+        function playWord(word, language) {
+            const apiKey = document.getElementById('apiKeyInput').value.trim();
+            if (!apiKey) {
+                alert('Please enter your VoiceRSS API key first!');
+                return;
+            }
+
+            const voiceRSSUrl = `https://api.voicerss.org/?key=${apiKey}&hl=${language}&src=${encodeURIComponent(word)}&f=22khz_16bit_stereo&c=mp3`;
+            const audio = new Audio(voiceRSSUrl);
+            audio.play().catch(error => {
+                console.error('Error playing audio:', error);
+                alert('Error playing audio. Please check your API key and try again.');
+            });
+        }
+
+        async function generateAllAudio() {
+            let enWords = [];
+            let targetWords = [];
+            let targetLanguage = 'pt-br';
+
+            if (currentMode === 'bilingual') {
+                const enWordsText = document.getElementById('enWordsInput').value;
+                const targetWordsText = document.getElementById('targetWordsInput').value;
+                
+                enWords = enWordsText.split('\n').filter(w => w.trim() !== '');
+                targetWords = targetWordsText.split('\n').filter(w => w.trim() !== '');
+                targetLanguage = document.getElementById('targetLanguageSelect').value;
+
+                if (enWords.length === 0 || targetWords.length === 0) {
+                    alert('Enter at least one word in both lists!');
+                    return;
+                }
+            } else {
+                const wordsText = document.getElementById('wordsInput').value;
+                enWords = wordsText.split('\n').filter(w => w.trim() !== '');
+                targetWords = enWords;
+                targetLanguage = getSelectedLanguage();
+
+                if (enWords.length === 0) {
+                    alert('Enter at least one word!');
+                    return;
+                }
+            }
+
+            const apiKey = document.getElementById('apiKeyInput').value.trim();
+            if (!apiKey) {
+                alert('Please enter your VoiceRSS API key!');
+                return;
+            }
+
+            generatedAudio = [];
+            const progress = document.getElementById('audioProgress');
+            const progressBar = document.getElementById('audioProgressBar');
+
+            progress.textContent = `Generating audio: 0/${enWords.length + targetWords.length} files`;
+            progressBar.style.width = '0%';
+
+            let fileCount = 0;
+            const totalFiles = enWords.length + targetWords.length;
+
+            // Generate English audio files
+            for (let i = 0; i < enWords.length; i++) {
+                const enWord = enWords[i].trim();
+                progress.textContent = `Generating audio ${fileCount + 1}/${totalFiles}: "${enWord}" (en-us)`;
+                progressBar.style.width = `${((fileCount + 1) / totalFiles) * 100}%`;
+
+                try {
+                    const enAudioBlob = await fetchVoiceRSS(enWord, 'en-us', apiKey);
+                    const enFileName = `en_${enWord.replace(/\s+/g, '_')}.mp3`;
+                    generatedAudio.push({ name: enFileName, data: enAudioBlob, lang: 'en' });
+                    fileCount++;
+                } catch (error) {
+                    console.error(`Error generating English audio for "${enWord}":`, error);
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 200));
+            }
+
+            // Generate target language audio files
+            for (let i = 0; i < targetWords.length; i++) {
+                const targetWord = targetWords[i].trim();
+                progress.textContent = `Generating audio ${fileCount + 1}/${totalFiles}: "${targetWord}" (${targetLanguage})`;
+                progressBar.style.width = `${((fileCount + 1) / totalFiles) * 100}%`;
+
+                try {
+                    const targetAudioBlob = await fetchVoiceRSS(targetWord, targetLanguage, apiKey);
+                    const targetFileName = `${targetLanguage}_${targetWord.replace(/\s+/g, '_')}.mp3`;
+                    generatedAudio.push({ name: targetFileName, data: targetAudioBlob, lang: targetLanguage });
+                    fileCount++;
+                } catch (error) {
+                    console.error(`Error generating target audio for "${targetWord}":`, error);
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+
+            progress.textContent = `✅ Audio ready! Created ${generatedAudio.length} files (${enWords.length} EN + ${targetWords.length} Target)`;
+            document.getElementById('downloadAudioBtn').disabled = false;
+            
+            // Enable all play buttons on cards
+            document.querySelectorAll('.word-card-buttons button[onclick^="playWord"]').forEach(btn => {
+                btn.disabled = false;
+            });
+        }
+
+        function fetchVoiceRSS(text, language, apiKey) {
+            return new Promise((resolve, reject) => {
+                const voiceRSSUrl = `https://api.voicerss.org/?key=${apiKey}&hl=${language}&src=${encodeURIComponent(text)}&f=22khz_16bit_stereo&c=mp3`;
+
+                fetch(voiceRSSUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`VoiceRSS API error! status: ${response.status}`);
+                        }
+                        return response.blob();
+                    })
+                    .then(blob => {
+                        if (blob.size > 1000) {
+                            resolve(blob);
+                        } else {
+                            throw new Error('Received invalid audio data');
+                        }
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
+            });
+        }
+
+        async function downloadAllAudio() {
+            if (generatedAudio.length === 0) {
+                alert('Generate audio first!');
+                return;
+            }
+
+            const zip = new JSZip();
+            const audioFolder = zip.folder("audio");
+
+            generatedAudio.forEach(audio => {
+                audioFolder.file(audio.name, audio.data);
+            });
+
+            const content = await zip.generateAsync({type: "blob"});
+            saveAs(content, "ar-cards-audio.zip");
+        }
+
+        function playAllWords() {
+            let enWords = [];
+            let targetWords = [];
+            let targetLanguage = 'pt-br';
+
+            if (currentMode === 'bilingual') {
+                const enWordsText = document.getElementById('enWordsInput').value;
+                const targetWordsText = document.getElementById('targetWordsInput').value;
+                
+                enWords = enWordsText.split('\n').filter(w => w.trim() !== '');
+                targetWords = targetWordsText.split('\n').filter(w => w.trim() !== '');
+                targetLanguage = document.getElementById('targetLanguageSelect').value;
+
+                if (enWords.length === 0 || targetWords.length === 0) {
+                    alert('Enter at least one word in both lists!');
+                    return;
+                }
+            } else {
+                const wordsText = document.getElementById('wordsInput').value;
+                enWords = wordsText.split('\n').filter(w => w.trim() !== '');
+                targetWords = enWords;
+                targetLanguage = getSelectedLanguage();
+
+                if (enWords.length === 0) {
+                    alert('Enter at least one word!');
+                    return;
+                }
+            }
+
+            const apiKey = document.getElementById('apiKeyInput').value.trim();
+            if (!apiKey) {
+                alert('Please enter your VoiceRSS API key first!');
+                return;
+            }
+
+            let enIndex = 0;
+            let targetIndex = 0;
+            const progress = document.getElementById('audioProgress');
+            const totalPlays = enWords.length + targetWords.length;
+            let playCount = 0;
+
+            function playNext() {
+                // First play all English words
+                if (enIndex < enWords.length) {
+                    const enWord = enWords[enIndex];
+                    playCount++;
+                    progress.textContent = `Playing: ${playCount}/${totalPlays} - "${enWord}" (en-us)`;
+
+                    const enVoiceRSSUrl = `https://api.voicerss.org/?key=${apiKey}&hl=en-us&src=${encodeURIComponent(enWord)}&f=22khz_16bit_stereo&c=mp3`;
+                    const enAudio = new Audio(enVoiceRSSUrl);
+
+                    enAudio.onended = () => {
+                        enIndex++;
+                        setTimeout(playNext, 500);
+                    };
+
+                    enAudio.onerror = (error) => {
+                        console.error(`Error playing "${enWord}":`, error);
+                        enIndex++;
+                        setTimeout(playNext, 500);
+                    };
+
+                    enAudio.play();
+                }
+                // Then play all target language words
+                else if (targetIndex < targetWords.length) {
+                    const targetWord = targetWords[targetIndex];
+                    playCount++;
+                    progress.textContent = `Playing: ${playCount}/${totalPlays} - "${targetWord}" (${targetLanguage})`;
+
+                    const targetVoiceRSSUrl = `https://api.voicerss.org/?key=${apiKey}&hl=${targetLanguage}&src=${encodeURIComponent(targetWord)}&f=22khz_16bit_stereo&c=mp3`;
+                    const targetAudio = new Audio(targetVoiceRSSUrl);
+
+                    targetAudio.onended = () => {
+                        targetIndex++;
+                        setTimeout(playNext, 500);
+                    };
+
+                    targetAudio.onerror = (error) => {
+                        console.error(`Error playing "${targetWord}":`, error);
+                        targetIndex++;
+                        setTimeout(playNext, 500);
+                    };
+
+                    targetAudio.play();
+                }
+                else {
+                    progress.textContent = '✅ Playback completed!';
+                }
+            }
+
+            playNext();
+        }
+
+        // ==================== INITIALIZATION ====================
+
+        window.onload = () => {
+            // Set initial mode
+            currentMode = 'bilingual';
+            document.getElementById('singleLangSelector').style.display = 'none';
+            
+            // Preview word input listener
+            let searchTimeout;
+            document.getElementById('previewWord').addEventListener('input', (e) => {
+                clearTimeout(searchTimeout);
+                const word = e.target.value.trim();
+                if (word) {
+                    searchTimeout = setTimeout(() => {
+                        searchIcons();
+                        generatePreview();
+                    }, 300);
+                }
+            });
+
+            // Initialize
+            selectedIconSource = document.getElementById('iconSource').value;
+            searchIcons();
+            generatePreview();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Icon + Word Image Generator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .panel h2 {
+            color: #333;
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .config-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .config-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        input[type="color"] {
+            width: 60px;
+            height: 35px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .preview-section {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .preview-canvas {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .icon-search-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .icon-search-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .icon-item {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .icon-item:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .icon-item.selected {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .icon-item span.material-symbols-outlined {
+            font-size: 32px;
+        }
+
+        .icon-item i.ti {
+            font-size: 32px;
+        }
+
+        .icon-item-label {
+            font-size: 10px;
+            color: #666;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        .progress {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 6px;
+            text-align: center;
+            color: #666;
+        }
+
+        .layout-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .layout-option {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .layout-option:hover {
+            border-color: #667eea;
+        }
+
+        .layout-option.selected {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .layout-option svg {
+            width: 60px;
+            height: 40px;
+            border: 1px solid #999;
+            margin-bottom: 5px;
+        }
+    </style>
+
+    <!-- Google Material Symbols -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <!-- Tabler Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Icon + Word Image Generator</h1>
+
+        <div class="panel">
+            <h2>⚙️ Settings</h2>
+
+            <div class="config-row">
+                <div class="config-item" style="flex: 1;">
+                    <label for="wordInput">English Word:</label>
+                    <input type="text" id="wordInput" placeholder="Enter an English word..." value="education">
+                </div>
+                <div style="display: flex; gap: 10px; flex-shrink: 0;">
+                    <button class="btn btn-success" onclick="generateImage()">🚀 Generate Image</button>
+                    <button class="btn btn-info" onclick="downloadImage()" id="downloadBtn" disabled>📥 Download</button>
+                </div>
+            </div>
+
+            <div class="config-row">
+                <div class="config-item">
+                    <label for="imgWidth">Width (px):</label>
+                    <input type="number" id="imgWidth" value="400" min="100" max="2000">
+                </div>
+                <div class="config-item">
+                    <label for="imgHeight">Height (px):</label>
+                    <input type="number" id="imgHeight" value="300" min="100" max="2000">
+                </div>
+                <div class="config-item">
+                    <label for="backgroundColor">Background:</label>
+                    <input type="color" id="backgroundColor" value="#ffffff">
+                </div>
+                <div class="config-item">
+                    <label for="textColor">Text:</label>
+                    <input type="color" id="textColor" value="#000000">
+                </div>
+                <div class="config-item">
+                    <label for="iconColor">Icon:</label>
+                    <input type="color" id="iconColor" value="#667eea">
+                </div>
+                <div class="config-item">
+                    <label for="fontSize">Font Size (px):</label>
+                    <input type="number" id="fontSize" value="48" min="12" max="200">
+                </div>
+                <div class="config-item">
+                    <label for="iconSize">Icon Size (px):</label>
+                    <input type="number" id="iconSize" value="100" min="20" max="500">
+                </div>
+            </div>
+
+            <div class="layout-options">
+                <div class="layout-option selected" data-layout="left" onclick="selectLayout('left')">
+                    <svg viewBox="0 0 60 40">
+                        <rect x="5" y="10" width="15" height="20" fill="#667eea" />
+                        <text x="25" y="25" font-size="8" fill="#333">WORD</text>
+                    </svg>
+                    <div>Icon Left</div>
+                </div>
+                <div class="layout-option" data-layout="top" onclick="selectLayout('top')">
+                    <svg viewBox="0 0 60 40">
+                        <rect x="22" y="5" width="15" height="12" fill="#667eea" />
+                        <text x="20" y="30" font-size="8" fill="#333">WORD</text>
+                    </svg>
+                    <div>Icon Top</div>
+                </div>
+                <div class="layout-option" data-layout="right" onclick="selectLayout('right')">
+                    <svg viewBox="0 0 60 40">
+                        <text x="5" y="25" font-size="8" fill="#333">WORD</text>
+                        <rect x="40" y="10" width="15" height="20" fill="#667eea" />
+                    </svg>
+                    <div>Icon Right</div>
+                </div>
+                <div class="layout-option" data-layout="bottom" onclick="selectLayout('bottom')">
+                    <svg viewBox="0 0 60 40">
+                        <text x="20" y="15" font-size="8" fill="#333">WORD</text>
+                        <rect x="22" y="23" width="15" height="12" fill="#667eea" />
+                    </svg>
+                    <div>Icon Bottom</div>
+                </div>
+            </div>
+
+            <div class="icon-search-section">
+                <h3>🔍 Select Icon</h3>
+                <div class="config-row" style="margin-bottom: 10px;">
+                    <div class="config-item">
+                        <label for="iconSource">Icon Source:</label>
+                        <select id="iconSource" onchange="updateIconSource()">
+                            <option value="material">Google Material Symbols (100,000+)</option>
+                            <option value="tabler">Tabler Icons (4,800+)</option>
+                        </select>
+                    </div>
+                </div>
+                <p style="color: #666; font-size: 13px; margin-bottom: 10px;">
+                    Icons are automatically searched via Iconify API. Click an icon to select it.
+                </p>
+                <div class="icon-grid" id="iconGrid"></div>
+                <div class="progress" id="iconProgress">Enter a word above to search for icons</div>
+            </div>
+
+            <div class="preview-section">
+                <h3>🖼️ Preview:</h3>
+                <canvas id="previewCanvas" class="preview-canvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== CONSTANTS ====================
+        let selectedIcon = 'school'; // Default icon
+        let selectedLayout = 'left';
+        let selectedIconSource = 'material'; // 'material' or 'tabler'
+        let generatedImageURL = null;
+
+        // Iconify API collections
+        const ICON_COLLECTIONS = {
+            'material': 'material-symbols',
+            'tabler': 'tabler'
+        };
+
+        // Material Symbols icon mapping (English word → icon name)
+        const iconMapping = {
+            'education': ['school', 'menu_book', 'graduation_cap', 'library_books'],
+            'school': ['school', 'graduation_cap', 'menu_book'],
+            'learning': ['psychology', 'lightbulb', 'menu_book'],
+            'teaching': ['cast_for_education', 'school', 'menu_book'],
+            'home': ['home', 'cottage', 'house'],
+            'user': ['person', 'face', 'emoji_people'],
+            'person': ['person', 'face', 'walking'],
+            'man': ['man', 'person', 'face'],
+            'woman': ['woman', 'person', 'face'],
+            'people': ['group', 'people', 'diversity'],
+            'boy': ['boy', 'person', 'face'],
+            'girl': ['girl', 'person', 'face'],
+            'face': ['face', 'emoji_emotions', 'sentiment_satisfied'],
+            'walking': ['directions_walk', 'walking', 'pedestrian'],
+            'settings': ['settings', 'tune', 'sliders'],
+            'search': ['search', 'find_in_page', 'magnify'],
+            'entertainment': ['theater_comedy', 'movie', 'music_note'],
+            'music': ['music_note', 'headphones', 'radio'],
+            'video': ['videocam', 'movie', 'play_arrow'],
+            'game': ['sports_esports', 'casino', 'toys'],
+            'book': ['menu_book', 'library_books', 'description'],
+            'file': ['description', 'insert_drive_file', 'draft'],
+            'folder': ['folder', 'folder_open', 'create_new_folder'],
+            'image': ['image', 'photo', 'picture_as_pdf'],
+            'photo': ['photo', 'photo_camera', 'image'],
+            'camera': ['photo_camera', 'camera_alt', 'videocam'],
+            'mail': ['mail', 'email', 'markunread'],
+            'message': ['message', 'chat', 'forum'],
+            'phone': ['phone', 'call', 'smartphone'],
+            'location': ['location_on', 'place', 'map'],
+            'map': ['map', 'terrain', 'language'],
+            'time': ['schedule', 'timer', 'access_time'],
+            'calendar': ['calendar_today', 'event', 'month'],
+            'date': ['calendar_today', 'event', 'today'],
+            'shopping': ['shopping_cart', 'shopping_bag', 'store'],
+            'cart': ['shopping_cart', 'add_shopping_cart', 'remove_shopping_cart'],
+            'store': ['store', 'storefront', 'shop'],
+            'money': ['attach_money', 'payments', 'account_balance'],
+            'payment': ['payments', 'credit_card', 'account_balance'],
+            'security': ['security', 'shield', 'lock'],
+            'lock': ['lock', 'lock_outline', 'security'],
+            'unlock': ['lock_open', 'unlock', 'vpn_key'],
+            'key': ['vpn_key', 'key', 'password'],
+            'star': ['star', 'star_rate', 'grade'],
+            'favorite': ['favorite', 'favorite_border', 'heart'],
+            'heart': ['favorite', 'favorite_border', 'self_improvement'],
+            'check': ['check', 'done', 'check_circle'],
+            'close': ['close', 'cancel', 'highlight_off'],
+            'delete': ['delete', 'delete_outline', 'remove_circle'],
+            'add': ['add', 'add_circle', 'plus'],
+            'edit': ['edit', 'edit_note', 'create'],
+            'save': ['save', 'save_alt', 'download'],
+            'download': ['download', 'file_download', 'get_app'],
+            'upload': ['upload', 'file_upload', 'publish'],
+            'share': ['share', 'ios_share', 'screen_share'],
+            'link': ['link', 'insert_link', 'anchor'],
+            'cloud': ['cloud', 'cloud_queue', 'weather_hail'],
+            'weather': ['wb_sunny', 'cloud', 'umbrella'],
+            'sun': ['wb_sunny', 'light_mode', 'sunny'],
+            'moon': ['dark_mode', 'nightlight', 'bedtime'],
+            'food': ['restaurant', 'lunch_dining', 'brunch_dining'],
+            'restaurant': ['restaurant', 'dinner_dining', 'ramen_dining'],
+            'drink': ['local_drink', 'wine_bar', 'liquor'],
+            'coffee': ['local_cafe', 'coffee', 'free_breakfast'],
+            'car': ['directions_car', 'local_taxi', 'commute'],
+            'transport': ['directions_bus', 'directions_train', 'airport_shuttle'],
+            'flight': ['flight', 'flight_takeoff', 'flight_land'],
+            'travel': ['flight', 'beach_access', 'travel_explore'],
+            'sport': ['sports_soccer', 'sports_basketball', 'fitness_center'],
+            'fitness': ['fitness_center', 'self_improvement', 'directions_run'],
+            'medical': ['local_hospital', 'medical_services', 'healing'],
+            'health': ['favorite', 'self_improvement', 'local_hospital'],
+            'nature': ['eco', 'nature', 'park'],
+            'animal': ['pets', 'paw', 'bird'],
+            'dog': ['pets', 'guide_dog', 'service_toolbox'],
+            'cat': ['pets', 'cat'],
+            'tree': ['nature', 'forest', 'park'],
+            'flower': ['local_florist', 'flower', 'yard'],
+            'technology': ['computer', 'laptop', 'desktop_mac'],
+            'computer': ['computer', 'laptop', 'desktop_mac'],
+            'phone': ['smartphone', 'iphone', 'android'],
+            'wifi': ['wifi', 'wifi_tethering', 'router'],
+            'battery': ['battery_full', 'battery_charging_full', 'power'],
+            'power': ['power', 'electric_bolt', 'battery_full']
+        };
+
+        // ==================== ICONIFY API SEARCH ====================
+
+        /**
+         * Search icons via Iconify API
+         * @param {string} query - Search query
+         * @param {string} collection - Icon collection ('material-symbols' or 'tabler')
+         * @param {number} limit - Max results (default: 50)
+         * @returns {Promise<string[]>} - Array of icon names
+         */
+        async function searchIconifyAPI(query, collection, limit = 50) {
+            try {
+                // Iconify search API endpoint
+                const url = `https://api.iconify.design/search?query=${encodeURIComponent(query)}&collection=${collection}&limit=${limit}`;
+                
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Extract icon names from response
+                if (data.icons && Array.isArray(data.icons)) {
+                    return data.icons;
+                }
+                
+                return [];
+            } catch (error) {
+                console.error('Iconify API search error:', error);
+                throw error;
+            }
+        }
+
+        /**
+         * Get suggested icons from mapping or API
+         * @param {string} word - Search word
+         * @param {string} source - Icon source ('material' or 'tabler')
+         * @returns {Promise<string[]>} - Array of icon names
+         */
+        async function getSuggestedIcons(word, source) {
+            const lowerWord = word.toLowerCase();
+            
+            // 1. First check local mapping
+            if (iconMapping[lowerWord]) {
+                return iconMapping[lowerWord];
+            }
+            
+            // 2. Search via Iconify API
+            const collection = ICON_COLLECTIONS[source];
+            try {
+                const icons = await searchIconifyAPI(lowerWord, collection, 50);
+                return icons.length > 0 ? icons : getFallbackIcons(source);
+            } catch (error) {
+                // Fallback to predefined icons if API fails
+                return getFallbackIcons(source);
+            }
+        }
+
+        /**
+         * Get fallback icons when API fails
+         * @param {string} source - Icon source
+         * @returns {string[]} - Array of popular icon names
+         */
+        function getFallbackIcons(source) {
+            const fallback = {
+                'material': [
+                    'home', 'person', 'settings', 'search', 'favorite', 'star',
+                    'check', 'close', 'add', 'edit', 'delete', 'save',
+                    'download', 'upload', 'share', 'lock', 'cloud', 'image',
+                    'music_note', 'videocam', 'mail', 'phone', 'location_on',
+                    'calendar_today', 'schedule', 'shopping_cart', 'payments', 'school', 'book'
+                ],
+                'tabler': [
+                    'home', 'user', 'settings', 'search', 'heart', 'star',
+                    'check', 'x', 'plus', 'edit', 'trash', 'download',
+                    'upload', 'share', 'lock', 'cloud', 'photo', 'music',
+                    'video', 'mail', 'phone', 'map-pin', 'calendar', 'clock',
+                    'shopping-cart', 'credit-card', 'school', 'book'
+                ]
+            };
+            return fallback[source] || fallback['material'];
+        }
+
+        // ==================== FUNCTIONS ====================
+
+        function selectLayout(layout) {
+            selectedLayout = layout;
+            document.querySelectorAll('.layout-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            document.querySelector(`[data-layout="${layout}"]`).classList.add('selected');
+            
+            // Regenerate preview if we have a word
+            const word = document.getElementById('wordInput').value.trim();
+            if (word && selectedIcon) {
+                generateImage();
+            }
+        }
+
+        // Update icon source when dropdown changes
+        function updateIconSource() {
+            selectedIconSource = document.getElementById('iconSource').value;
+            searchIcons();
+        }
+
+        async function searchIcons() {
+            const searchTerm = document.getElementById('wordInput').value.trim().toLowerCase();
+            const iconSource = document.getElementById('iconSource').value;
+            const iconGrid = document.getElementById('iconGrid');
+            const progress = document.getElementById('iconProgress');
+
+            if (!searchTerm) {
+                progress.textContent = '⚠️ Please enter a word above';
+                iconGrid.innerHTML = '';
+                return;
+            }
+
+            progress.textContent = `🔄 Searching ${iconSource === 'material' ? 'Material Symbols' : 'Tabler Icons'}...`;
+            iconGrid.innerHTML = '';
+
+            try {
+                // Search via Iconify API
+                const matchingIcons = await getSuggestedIcons(searchTerm, iconSource);
+
+                if (matchingIcons.length === 0) {
+                    progress.textContent = `⚠️ No icons found for "${searchTerm}". Showing popular icons:`;
+                } else {
+                    progress.textContent = `✅ Found ${matchingIcons.length} icon(s) for "${searchTerm}"`;
+                }
+
+                // Display icons
+                matchingIcons.slice(0, 50).forEach((icon, index) => {
+                    const iconItem = document.createElement('div');
+                    iconItem.className = 'icon-item' + (icon === selectedIcon ? ' selected' : '');
+                    iconItem.onclick = () => selectIcon(icon, iconSource);
+                    
+                    // Render icon based on source
+                    if (iconSource === 'material') {
+                        iconItem.innerHTML = `
+                            <span class="material-symbols-outlined">${icon}</span>
+                            <div class="icon-item-label">${icon}</div>
+                        `;
+                    } else {
+                        // Tabler Icons use kebab-case
+                        const tablerIconName = icon.replace(/_/g, '-');
+                        iconItem.innerHTML = `
+                            <i class="ti ti-${tablerIconName}"></i>
+                            <div class="icon-item-label">${tablerIconName}</div>
+                        `;
+                    }
+                    iconGrid.appendChild(iconItem);
+                });
+
+                // Auto-select first icon
+                if (!selectedIcon || !matchingIcons.includes(selectedIcon)) {
+                    selectedIcon = matchingIcons[0];
+                    selectedIconSource = iconSource;
+                }
+
+            } catch (error) {
+                console.error('Search error:', error);
+                progress.textContent = `❌ Error searching icons. Using fallback icons.`;
+                
+                // Show fallback icons
+                const fallbackIcons = getFallbackIcons(iconSource);
+                fallbackIcons.forEach(icon => {
+                    const iconItem = document.createElement('div');
+                    iconItem.className = 'icon-item';
+                    iconItem.onclick = () => selectIcon(icon, iconSource);
+                    
+                    if (iconSource === 'material') {
+                        iconItem.innerHTML = `
+                            <span class="material-symbols-outlined">${icon}</span>
+                            <div class="icon-item-label">${icon}</div>
+                        `;
+                    } else {
+                        const tablerIconName = icon.replace(/_/g, '-');
+                        iconItem.innerHTML = `
+                            <i class="ti ti-${tablerIconName}"></i>
+                            <div class="icon-item-label">${tablerIconName}</div>
+                        `;
+                    }
+                    iconGrid.appendChild(iconItem);
+                });
+            }
+        }
+
+        function selectIcon(icon, iconSource) {
+            selectedIcon = icon;
+            selectedIconSource = iconSource;
+            console.log(`Selected icon: ${icon}, source: ${iconSource}`);
+            
+            document.querySelectorAll('.icon-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            // Update preview
+            const word = document.getElementById('wordInput').value.trim();
+            if (word) {
+                generateImage();
+            }
+        }
+
+        function getImageConfig() {
+            return {
+                width: parseInt(document.getElementById('imgWidth').value),
+                height: parseInt(document.getElementById('imgHeight').value),
+                backgroundColor: document.getElementById('backgroundColor').value,
+                textColor: document.getElementById('textColor').value,
+                iconColor: document.getElementById('iconColor').value,
+                fontSize: parseInt(document.getElementById('fontSize').value),
+                iconSize: parseInt(document.getElementById('iconSize').value)
+            };
+        }
+
+        async function generateImage() {
+            const word = document.getElementById('wordInput').value.trim();
+            
+            if (!word) {
+                alert('Please enter a word!');
+                return;
+            }
+
+            if (!selectedIcon) {
+                alert('Please select an icon!');
+                return;
+            }
+
+            console.log(`Generating image with icon: ${selectedIcon}, source: ${selectedIconSource}`);
+
+            const config = getImageConfig();
+            const canvas = document.getElementById('previewCanvas');
+            canvas.width = config.width;
+            canvas.height = config.height;
+            const ctx = canvas.getContext('2d');
+
+            // Fill background
+            ctx.fillStyle = config.backgroundColor;
+            ctx.fillRect(0, 0, config.width, config.height);
+
+            // Load and draw icon
+            try {
+                const iconDataURL = await loadIcon(selectedIcon, selectedIconSource, config.iconColor, config.iconSize);
+                const iconImg = new Image();
+                iconImg.src = iconDataURL;
+                
+                await new Promise((resolve, reject) => {
+                    iconImg.onload = resolve;
+                    iconImg.onerror = reject;
+                });
+
+                // Draw icon based on layout
+                let iconX, iconY, textX, textY;
+                const padding = 20;
+
+                switch (selectedLayout) {
+                    case 'left':
+                        iconX = padding;
+                        iconY = (config.height - config.iconSize) / 2;
+                        textX = config.iconSize + padding * 2;
+                        textY = config.height / 2;
+                        break;
+                    case 'top':
+                        iconX = (config.width - config.iconSize) / 2;
+                        iconY = padding;
+                        textX = config.width / 2;
+                        textY = config.height / 2 + config.iconSize / 2;
+                        break;
+                    case 'right':
+                        iconX = config.width - config.iconSize - padding;
+                        iconY = (config.height - config.iconSize) / 2;
+                        textX = config.width - config.iconSize - padding * 2;
+                        textY = config.height / 2;
+                        break;
+                    case 'bottom':
+                        iconX = (config.width - config.iconSize) / 2;
+                        iconY = config.height - config.iconSize - padding;
+                        textX = config.width / 2;
+                        textY = config.height / 2 - config.iconSize / 2;
+                        break;
+                }
+
+                ctx.drawImage(iconImg, iconX, iconY, config.iconSize, config.iconSize);
+
+                // Draw text
+                ctx.font = `bold ${config.fontSize}px Arial`;
+                ctx.fillStyle = config.textColor;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(word, textX, textY);
+
+                // Enable download button
+                generatedImageURL = canvas.toDataURL('image/jpeg', 0.95);
+                document.getElementById('downloadBtn').disabled = false;
+
+            } catch (error) {
+                console.error('Error generating image:', error);
+                alert('Error loading icon. Please try again.');
+            }
+        }
+
+        function loadIcon(iconName, source, color, size) {
+            if (source === 'tabler') {
+                return loadTablerIcon(iconName, color, size);
+            } else {
+                return loadMaterialIcon(iconName, color, size);
+            }
+        }
+
+        function loadTablerIcon(iconName, color, size) {
+            return new Promise((resolve, reject) => {
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = size;
+                tempCanvas.height = size;
+                const ctx = tempCanvas.getContext('2d');
+
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                
+                // Tabler Icons via Iconify API
+                const svgUrl = `https://api.iconify.design/tabler/${iconName}.svg?color=${encodeURIComponent(color)}`;
+                
+                img.onload = () => {
+                    ctx.drawImage(img, 0, 0, size, size);
+                    resolve(tempCanvas.toDataURL('image/png'));
+                };
+                img.onerror = () => {
+                    // Fallback: render as colored circle with first letter
+                    ctx.fillStyle = color;
+                    ctx.beginPath();
+                    ctx.arc(size/2, size/2, size/2 - 4, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = `bold ${size/2}px Arial`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(iconName[0].toUpperCase(), size/2, size/2);
+                    resolve(tempCanvas.toDataURL('image/png'));
+                };
+                img.src = svgUrl;
+            });
+        }
+
+        function loadMaterialIcon(iconName, color, size) {
+            return new Promise((resolve, reject) => {
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = size;
+                tempCanvas.height = size;
+                const ctx = tempCanvas.getContext('2d');
+
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                
+                // Use Iconify API for Material Symbols (more reliable)
+                const svgUrl = `https://api.iconify.design/material-symbols/${iconName.replace(/_/g, '-')}.svg?color=${encodeURIComponent(color)}`;
+                
+                img.onload = () => {
+                    ctx.drawImage(img, 0, 0, size, size);
+                    resolve(tempCanvas.toDataURL('image/png'));
+                };
+                img.onerror = () => {
+                    // Fallback: render using Material Symbols font
+                    ctx.fillStyle = color;
+                    ctx.font = `${size}px Material Symbols Outlined`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    
+                    // Get codepoint for icon
+                    const codepoint = getMaterialIconCodepoint(iconName);
+                    ctx.fillText(codepoint, size/2, size/2);
+                    resolve(tempCanvas.toDataURL('image/png'));
+                };
+                img.src = svgUrl;
+            });
+        }
+
+        function getMaterialIconCodepoint(iconName) {
+            // Map of common Material Symbols to their Unicode codepoints
+            const codepoints = {
+                'school': '\ue3af',
+                'home': '\ue88a',
+                'person': '\ue7fd',
+                'man': '\ue4eb',
+                'woman': '\ue839',
+                'boy': '\ue4eb',
+                'girl': '\ue839',
+                'face': '\ue87c',
+                'group': '\ue7ef',
+                'people': '\ue7ef',
+                'settings': '\ue8b8',
+                'search': '\ue8b6',
+                'music_note': '\ue405',
+                'videocam': '\ue04b',
+                'image': '\ue3f4',
+                'mail': '\ue158',
+                'phone': '\ue0cd',
+                'location_on': '\ue0c8',
+                'star': '\ue838',
+                'favorite': '\ue87d',
+                'check': '\ue5ca',
+                'close': '\ue5cd',
+                'add': '\ue145',
+                'edit': '\ue3c9',
+                'delete': '\ue872',
+                'save': '\ue161',
+                'download': '\ue2c4',
+                'upload': '\ue2c6',
+                'share': '\ue80d',
+                'lock': '\ue897',
+                'cloud': '\ue2bd',
+                'lightbulb': '\ue0f0',
+                'face': '\ue87c',
+                'pets': '\ue91d',
+                'cat': '\ue91d', // Use pets as fallback
+                'dog': '\ue91d',
+                'book': '\ue865',
+                'menu_book': '\uea19',
+                'graduation_cap': '\uea19',
+                'theater_comedy': '\uea6e',
+                'movie': '\ue02c',
+                'game': '\ue337',
+                'sports_esports': '\ue337',
+                'calendar_today': '\ue935',
+                'schedule': '\ue8b5',
+                'shopping_cart': '\ue8cc',
+                'payments': '\uef04',
+                'security': '\ue32a',
+                'wifi': '\ue63e',
+                'battery_full': '\ue1a4',
+                'computer': '\ue30a',
+                'smartphone': '\ue32c'
+            };
+            return codepoints[iconName] || '\ue88a'; // Default to home icon
+        }
+
+        function downloadImage() {
+            if (!generatedImageURL) {
+                alert('Generate an image first!');
+                return;
+            }
+
+            const word = document.getElementById('wordInput').value.trim();
+            const fileName = word.replace(/\s+/g, '_') + '.jpg';
+
+            const link = document.createElement('a');
+            link.download = fileName;
+            link.href = generatedImageURL;
+            link.click();
+        }
+
+        // Auto-search on load
+        window.onload = () => {
+            // Set initial icon source
+            selectedIconSource = document.getElementById('iconSource').value;
+            
+            // Add debounced search on word input change
+            let searchTimeout;
+            document.getElementById('wordInput').addEventListener('input', (e) => {
+                clearTimeout(searchTimeout);
+                const word = e.target.value.trim();
+                if (word) {
+                    // Debounce search to avoid too many API calls
+                    searchTimeout = setTimeout(() => {
+                        searchIcons();
+                        generateImage();
+                    }, 300);
+                }
+            });
+            
+            searchIcons();
+            generateImage();
+        };
+    </script>
+</body>
+</html>
