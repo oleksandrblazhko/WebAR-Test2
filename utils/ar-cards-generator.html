@@ -105,6 +105,8 @@
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             background: white;
+            max-width: 200px;
+            height: auto;
         }
 
         input[type="color"] {
@@ -387,32 +389,6 @@
             color: white;
         }
 
-        .progress {
-            margin-top: 10px;
-            padding: 12px;
-            background: #f0f0f0;
-            border-radius: 6px;
-            text-align: center;
-            color: #666;
-            font-weight: 500;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #e0e0e0;
-            border-radius: 4px;
-            margin-top: 10px;
-            overflow: hidden;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            width: 0%;
-            transition: width 0.3s;
-        }
-
         .badge {
             display: inline-block;
             padding: 3px 8px;
@@ -453,7 +429,7 @@
                         English Words
                         <span class="badge">Auto TTS: en-us</span>
                     </h3>
-                    <textarea id="enWordsInput" placeholder="Enter English words, each on a new line...">
+                    <textarea id="enWordsInput" placeholder="Enter English words, each on a new line..." spellcheck="false">
 Education
 Entertainment
 Reality
@@ -480,7 +456,7 @@ Mixed
                             <option value="it-it">Italian (Italy) - it-it</option>
                         </select>
                     </h3>
-                    <textarea id="targetWordsInput" placeholder="Enter target language words, each on a new line...">
+                    <textarea id="targetWordsInput" placeholder="Enter target language words, each on a new line..." spellcheck="false">
 Educação
 Entretenimento
 Realidade
@@ -551,7 +527,7 @@ Mista
 
             <div class="icon-search-section">
                 <h3>🔍 Icon Source & Preview</h3>
-                <div style="display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: start;">
+                <div style="display: grid; grid-template-columns: 1fr auto auto; gap: 20px; align-items: start;">
                     <!-- Left column: Search controls and icons -->
                     <div>
                         <div class="config-row" style="margin-bottom: 10px; align-items: flex-end;">
@@ -562,8 +538,9 @@ Mista
                             <div class="config-item" style="flex: 1;">
                                 <label for="iconSource">Icon Library:</label>
                                 <select id="iconSource" onchange="updateIconSource()">
-                                    <option value="material">Google Material Symbols (100,000+)</option>
+                                    <option value="material">Google Material Symbols (3,000+)</option>
                                     <option value="tabler">Tabler Icons (4,800+)</option>
+                                    <option value="iconify">Iconify (100,000+)</option>
                                 </select>
                             </div>
                         </div>
@@ -571,30 +548,23 @@ Mista
                             🔎 Each word from your list will automatically get its own relevant icon. Use this preview to test how icon search works.
                         </p>
                         <div class="icon-grid" id="iconGrid"></div>
-                        <div class="progress" id="iconProgress">Enter a word to search for icons</div>
                     </div>
 
-                    <!-- Right column: Preview and Action buttons -->
-                    <div style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 15px;">
-                        <div>
-                            <label style="display: block; margin-bottom: 10px;">Layout Preview:</label>
-                            <canvas id="previewCanvas" class="preview-canvas" width="200" height="150" style="max-width: 100%; height: auto;"></canvas>
-                            <div style="margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                                <button class="btn btn-primary" id="saveCardIconBtn" onclick="saveCardIcon()" style="display: none; padding: 8px 12px; font-size: 13px;">💾 Зберегти зміни</button>
-                                <span id="editingCardLabel" style="display: none; color: #667eea; font-weight: 600; font-size: 13px;"></span>
-                            </div>
+                    <!-- Middle column: Preview -->
+                    <div style="text-align: center;">
+                        <canvas id="previewCanvas" class="preview-canvas" width="200" height="120"></canvas>
+                        <div style="margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                            <button class="btn btn-primary" id="saveCardIconBtn" onclick="saveCardIcon()" style="display: none; padding: 8px 12px; font-size: 13px;">💾 Зберегти зміни</button>
+                            <span id="editingCardLabel" style="display: none; color: #667eea; font-weight: 600; font-size: 13px;"></span>
                         </div>
-                        <div style="display: flex; flex-direction: row; gap: 10px; justify-content: center;">
-                            <button class="btn btn-primary" onclick="generateAllImages()">🚀 Generate All Bilingual Images</button>
-                            <button class="btn btn-success" onclick="downloadAllImages()" id="downloadImagesBtn" disabled>📥 Download Images ZIP</button>
-                        </div>
+                    </div>
+
+                    <!-- Right column: Action buttons -->
+                    <div style="display: flex; flex-direction: column; gap: 10px; justify-content: center;">
+                        <button class="btn btn-primary" onclick="generateAllImages()">🚀 Generate All Bilingual Images</button>
+                        <button class="btn btn-success" onclick="downloadAllImages()" id="downloadImagesBtn" disabled>📥 Download Images ZIP</button>
                     </div>
                 </div>
-            </div>
-
-            <div class="progress" id="imageProgress">Ready to generate bilingual images</div>
-            <div class="progress-bar">
-                <div class="progress-bar-fill" id="imageProgressBar"></div>
             </div>
         </div>
 
@@ -618,11 +588,6 @@ Mista
             <div>
                 <button class="btn btn-primary" onclick="generateAllAudio()">🎵 Generate All Audio</button>
                 <button class="btn btn-success" onclick="downloadAllAudio()" id="downloadAudioBtn" disabled>📥 Download Audio ZIP</button>
-            </div>
-
-            <div class="progress" id="audioProgress">Ready to generate audio</div>
-            <div class="progress-bar">
-                <div class="progress-bar-fill" id="audioProgressBar"></div>
             </div>
         </div>
         </div>
@@ -651,7 +616,8 @@ Mista
         // Iconify API collections
         const ICON_COLLECTIONS = {
             'material': 'material-symbols',
-            'tabler': 'tabler'
+            'tabler': 'tabler',
+            'iconify': 'material-symbols'
         };
 
         // Material Symbols icon mapping (English word → icon name)
@@ -745,19 +711,20 @@ Mista
 
         async function searchIconifyAPI(query, collection, limit = 50) {
             try {
-                const url = `https://api.iconify.design/search?query=${encodeURIComponent(query)}&collection=${collection}&limit=${limit}`;
+                // For Iconify source, search across all collections
+                const url = `https://api.iconify.design/search?query=${encodeURIComponent(query)}&limit=${limit}`;
                 const response = await fetch(url);
-                
+
                 if (!response.ok) {
                     throw new Error(`API error: ${response.status}`);
                 }
-                
+
                 const data = await response.json();
-                
+
                 if (data.icons && Array.isArray(data.icons)) {
                     return data.icons;
                 }
-                
+
                 return [];
             } catch (error) {
                 console.error('Iconify API search error:', error);
@@ -767,11 +734,22 @@ Mista
 
         async function getSuggestedIcons(word, source) {
             const lowerWord = word.toLowerCase();
-            
+
             if (iconMapping[lowerWord]) {
                 return iconMapping[lowerWord];
             }
-            
+
+            // For Iconify, search across all collections
+            if (source === 'iconify') {
+                try {
+                    const icons = await searchIconifyAPI(lowerWord, 'material-symbols', 50);
+                    return icons.length > 0 ? icons : getFallbackIcons(source);
+                } catch (error) {
+                    return getFallbackIcons(source);
+                }
+            }
+
+            // For material and tabler, use specific collection
             const collection = ICON_COLLECTIONS[source];
             try {
                 const icons = await searchIconifyAPI(lowerWord, collection, 50);
@@ -796,6 +774,13 @@ Mista
                     'upload', 'share', 'lock', 'cloud', 'photo', 'music',
                     'video', 'mail', 'phone', 'map-pin', 'calendar', 'clock',
                     'shopping-cart', 'credit-card', 'school', 'book'
+                ],
+                'iconify': [
+                    'home', 'person', 'settings', 'search', 'favorite', 'star',
+                    'check', 'close', 'add', 'edit', 'delete', 'save',
+                    'download', 'upload', 'share', 'lock', 'cloud', 'image',
+                    'music_note', 'videocam', 'mail', 'phone', 'location_on',
+                    'calendar_today', 'schedule', 'shopping_cart', 'payments', 'school', 'book'
                 ]
             };
             return fallback[source] || fallback['material'];
@@ -811,41 +796,39 @@ Mista
         async function searchIcons() {
             const word = document.getElementById('previewWord').value.trim();
             const iconGrid = document.getElementById('iconGrid');
-            const progress = document.getElementById('iconProgress');
 
             if (!word) {
-                progress.textContent = 'Enter a word to search for icons';
                 iconGrid.innerHTML = '';
                 return;
             }
 
-            progress.textContent = `🔄 Searching ${selectedIconSource === 'material' ? 'Material Symbols' : 'Tabler Icons'}...`;
             iconGrid.innerHTML = '';
 
             try {
                 const matchingIcons = await getSuggestedIcons(word, selectedIconSource);
 
-                if (matchingIcons.length === 0) {
-                    progress.textContent = `⚠️ No icons found. Showing popular icons:`;
-                } else {
-                    progress.textContent = `✅ Found ${matchingIcons.length} icon(s)`;
-                }
-
                 matchingIcons.slice(0, 30).forEach((icon) => {
                     const iconItem = document.createElement('div');
                     iconItem.className = 'icon-item' + (icon === selectedIcon ? ' selected' : '');
                     iconItem.onclick = () => selectIcon(icon);
-                    
+
                     if (selectedIconSource === 'material') {
                         iconItem.innerHTML = `
                             <span class="material-symbols-outlined">${icon}</span>
                             <div class="icon-item-label">${icon}</div>
                         `;
-                    } else {
+                    } else if (selectedIconSource === 'tabler') {
                         const tablerIconName = icon.replace(/_/g, '-');
                         iconItem.innerHTML = `
                             <i class="ti ti-${tablerIconName}"></i>
                             <div class="icon-item-label">${tablerIconName}</div>
+                        `;
+                    } else {
+                        // Iconify - display icon name with collection prefix
+                        const iconDisplay = icon.includes(':') ? icon.split(':')[1] : icon;
+                        iconItem.innerHTML = `
+                            <img src="https://api.iconify.design/${icon}.svg?height=32" alt="${iconDisplay}" style="width: 32px; height: 32px;">
+                            <div class="icon-item-label">${icon}</div>
                         `;
                     }
                     iconGrid.appendChild(iconItem);
@@ -857,24 +840,30 @@ Mista
 
             } catch (error) {
                 console.error('Search error:', error);
-                progress.textContent = `❌ Error searching icons`;
-                
+
                 const fallbackIcons = getFallbackIcons(selectedIconSource);
                 fallbackIcons.forEach(icon => {
                     const iconItem = document.createElement('div');
                     iconItem.className = 'icon-item';
                     iconItem.onclick = () => selectIcon(icon);
-                    
+
                     if (selectedIconSource === 'material') {
                         iconItem.innerHTML = `
                             <span class="material-symbols-outlined">${icon}</span>
                             <div class="icon-item-label">${icon}</div>
                         `;
-                    } else {
+                    } else if (selectedIconSource === 'tabler') {
                         const tablerIconName = icon.replace(/_/g, '-');
                         iconItem.innerHTML = `
                             <i class="ti ti-${tablerIconName}"></i>
                             <div class="icon-item-label">${tablerIconName}</div>
+                        `;
+                    } else {
+                        // Iconify fallback
+                        const iconDisplay = icon.includes(':') ? icon.split(':')[1] : icon;
+                        iconItem.innerHTML = `
+                            <img src="https://api.iconify.design/${icon}.svg?height=32" alt="${iconDisplay}" style="width: 32px; height: 32px;">
+                            <div class="icon-item-label">${icon}</div>
                         `;
                     }
                     iconGrid.appendChild(iconItem);
@@ -919,6 +908,8 @@ Mista
         function loadIcon(iconName, source, color, size) {
             if (source === 'tabler') {
                 return loadTablerIcon(iconName, color, size);
+            } else if (source === 'iconify') {
+                return loadIconifyIcon(iconName, color, size);
             } else {
                 return loadMaterialIcon(iconName, color, size);
             }
@@ -940,6 +931,40 @@ Mista
                     resolve(tempCanvas.toDataURL('image/png'));
                 };
                 img.onerror = () => {
+                    ctx.fillStyle = color;
+                    ctx.beginPath();
+                    ctx.arc(size/2, size/2, size/2 - 4, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = `bold ${size/2}px Arial`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(iconName[0].toUpperCase(), size/2, size/2);
+                    resolve(tempCanvas.toDataURL('image/png'));
+                };
+                img.src = svgUrl;
+            });
+        }
+
+        function loadIconifyIcon(iconName, color, size) {
+            return new Promise((resolve, reject) => {
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = size;
+                tempCanvas.height = size;
+                const ctx = tempCanvas.getContext('2d');
+
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                
+                // Iconify API - use full icon name with collection prefix (e.g., "mdi:woman")
+                const svgUrl = `https://api.iconify.design/${iconName}.svg?color=${encodeURIComponent(color)}`;
+
+                img.onload = () => {
+                    ctx.drawImage(img, 0, 0, size, size);
+                    resolve(tempCanvas.toDataURL('image/png'));
+                };
+                img.onerror = () => {
+                    // Fallback to colored circle with letter
                     ctx.fillStyle = color;
                     ctx.beginPath();
                     ctx.arc(size/2, size/2, size/2 - 4, 0, Math.PI * 2);
@@ -1059,12 +1084,12 @@ Mista
             ctx.fillStyle = config.backgroundColor;
             ctx.fillRect(0, 0, config.width, config.height);
 
-            // Search for icon based on ENGLISH word (iconSearchWord)
+            // Search for icon based on search word
             let iconToUse = selectedIcon;
             try {
                 const icons = await getSuggestedIcons(iconSearchWord, selectedIconSource);
                 if (icons.length > 0) {
-                    iconToUse = icons[0];
+                    iconToUse = icons[0]; // Use first icon from search
                 }
             } catch (error) {
                 console.warn(`Could not find icon for "${iconSearchWord}", using default`);
@@ -1157,20 +1182,11 @@ Mista
             generatedImages = [];
             cardsArray = []; // Reset cards array
             const wordList = document.getElementById('wordList');
-            const progress = document.getElementById('imageProgress');
-            const progressBar = document.getElementById('imageProgressBar');
-
             wordList.innerHTML = '';
-            const totalCards = enWords.length + targetWords.length;
-            let cardCount = 0;
-            progress.textContent = `Generating images: 0/${totalCards}`;
-            progressBar.style.width = '0%';
 
             // Generate cards for ENGLISH words (using English word for icon search)
             for (let i = 0; i < enWords.length; i++) {
                 const enWord = enWords[i].trim();
-                progress.textContent = `Generating English card ${i + 1}/${enWords.length}: "${enWord}"`;
-                progressBar.style.width = `${((cardCount + 1) / totalCards) * 100}%`;
 
                 try {
                     // Search icon based on English word
@@ -1184,7 +1200,6 @@ Mista
                         word: enWord,
                         lang: 'en'
                     });
-                    cardCount++;
 
                     // Add card to list
                     const wordCard = document.createElement('div');
@@ -1220,9 +1235,7 @@ Mista
             // Generate cards for TARGET language words (using English word for icon search)
             for (let i = 0; i < targetWords.length; i++) {
                 const targetWord = targetWords[i].trim();
-                const enWordForIcon = enWords[i]; // Use corresponding English word for icon search
-                progress.textContent = `Generating ${document.getElementById('targetLanguageSelect').value} card ${i + 1}/${targetWords.length}: "${targetWord}"`;
-                progressBar.style.width = `${((cardCount + 1) / totalCards) * 100}%`;
+                const enWordForIcon = enWords[i];
 
                 try {
                     // Search icon based on ENGLISH word, but display TARGET word
@@ -1236,7 +1249,6 @@ Mista
                         word: targetWord,
                         lang: document.getElementById('targetLanguageSelect').value
                     });
-                    cardCount++;
 
                     // Add card to list
                     const wordCard = document.createElement('div');
@@ -1270,7 +1282,6 @@ Mista
                 await new Promise(resolve => setTimeout(resolve, 100));
             }
 
-            progress.textContent = `✅ Images ready! Created ${generatedImages.length} cards (${enWords.length} EN + ${targetWords.length} Target)`;
             document.getElementById('downloadImagesBtn').disabled = false;
             document.getElementById('cardsCount').textContent = generatedImages.length;
         }
@@ -1341,10 +1352,6 @@ Mista
 
             const card = cardsArray[selectedCardIndex];
             const newIcon = selectedIcon;
-
-            // Regenerate image with new icon
-            const progress = document.getElementById('imageProgress');
-            progress.textContent = `🔄 Оновлення іконки для "${card.word}"...`;
 
             try {
                 const config = getImageConfig();
@@ -1418,11 +1425,8 @@ Mista
                 document.getElementById('saveCardIconBtn').style.display = 'none';
                 document.getElementById('editingCardLabel').style.display = 'none';
 
-                progress.textContent = `✅ Іконку оновлено для "${card.word}"`;
-
             } catch (error) {
                 console.error('Error updating icon:', error);
-                progress.textContent = `❌ Помилка оновлення іконки`;
             }
         }
 
@@ -1463,26 +1467,15 @@ Mista
             }
 
             generatedAudio = [];
-            const progress = document.getElementById('audioProgress');
-            const progressBar = document.getElementById('audioProgressBar');
-
-            progress.textContent = `Generating audio: 0/${enWords.length + targetWords.length} files`;
-            progressBar.style.width = '0%';
-
-            let fileCount = 0;
-            const totalFiles = enWords.length + targetWords.length;
 
             // Generate English audio files
             for (let i = 0; i < enWords.length; i++) {
                 const enWord = enWords[i].trim();
-                progress.textContent = `Generating audio ${fileCount + 1}/${totalFiles}: "${enWord}" (en-us)`;
-                progressBar.style.width = `${((fileCount + 1) / totalFiles) * 100}%`;
 
                 try {
                     const enAudioBlob = await fetchVoiceRSS(enWord, 'en-us', apiKey);
                     const enFileName = `en_${enWord.replace(/\s+/g, '_')}.mp3`;
                     generatedAudio.push({ name: enFileName, data: enAudioBlob, lang: 'en' });
-                    fileCount++;
                 } catch (error) {
                     console.error(`Error generating English audio for "${enWord}":`, error);
                 }
@@ -1493,14 +1486,11 @@ Mista
             // Generate target language audio files
             for (let i = 0; i < targetWords.length; i++) {
                 const targetWord = targetWords[i].trim();
-                progress.textContent = `Generating audio ${fileCount + 1}/${totalFiles}: "${targetWord}" (${targetLanguage})`;
-                progressBar.style.width = `${((fileCount + 1) / totalFiles) * 100}%`;
 
                 try {
                     const targetAudioBlob = await fetchVoiceRSS(targetWord, targetLanguage, apiKey);
                     const targetFileName = `${targetLanguage}_${targetWord.replace(/\s+/g, '_')}.mp3`;
                     generatedAudio.push({ name: targetFileName, data: targetAudioBlob, lang: targetLanguage });
-                    fileCount++;
                 } catch (error) {
                     console.error(`Error generating target audio for "${targetWord}":`, error);
                 }
@@ -1508,7 +1498,6 @@ Mista
                 await new Promise(resolve => setTimeout(resolve, 300));
             }
 
-            progress.textContent = `✅ Audio ready! Created ${generatedAudio.length} files (${enWords.length} EN + ${targetWords.length} Target)`;
             document.getElementById('downloadAudioBtn').disabled = false;
             
             // Enable all play buttons on cards
