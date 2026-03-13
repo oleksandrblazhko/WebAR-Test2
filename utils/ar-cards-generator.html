@@ -337,7 +337,7 @@
         .word-card img {
             width: 100%;
             height: 120px;
-            object-fit: cover;
+            object-fit: contain;
         }
 
         .word-card-content {
@@ -408,6 +408,11 @@
         .api-info a {
             color: #667eea;
         }
+
+        svg {
+            display: inline-block;
+            vertical-align: middle;
+        }
     </style>
 
     <!-- Google Material Symbols -->
@@ -425,16 +430,25 @@
             <div class="word-lists-container">
                 <div class="word-list-panel">
                     <h3>
-                        <span style="font-size: 24px;">🇬🇧</span>
+                        <svg style="width: 24px; height: 24px; vertical-align: middle; margin-right: 4px;" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+                            <!-- UK Flag (Union Jack) -->
+                            <rect width="60" height="40" fill="#012169"/>
+                            <path d="M0,0 L60,40 M60,0 L0,40" stroke="#fff" stroke-width="8"/>
+                            <path d="M0,0 L60,40 M60,0 L0,40" stroke="#C8102E" stroke-width="5" fill="none"/>
+                            <rect x="0" y="16" width="60" height="8" fill="#fff"/>
+                            <rect x="26" y="0" width="8" height="40" fill="#fff"/>
+                            <rect x="0" y="18" width="60" height="4" fill="#C8102E"/>
+                            <rect x="28" y="0" width="4" height="40" fill="#C8102E"/>
+                        </svg>
                         English Words
                         <span class="badge">Auto TTS: en-us</span>
                     </h3>
                     <textarea id="enWordsInput" placeholder="Enter English words, each on a new line..." spellcheck="false">
-Education
-Entertainment
-Reality
-Augmented
-Mixed
+Man
+Woman
+Child
+Dog
+Cat
 </textarea>
                     <p style="font-size: 12px; color: #666; margin-top: 8px;">
                         💡 Icons will be searched based on these English words
@@ -442,7 +456,13 @@ Mixed
                 </div>
                 <div class="word-list-panel">
                     <h3>
-                        <span id="targetFlagEmoji" style="font-size: 24px;">🇵🇹</span>
+                        <svg id="targetFlagSvg" style="width: 24px; height: 24px; vertical-align: middle; margin-right: 4px;" viewBox="0 0 90 60" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Portugal Flag -->
+                            <rect width="90" height="60" fill="#006600"/>
+                            <rect x="36" y="0" width="54" height="60" fill="#ff0000"/>
+                            <circle cx="36" cy="30" r="18" fill="#ffcc00"/>
+                            <path d="M30,30 L30,24 L42,30 L30,36 Z" fill="#006600"/>
+                        </svg>
                         Target Language Words
                         <select id="targetLanguageSelect" style="margin-left: 10px; font-size: 13px;" onchange="updateTargetFlag()">
                             <option value="pt-pt" selected>Portuguese (Portugal) - pt-pt</option>
@@ -457,11 +477,11 @@ Mixed
                         </select>
                     </h3>
                     <textarea id="targetWordsInput" placeholder="Enter target language words, each on a new line..." spellcheck="false">
-Educação
-Entretenimento
-Realidade
-Aumentada
-Mista
+Homem
+Mulher
+Criança
+Cachorro
+Gato
 </textarea>
                     <p style="font-size: 12px; color: #666; margin-top: 8px;">
                         💡 Must have same number of words as English list
@@ -538,9 +558,9 @@ Mista
                             <div class="config-item" style="flex: 1;">
                                 <label for="iconSource">Icon Library:</label>
                                 <select id="iconSource" onchange="updateIconSource()">
+                                    <option value="iconify">Iconify (100,000+)</option>
                                     <option value="material">Google Material Symbols (3,000+)</option>
                                     <option value="tabler">Tabler Icons (4,800+)</option>
-                                    <option value="iconify">Iconify (100,000+)</option>
                                 </select>
                             </div>
                         </div>
@@ -607,7 +627,7 @@ Mista
         // ==================== CONSTANTS ====================
         let selectedIcon = 'school';
         let selectedLayout = 'top';
-        let selectedIconSource = 'material';
+        let selectedIconSource = 'iconify';
         let generatedImages = [];
         let generatedAudio = [];
         let selectedCardIndex = null; // Index of currently selected card for editing
@@ -617,102 +637,23 @@ Mista
         const ICON_COLLECTIONS = {
             'material': 'material-symbols',
             'tabler': 'tabler',
-            'iconify': 'material-symbols'
+            'iconify': ''  // Empty = search all collections
         };
 
-        // Material Symbols icon mapping (English word → icon name)
-        const iconMapping = {
-            'education': ['school', 'menu_book', 'graduation_cap', 'library_books'],
-            'school': ['school', 'graduation_cap', 'menu_book'],
-            'learning': ['psychology', 'lightbulb', 'menu_book'],
-            'teaching': ['cast_for_education', 'school', 'menu_book'],
-            'home': ['home', 'cottage', 'house'],
-            'user': ['person', 'face', 'emoji_people'],
-            'person': ['person', 'face', 'walking'],
-            'man': ['man', 'person', 'face'],
-            'woman': ['woman', 'person', 'face'],
-            'people': ['group', 'people', 'diversity'],
-            'boy': ['boy', 'person', 'face'],
-            'girl': ['girl', 'person', 'face'],
-            'face': ['face', 'emoji_emotions', 'sentiment_satisfied'],
-            'walking': ['directions_walk', 'walking', 'pedestrian'],
-            'settings': ['settings', 'tune', 'sliders'],
-            'search': ['search', 'find_in_page', 'magnify'],
-            'entertainment': ['theater_comedy', 'movie', 'music_note'],
-            'music': ['music_note', 'headphones', 'radio'],
-            'video': ['videocam', 'movie', 'play_arrow'],
-            'game': ['sports_esports', 'casino', 'toys'],
-            'book': ['menu_book', 'library_books', 'description'],
-            'file': ['description', 'insert_drive_file', 'draft'],
-            'folder': ['folder', 'folder_open', 'create_new_folder'],
-            'image': ['image', 'photo', 'picture_as_pdf'],
-            'photo': ['photo', 'photo_camera', 'image'],
-            'camera': ['photo_camera', 'camera_alt', 'videocam'],
-            'mail': ['mail', 'email', 'markunread'],
-            'message': ['message', 'chat', 'forum'],
-            'phone': ['phone', 'call', 'smartphone'],
-            'location': ['location_on', 'place', 'map'],
-            'map': ['map', 'terrain', 'language'],
-            'time': ['schedule', 'timer', 'access_time'],
-            'calendar': ['calendar_today', 'event', 'month'],
-            'date': ['calendar_today', 'event', 'today'],
-            'shopping': ['shopping_cart', 'shopping_bag', 'store'],
-            'cart': ['shopping_cart', 'add_shopping_cart', 'remove_shopping_cart'],
-            'store': ['store', 'storefront', 'shop'],
-            'money': ['attach_money', 'payments', 'account_balance'],
-            'payment': ['payments', 'credit_card', 'account_balance'],
-            'security': ['security', 'shield', 'lock'],
-            'lock': ['lock', 'lock_outline', 'security'],
-            'unlock': ['lock_open', 'unlock', 'vpn_key'],
-            'key': ['vpn_key', 'key', 'password'],
-            'star': ['star', 'star_rate', 'grade'],
-            'favorite': ['favorite', 'favorite_border', 'heart'],
-            'heart': ['favorite', 'favorite_border', 'self_improvement'],
-            'check': ['check', 'done', 'check_circle'],
-            'close': ['close', 'cancel', 'highlight_off'],
-            'delete': ['delete', 'delete_outline', 'remove_circle'],
-            'add': ['add', 'add_circle', 'plus'],
-            'edit': ['edit', 'edit_note', 'create'],
-            'save': ['save', 'save_alt', 'download'],
-            'download': ['download', 'file_download', 'get_app'],
-            'upload': ['upload', 'file_upload', 'publish'],
-            'share': ['share', 'ios_share', 'screen_share'],
-            'link': ['link', 'insert_link', 'anchor'],
-            'cloud': ['cloud', 'cloud_queue', 'weather_hail'],
-            'weather': ['wb_sunny', 'cloud', 'umbrella'],
-            'sun': ['wb_sunny', 'light_mode', 'sunny'],
-            'moon': ['dark_mode', 'nightlight', 'bedtime'],
-            'food': ['restaurant', 'lunch_dining', 'brunch_dining'],
-            'restaurant': ['restaurant', 'dinner_dining', 'ramen_dining'],
-            'drink': ['local_drink', 'wine_bar', 'liquor'],
-            'coffee': ['local_cafe', 'coffee', 'free_breakfast'],
-            'car': ['directions_car', 'local_taxi', 'commute'],
-            'transport': ['directions_bus', 'directions_train', 'airport_shuttle'],
-            'flight': ['flight', 'flight_takeoff', 'flight_land'],
-            'travel': ['flight', 'beach_access', 'travel_explore'],
-            'sport': ['sports_soccer', 'sports_basketball', 'fitness_center'],
-            'fitness': ['fitness_center', 'self_improvement', 'directions_run'],
-            'medical': ['local_hospital', 'medical_services', 'healing'],
-            'health': ['favorite', 'self_improvement', 'local_hospital'],
-            'nature': ['eco', 'nature', 'park'],
-            'animal': ['pets', 'paw', 'bird'],
-            'dog': ['pets', 'guide_dog', 'service_toolbox'],
-            'cat': ['pets', 'cat'],
-            'tree': ['nature', 'forest', 'park'],
-            'flower': ['local_florist', 'flower', 'yard'],
-            'technology': ['computer', 'laptop', 'desktop_mac'],
-            'computer': ['computer', 'laptop', 'desktop_mac'],
-            'wifi': ['wifi', 'wifi_tethering', 'router'],
-            'battery': ['battery_full', 'battery_charging_full', 'power'],
-            'power': ['power', 'electric_bolt', 'battery_full']
-        };
+        // API cache for faster repeated searches
+        const iconCache = new Map();
 
-        // ==================== ICONIFY API SEARCH ====================
+        // ==================== ADAPTIVE ICON SEARCH ====================
 
         async function searchIconifyAPI(query, collection, limit = 50) {
             try {
-                // For Iconify source, search across all collections
-                const url = `https://api.iconify.design/search?query=${encodeURIComponent(query)}&limit=${limit}`;
+                // Build URL with collection filter if specified
+                let url = `https://api.iconify.design/search?query=${encodeURIComponent(query)}&limit=${limit}`;
+                
+                if (collection) {
+                    url += `&prefix=${collection}`;
+                }
+
                 const response = await fetch(url);
 
                 if (!response.ok) {
@@ -732,31 +673,144 @@ Mista
             }
         }
 
-        async function getSuggestedIcons(word, source) {
-            const lowerWord = word.toLowerCase();
+        // Normalize word for search
+        function normalizeWord(word) {
+            return word
+                .trim()
+                .toLowerCase()
+                .replace(/[^\w\s-]/g, '')  // Remove special chars
+                .replace(/\s+/g, '-');      // Spaces to dashes
+        }
 
-            if (iconMapping[lowerWord]) {
-                return iconMapping[lowerWord];
+        // Simple lemmatization for common English forms
+        function lemmatizeWord(word) {
+            const irregularForms = {
+                'children': 'child',
+                'men': 'man',
+                'women': 'woman',
+                'people': 'person',
+                'mice': 'mouse',
+                'geese': 'goose',
+                'feet': 'foot',
+                'teeth': 'tooth',
+                'running': 'run',
+                'swimming': 'swim',
+                'sitting': 'sit',
+                'better': 'good',
+                'best': 'good',
+                'worse': 'bad',
+                'worst': 'bad',
+            };
+
+            if (irregularForms[word]) {
+                return irregularForms[word];
             }
 
-            // For Iconify, search across all collections
-            if (source === 'iconify') {
-                try {
-                    const icons = await searchIconifyAPI(lowerWord, 'material-symbols', 50);
-                    return icons.length > 0 ? icons : getFallbackIcons(source);
-                } catch (error) {
-                    return getFallbackIcons(source);
+            // Simple suffix rules
+            const rules = [
+                [/ies$/, 'y'],      // categories → category
+                [/es$/, ''],        // boxes → box
+                [/s$/, ''],         // cats → cat
+                [/ing$/, ''],       // running → run
+                [/ed$/, ''],        // played → play
+                [/er$/, ''],        // teacher → teach
+                [/tion$/, 'te'],    // education → educate
+                [/ment$/, ''],      // development → develop
+                [/ness$/, ''],      // happiness → happy
+                [/ly$/, ''],        // quickly → quick
+            ];
+
+            for (const [pattern, replacement] of rules) {
+                if (pattern.test(word)) {
+                    return word.replace(pattern, replacement);
                 }
             }
 
-            // For material and tabler, use specific collection
-            const collection = ICON_COLLECTIONS[source];
+            return word;
+        }
+
+        // Prioritize icons based on relevance
+        function prioritizeIcons(icons, query) {
+            const queryLower = query.toLowerCase();
+            
+            return icons
+                .filter((icon, index, self) => {
+                    // Remove duplicates by icon name
+                    const iconName = icon.split(':').pop();
+                    return self.findIndex(i => i.split(':').pop() === iconName) === index;
+                })
+                .sort((a, b) => {
+                    const aName = a.split(':').pop().toLowerCase();
+                    const bName = b.split(':').pop().toLowerCase();
+                    
+                    let scoreA = 0, scoreB = 0;
+                    
+                    // Exact match gets highest priority
+                    if (aName === queryLower) scoreA += 100;
+                    if (bName === queryLower) scoreB += 100;
+                    
+                    // Contains the query word
+                    if (aName.includes(queryLower)) scoreA += 50;
+                    if (bName.includes(queryLower)) scoreB += 50;
+                    
+                    // Shorter names = simpler icons
+                    scoreA += Math.max(0, 20 - aName.length);
+                    scoreB += Math.max(0, 20 - bName.length);
+                    
+                    return scoreB - scoreA;
+                });
+        }
+
+        async function getSuggestedIcons(word, source) {
+            // Normalize the word
+            const normalizedWord = normalizeWord(word);
+            const lowerWord = normalizedWord.toLowerCase();
+            
+            // Get collection for the source
+            const collection = ICON_COLLECTIONS[source] || null;
+            
+            // Check cache first
+            const cacheKey = `${lowerWord}:${source}`;
+            if (iconCache.has(cacheKey)) {
+                console.log(`💾 Cache: "${lowerWord}"`);
+                return iconCache.get(cacheKey);
+            }
+            
+            // Try original word
+            let icons = [];
             try {
-                const icons = await searchIconifyAPI(lowerWord, collection, 50);
-                return icons.length > 0 ? icons : getFallbackIcons(source);
+                icons = await searchIconifyAPI(lowerWord, collection, 50);
             } catch (error) {
+                console.warn(`API search for "${lowerWord}" failed`);
+            }
+            
+            // If no results, try lemmatized form
+            if (icons.length === 0) {
+                const lemma = lemmatizeWord(lowerWord);
+                if (lemma !== lowerWord) {
+                    console.log(`📚 Lemmatized: "${lowerWord}" → "${lemma}"`);
+                    try {
+                        icons = await searchIconifyAPI(lemma, collection, 50);
+                    } catch (error) {
+                        console.warn(`API search for "${lemma}" failed`);
+                    }
+                }
+            }
+            
+            // Prioritize results
+            const prioritizedIcons = prioritizeIcons(icons, lowerWord);
+            
+            // Store in cache
+            iconCache.set(cacheKey, prioritizedIcons);
+            
+            // Fallback if no icons found
+            if (prioritizedIcons.length === 0) {
+                console.log(`⚠️ Fallback for "${lowerWord}"`);
                 return getFallbackIcons(source);
             }
+            
+            console.log(`✅ Found ${prioritizedIcons.length} icons for "${lowerWord}"`);
+            return prioritizedIcons;
         }
 
         function getFallbackIcons(source) {
@@ -776,11 +830,8 @@ Mista
                     'shopping-cart', 'credit-card', 'school', 'book'
                 ],
                 'iconify': [
-                    'home', 'person', 'settings', 'search', 'favorite', 'star',
-                    'check', 'close', 'add', 'edit', 'delete', 'save',
-                    'download', 'upload', 'share', 'lock', 'cloud', 'image',
-                    'music_note', 'videocam', 'mail', 'phone', 'location_on',
-                    'calendar_today', 'schedule', 'shopping_cart', 'payments', 'school', 'book'
+                    'material-symbols:home', 'material-symbols:person', 'material-symbols:settings',
+                    'material-symbols:search', 'material-symbols:favorite', 'material-symbols:star'
                 ]
             };
             return fallback[source] || fallback['material'];
@@ -1149,17 +1200,17 @@ Mista
 
         function getFlagForLanguage(lang) {
             const flagMap = {
-                'pt-pt': '🇵🇹',
-                'pt-br': '🇧🇷',
-                'pl-pl': '🇵🇱',
-                'de-de': '🇩🇪',
-                'en-us': '🇺🇸',
-                'en-gb': '🇬🇧',
-                'es-es': '🇪🇸',
-                'fr-fr': '🇫🇷',
-                'it-it': '🇮🇹'
+                'pt-pt': `<svg style="width: 18px; height: 12px;" viewBox="0 0 90 60"><rect width="90" height="60" fill="#006600"/><rect x="36" y="0" width="54" height="60" fill="#ff0000"/><circle cx="36" cy="30" r="18" fill="#ffcc00"/><path d="M30,30 L30,24 L42,30 L30,36 Z" fill="#006600"/></svg>`,
+                'pt-br': `<svg style="width: 18px; height: 12px;" viewBox="0 0 100 70"><rect width="100" height="70" fill="#009c3b"/><polygon points="50,10 90,35 50,60 10,35" fill="#ffdf00"/><circle cx="50" cy="35" r="15" fill="#002776"/></svg>`,
+                'pl-pl': `<svg style="width: 18px; height: 12px;" viewBox="0 0 80 50"><rect width="80" height="25" fill="#fff"/><rect y="25" width="80" height="25" fill="#dc143c"/></svg>`,
+                'de-de': `<svg style="width: 18px; height: 12px;" viewBox="0 0 90 60"><rect width="90" height="20" fill="#000"/><rect y="20" width="90" height="20" fill="#dd0000"/><rect y="40" width="90" height="20" fill="#ffce00"/></svg>`,
+                'en-us': `<svg style="width: 18px; height: 12px;" viewBox="0 0 90 60"><rect width="90" height="60" fill="#b22234"/><rect y="0" width="90" height="60" fill="#fff" stroke="#b22234" stroke-width="9.23"/><rect width="36" height="32.31" fill="#3c3b6e"/></svg>`,
+                'en-gb': `<svg style="width: 18px; height: 12px;" viewBox="0 0 60 40"><rect width="60" height="40" fill="#012169"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#fff" stroke-width="8"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#C8102E" stroke-width="5" fill="none"/><rect x="0" y="16" width="60" height="8" fill="#fff"/><rect x="26" y="0" width="8" height="40" fill="#fff"/><rect x="0" y="18" width="60" height="4" fill="#C8102E"/><rect x="28" y="0" width="4" height="40" fill="#C8102E"/></svg>`,
+                'es-es': `<svg style="width: 18px; height: 12px;" viewBox="0 0 90 60"><rect width="90" height="60" fill="#aa151b"/><rect y="15" width="90" height="30" fill="#f1bf00"/></svg>`,
+                'fr-fr': `<svg style="width: 18px; height: 12px;" viewBox="0 0 90 60"><rect width="30" height="60" fill="#0055a4"/><rect x="30" width="30" height="60" fill="#fff"/><rect x="60" width="30" height="60" fill="#ef4135"/></svg>`,
+                'it-it': `<svg style="width: 18px; height: 12px;" viewBox="0 0 90 60"><rect width="30" height="60" fill="#008c45"/><rect x="30" width="30" height="60" fill="#fff"/><rect x="60" width="30" height="60" fill="#cd212a"/></svg>`
             };
-            return flagMap[lang] || '🌍';
+            return flagMap[lang] || '<svg style="width: 18px; height: 12px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#667eea"/></svg>';
         }
 
         async function generateAllImages() {
@@ -1207,7 +1258,7 @@ Mista
                     wordCard.innerHTML = `
                         <img src="${dataURL}" alt="${enWord}">
                         <div class="word-card-content">
-                            <div class="word-card-text">🇬🇧 ${enWord}</div>
+                            <div class="word-card-text">${getFlagForLanguage('en-gb')} ${enWord}</div>
                             <div class="word-card-buttons">
                                 <button class="btn btn-info btn-small" onclick="downloadSingleImage('${fileName}', '${dataURL}')">📥</button>
                                 <button class="btn btn-small" onclick="playWord('${enWord}', 'en-us')" ${!document.getElementById('apiKeyInput').value.trim() ? 'disabled' : ''}>🔊</button>
@@ -1341,7 +1392,7 @@ Mista
             // Show save button and label
             document.getElementById('saveCardIconBtn').style.display = 'inline-block';
             document.getElementById('editingCardLabel').style.display = 'inline';
-            document.getElementById('editingCardLabel').textContent = `✏️ Редагування: ${lang === 'en' ? '🇬🇧' : getFlagForLanguage(card.lang)} ${card.word}`;
+            document.getElementById('editingCardLabel').textContent = `✏️ Редагування: ${lang === 'en' ? getFlagForLanguage('en-gb') : getFlagForLanguage(card.lang)} ${card.word}`;
         }
 
         async function saveCardIcon() {
@@ -1551,21 +1602,21 @@ Mista
 
         function updateTargetFlag() {
             const language = document.getElementById('targetLanguageSelect').value;
-            const flagEmoji = document.getElementById('targetFlagEmoji');
-            
+            const flagSvg = document.getElementById('targetFlagSvg');
+
             const flagMap = {
-                'pt-pt': '🇵🇹',
-                'pt-br': '🇧🇷',
-                'pl-pl': '🇵🇱',
-                'de-de': '🇩🇪',
-                'en-us': '🇺🇸',
-                'en-gb': '🇬🇧',
-                'es-es': '🇪🇸',
-                'fr-fr': '🇫🇷',
-                'it-it': '🇮🇹'
+                'pt-pt': `<svg viewBox="0 0 90 60"><rect width="90" height="60" fill="#006600"/><rect x="36" y="0" width="54" height="60" fill="#ff0000"/><circle cx="36" cy="30" r="18" fill="#ffcc00"/><path d="M30,30 L30,24 L42,30 L30,36 Z" fill="#006600"/></svg>`,
+                'pt-br': `<svg viewBox="0 0 100 70"><rect width="100" height="70" fill="#009c3b"/><polygon points="50,10 90,35 50,60 10,35" fill="#ffdf00"/><circle cx="50" cy="35" r="15" fill="#002776"/></svg>`,
+                'pl-pl': `<svg viewBox="0 0 80 50"><rect width="80" height="25" fill="#fff"/><rect y="25" width="80" height="25" fill="#dc143c"/></svg>`,
+                'de-de': `<svg viewBox="0 0 90 60"><rect width="90" height="20" fill="#000"/><rect y="20" width="90" height="20" fill="#dd0000"/><rect y="40" width="90" height="20" fill="#ffce00"/></svg>`,
+                'en-us': `<svg viewBox="0 0 90 60"><rect width="90" height="60" fill="#b22234"/><rect y="0" width="90" height="60" fill="#fff" stroke="#b22234" stroke-width="9.23"/><rect width="36" height="32.31" fill="#3c3b6e"/></svg>`,
+                'en-gb': `<svg viewBox="0 0 60 40"><rect width="60" height="40" fill="#012169"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#fff" stroke-width="8"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#C8102E" stroke-width="5" fill="none"/><rect x="0" y="16" width="60" height="8" fill="#fff"/><rect x="26" y="0" width="8" height="40" fill="#fff"/><rect x="0" y="18" width="60" height="4" fill="#C8102E"/><rect x="28" y="0" width="4" height="40" fill="#C8102E"/></svg>`,
+                'es-es': `<svg viewBox="0 0 90 60"><rect width="90" height="60" fill="#aa151b"/><rect y="15" width="90" height="30" fill="#f1bf00"/></svg>`,
+                'fr-fr': `<svg viewBox="0 0 90 60"><rect width="30" height="60" fill="#0055a4"/><rect x="30" width="30" height="60" fill="#fff"/><rect x="60" width="30" height="60" fill="#ef4135"/></svg>`,
+                'it-it': `<svg viewBox="0 0 90 60"><rect width="30" height="60" fill="#008c45"/><rect x="30" width="30" height="60" fill="#fff"/><rect x="60" width="30" height="60" fill="#cd212a"/></svg>`
             };
-            
-            flagEmoji.textContent = flagMap[language] || '🌍';
+
+            flagSvg.innerHTML = flagMap[language] || '<circle cx="12" cy="12" r="10" fill="#667eea"/>';
         }
 
         window.onload = () => {
