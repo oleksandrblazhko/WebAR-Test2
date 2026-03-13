@@ -574,7 +574,7 @@ Gato
                     <div style="text-align: center;">
                         <canvas id="previewCanvas" class="preview-canvas" width="200" height="120"></canvas>
                         <div style="margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                            <button class="btn btn-primary" id="saveCardIconBtn" onclick="saveCardIcon()" style="display: none; padding: 8px 12px; font-size: 13px;">💾 Зберегти зміни</button>
+                            <button class="btn btn-primary" id="saveCardIconBtn" onclick="saveCardIcon()" style="display: none; padding: 8px 12px; font-size: 13px;">💾 Save Changes</button>
                             <span id="editingCardLabel" style="display: none; color: #667eea; font-weight: 600; font-size: 13px;"></span>
                         </div>
                     </div>
@@ -1392,7 +1392,7 @@ Gato
             // Show save button and label
             document.getElementById('saveCardIconBtn').style.display = 'inline-block';
             document.getElementById('editingCardLabel').style.display = 'inline';
-            document.getElementById('editingCardLabel').textContent = `✏️ Редагування: ${lang === 'en' ? getFlagForLanguage('en-gb') : getFlagForLanguage(card.lang)} ${card.word}`;
+            document.getElementById('editingCardLabel').innerHTML = `✏️ Editing: ${lang === 'en' ? getFlagForLanguage('en-gb') : getFlagForLanguage(card.lang)} ${card.word}`;
         }
 
         async function saveCardIcon() {
