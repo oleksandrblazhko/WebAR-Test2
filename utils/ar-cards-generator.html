@@ -38,6 +38,18 @@
             margin-bottom: 20px;
         }
 
+        .settings-container {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .settings-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .panel h2 {
             color: #333;
             margin-top: 0;
@@ -52,9 +64,8 @@
 
         .config-row {
             display: flex;
-            gap: 15px;
+            gap: 10px;
             margin-bottom: 15px;
-            flex-wrap: wrap;
             align-items: flex-end;
         }
 
@@ -87,6 +98,13 @@
         textarea:focus {
             outline: none;
             border-color: #667eea;
+        }
+
+        .preview-canvas {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: white;
         }
 
         input[type="color"] {
@@ -217,18 +235,23 @@
 
         .layout-options {
             display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 5px;
+            margin-bottom: 0;
         }
 
         .layout-option {
-            flex: 1;
-            padding: 10px;
+            padding: 5px 8px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             cursor: pointer;
             text-align: center;
             transition: all 0.2s;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            white-space: nowrap;
         }
 
         .layout-option:hover {
@@ -244,18 +267,6 @@
             width: 60px;
             height: 40px;
             border: 1px solid #999;
-            margin-bottom: 5px;
-        }
-
-        .preview-section {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .preview-canvas {
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .word-lists-container {
@@ -316,6 +327,11 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
 
+        .word-card.selected {
+            border: 3px solid #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+        }
+
         .word-card img {
             width: 100%;
             height: 120px;
@@ -366,6 +382,11 @@
             flex-wrap: wrap;
         }
 
+        .edit-icon-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
         .progress {
             margin-top: 10px;
             padding: 12px;
@@ -411,45 +432,6 @@
         .api-info a {
             color: #667eea;
         }
-
-        .mode-selector {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            justify-content: center;
-        }
-
-        .mode-option {
-            flex: 1;
-            max-width: 300px;
-            padding: 15px;
-            border: 3px solid #e0e0e0;
-            border-radius: 12px;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.2s;
-        }
-
-        .mode-option:hover {
-            border-color: #667eea;
-            transform: translateY(-2px);
-        }
-
-        .mode-option.selected {
-            border-color: #667eea;
-            background: #f0f4ff;
-        }
-
-        .mode-option h4 {
-            margin: 0 0 5px 0;
-            color: #333;
-        }
-
-        .mode-option p {
-            margin: 0;
-            font-size: 12px;
-            color: #666;
-        }
     </style>
 
     <!-- Google Material Symbols -->
@@ -461,21 +443,6 @@
     <div class="container">
         <h1>🎨🔊 Dual-Marker-Based Multimodal Bilingual Augmented Reality Flashcard Generator</h1>
 
-        <!-- Mode Selector -->
-        <div class="panel">
-            <h2>📋 Select Generation Mode</h2>
-            <div class="mode-selector">
-                <div class="mode-option selected" data-mode="bilingual" onclick="selectMode('bilingual')">
-                    <h4>🔤 Bilingual (English + Target Language)</h4>
-                    <p>Two parallel word lists - cards show both languages</p>
-                </div>
-                <div class="mode-option" data-mode="single" onclick="selectMode('single')">
-                    <h4>📝 Single Language</h4>
-                    <p>One word list - standard cards</p>
-                </div>
-            </div>
-        </div>
-
         <!-- Bilingual Word Lists Panel -->
         <div class="panel" id="bilingualPanel">
             <h2>📝 Bilingual Word Lists</h2>
@@ -486,23 +453,24 @@
                         English Words
                         <span class="badge">Auto TTS: en-us</span>
                     </h3>
-                    <textarea id="enWordsInput" placeholder="Enter English words, each on a new line...">Education
+                    <textarea id="enWordsInput" placeholder="Enter English words, each on a new line...">
+Education
 Entertainment
 Reality
 Augmented
 Mixed
-Teaching</textarea>
+</textarea>
                     <p style="font-size: 12px; color: #666; margin-top: 8px;">
                         💡 Icons will be searched based on these English words
                     </p>
                 </div>
                 <div class="word-list-panel">
                     <h3>
-                        <span style="font-size: 24px;">🌍</span>
+                        <span id="targetFlagEmoji" style="font-size: 24px;">🇵🇹</span>
                         Target Language Words
-                        <select id="targetLanguageSelect" style="margin-left: 10px; font-size: 13px;">
-                            <option value="pt-br" selected>Portuguese (Brazil) - pt-br</option>
-                            <option value="pt-pt">Portuguese (Portugal) - pt-pt</option>
+                        <select id="targetLanguageSelect" style="margin-left: 10px; font-size: 13px;" onchange="updateTargetFlag()">
+                            <option value="pt-pt" selected>Portuguese (Portugal) - pt-pt</option>
+                            <option value="pt-br">Portuguese (Brazil) - pt-br</option>
                             <option value="pl-pl">Polish (Poland) - pl-pl</option>
                             <option value="de-de">German (Germany) - de-de</option>
                             <option value="en-us">English (US) - en-us</option>
@@ -512,12 +480,13 @@ Teaching</textarea>
                             <option value="it-it">Italian (Italy) - it-it</option>
                         </select>
                     </h3>
-                    <textarea id="targetWordsInput" placeholder="Enter target language words, each on a new line...">Educação
+                    <textarea id="targetWordsInput" placeholder="Enter target language words, each on a new line...">
+Educação
 Entretenimento
 Realidade
 Aumentada
 Mista
-Ensino</textarea>
+</textarea>
                     <p style="font-size: 12px; color: #666; margin-top: 8px;">
                         💡 Must have same number of words as English list
                     </p>
@@ -525,23 +494,11 @@ Ensino</textarea>
             </div>
         </div>
 
-        <!-- Single Language Word List Panel (hidden by default) -->
-        <div class="panel" id="singlePanel" style="display: none;">
-            <h2>📝 Word List</h2>
-            <div class="config-item">
-                <label for="wordsInput">Words (each on a new line):</label>
-                <textarea id="wordsInput" placeholder="Enter words, each on a new line..." style="height: 150px;">Realidade
-Aumentada
-Mista
-Entretenimento
-Ensino
-Educação</textarea>
-            </div>
-        </div>
-
-        <!-- Image Settings Panel -->
-        <div class="panel">
-            <h2>🎨 Image Settings</h2>
+        <!-- Settings Container (Image + Audio) -->
+        <div class="settings-container">
+            <!-- Image Settings Panel -->
+            <div class="panel">
+                <h2>🎨 Image Settings</h2>
 
             <div class="config-row">
                 <div class="config-item">
@@ -572,72 +529,67 @@ Educação</textarea>
                     <label for="iconSize">Icon Size (px):</label>
                     <input type="number" id="iconSize" value="100" min="20" max="500">
                 </div>
-            </div>
-
-            <div class="layout-options">
-                <div class="layout-option selected" data-layout="top" onclick="selectLayout('top')">
-                    <svg viewBox="0 0 60 40">
-                        <rect x="22" y="5" width="15" height="12" fill="#667eea" />
-                        <text x="30" y="30" font-size="8" fill="#333" text-anchor="middle">WORD</text>
-                    </svg>
-                    <div>Icon Top</div>
-                </div>
-                <div class="layout-option" data-layout="left" onclick="selectLayout('left')">
-                    <svg viewBox="0 0 60 40">
-                        <rect x="5" y="10" width="12" height="20" fill="#667eea" />
-                        <text x="40" y="25" font-size="8" fill="#333" text-anchor="middle">WORD</text>
-                    </svg>
-                    <div>Icon Left</div>
-                </div>
-                <div class="layout-option" data-layout="bottom" onclick="selectLayout('bottom')">
-                    <svg viewBox="0 0 60 40">
-                        <text x="30" y="15" font-size="8" fill="#333" text-anchor="middle">WORD</text>
-                        <rect x="22" y="20" width="15" height="12" fill="#667eea" />
-                    </svg>
-                    <div>Icon Bottom</div>
-                </div>
-                <div class="layout-option" data-layout="right" onclick="selectLayout('right')">
-                    <svg viewBox="0 0 60 40">
-                        <text x="25" y="25" font-size="8" fill="#333" text-anchor="middle">WORD</text>
-                        <rect x="42" y="10" width="12" height="20" fill="#667eea" />
-                    </svg>
-                    <div>Icon Right</div>
+                <div class="config-item">
+                    <div class="layout-options" style="margin-bottom: 0; gap: 5px; align-items: flex-end;">
+                        <div class="layout-option selected" data-layout="top" onclick="selectLayout('top')">
+                            <div>Icon Top</div>
+                            <svg viewBox="0 0 60 40">
+                                <rect x="22" y="5" width="15" height="12" fill="#667eea" />
+                                <text x="30" y="30" font-size="8" fill="#333" text-anchor="middle">WORD</text>
+                            </svg>
+                        </div>
+                        <div class="layout-option" data-layout="bottom" onclick="selectLayout('bottom')">
+                            <div>Icon Bottom</div>
+                            <svg viewBox="0 0 60 40">
+                                <text x="30" y="15" font-size="8" fill="#333" text-anchor="middle">WORD</text>
+                                <rect x="22" y="20" width="15" height="12" fill="#667eea" />
+                            </svg>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="icon-search-section">
                 <h3>🔍 Icon Source & Preview</h3>
-                <div class="config-row" style="margin-bottom: 10px;">
-                    <div class="config-item" style="flex: 1;">
-                        <label for="iconSource">Icon Library:</label>
-                        <select id="iconSource" onchange="updateIconSource()">
-                            <option value="material">Google Material Symbols (100,000+)</option>
-                            <option value="tabler">Tabler Icons (4,800+)</option>
-                        </select>
+                <div style="display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: start;">
+                    <!-- Left column: Search controls and icons -->
+                    <div>
+                        <div class="config-row" style="margin-bottom: 10px; align-items: flex-end;">
+                            <div class="config-item" style="flex: 1;">
+                                <label for="previewWord">Test search with word:</label>
+                                <input type="text" id="previewWord" placeholder="Enter word to test icon search..." value="Education">
+                            </div>
+                            <div class="config-item" style="flex: 1;">
+                                <label for="iconSource">Icon Library:</label>
+                                <select id="iconSource" onchange="updateIconSource()">
+                                    <option value="material">Google Material Symbols (100,000+)</option>
+                                    <option value="tabler">Tabler Icons (4,800+)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <p style="color: #666; font-size: 13px; margin-bottom: 10px;">
+                            🔎 Each word from your list will automatically get its own relevant icon. Use this preview to test how icon search works.
+                        </p>
+                        <div class="icon-grid" id="iconGrid"></div>
+                        <div class="progress" id="iconProgress">Enter a word to search for icons</div>
                     </div>
-                    <div class="config-item" style="flex: 1;">
-                        <label for="previewWord">Test search with word:</label>
-                        <input type="text" id="previewWord" placeholder="Enter word to test icon search..." value="Education">
+
+                    <!-- Right column: Preview and Action buttons -->
+                    <div style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 15px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 10px;">Layout Preview:</label>
+                            <canvas id="previewCanvas" class="preview-canvas" width="200" height="150" style="max-width: 100%; height: auto;"></canvas>
+                            <div style="margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                                <button class="btn btn-primary" id="saveCardIconBtn" onclick="saveCardIcon()" style="display: none; padding: 8px 12px; font-size: 13px;">💾 Зберегти зміни</button>
+                                <span id="editingCardLabel" style="display: none; color: #667eea; font-weight: 600; font-size: 13px;"></span>
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: row; gap: 10px; justify-content: center;">
+                            <button class="btn btn-primary" onclick="generateAllImages()">🚀 Generate All Bilingual Images</button>
+                            <button class="btn btn-success" onclick="downloadAllImages()" id="downloadImagesBtn" disabled>📥 Download Images ZIP</button>
+                        </div>
                     </div>
                 </div>
-                <p style="color: #666; font-size: 13px; margin-bottom: 10px;">
-                    🔎 Each word from your list will automatically get its own relevant icon. Use this preview to test how icon search works.
-                </p>
-                <div class="icon-grid" id="iconGrid"></div>
-                <div class="progress" id="iconProgress">Enter a word to search for icons</div>
-            </div>
-
-            <div class="preview-section">
-                <h3>🖼️ Layout Preview:</h3>
-                <canvas id="previewCanvas" class="preview-canvas" width="400" height="300"></canvas>
-                <p style="color: #888; font-size: 12px; margin-top: 10px;">
-                    Preview shows how a card will look. Each word gets its own icon automatically.
-                </p>
-            </div>
-
-            <div style="margin-top: 20px;">
-                <button class="btn btn-primary" onclick="generateAllImages()">🚀 Generate All Bilingual Images</button>
-                <button class="btn btn-success" onclick="downloadAllImages()" id="downloadImagesBtn" disabled>📥 Download Images ZIP</button>
             </div>
 
             <div class="progress" id="imageProgress">Ready to generate bilingual images</div>
@@ -656,37 +608,23 @@ Educação</textarea>
                         <label for="apiKeyInput">VoiceRSS API Key:</label>
                         <input type="text" id="apiKeyInput" placeholder="Enter your VoiceRSS API key" value="">
                     </div>
-                    <div class="config-item" id="singleLangSelector">
-                        <label for="languageSelect">Language (Single Mode):</label>
-                        <select id="languageSelect">
-                            <option value="pt-br" selected>Portuguese (Brazil) - pt-br</option>
-                            <option value="pt-pt">Portuguese (Portugal) - pt-pt</option>
-                            <option value="pl-pl">Polish (Poland) - pl-pl</option>
-                            <option value="de-de">German (Germany) - de-de</option>
-                            <option value="en-us">English (US) - en-us</option>
-                            <option value="en-gb">English (UK) - en-gb</option>
-                            <option value="es-es">Spanish (Spain) - es-es</option>
-                            <option value="fr-fr">French (France) - fr-fr</option>
-                            <option value="it-it">Italian (Italy) - it-it</option>
-                        </select>
-                    </div>
                 </div>
                 <p class="api-info">
-                    💡 Bilingual mode: English (en-us) + Target Language | Single mode: Selected language only<br>
-                    🔗 Get your free API key at <a href="https://www.voicerss.org/" target="_blank">voicerss.org</a> (500 free requests/day)
+                    🔗 Get your free API key at <a href="https://www.voicerss.org/" target="_blank">voicerss.org</a> (500 free requests/day)<br>
+                    💡 Bilingual mode: English (en-us) + Target Language
                 </p>
             </div>
 
             <div>
                 <button class="btn btn-primary" onclick="generateAllAudio()">🎵 Generate All Audio</button>
                 <button class="btn btn-success" onclick="downloadAllAudio()" id="downloadAudioBtn" disabled>📥 Download Audio ZIP</button>
-                <button class="btn btn-info" onclick="playAllWords()">▶️ Play All</button>
             </div>
 
             <div class="progress" id="audioProgress">Ready to generate audio</div>
             <div class="progress-bar">
                 <div class="progress-bar-fill" id="audioProgressBar"></div>
             </div>
+        </div>
         </div>
 
         <!-- Results Panel -->
@@ -707,7 +645,8 @@ Educação</textarea>
         let selectedIconSource = 'material';
         let generatedImages = [];
         let generatedAudio = [];
-        let currentMode = 'bilingual'; // 'bilingual' or 'single'
+        let selectedCardIndex = null; // Index of currently selected card for editing
+        let cardsArray = []; // Array to store card data for easy access
 
         // Iconify API collections
         const ICON_COLLECTIONS = {
@@ -860,26 +799,6 @@ Educação</textarea>
                 ]
             };
             return fallback[source] || fallback['material'];
-        }
-
-        // ==================== MODE SELECTION ====================
-
-        function selectMode(mode) {
-            currentMode = mode;
-            document.querySelectorAll('.mode-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            document.querySelector(`[data-mode="${mode}"]`).classList.add('selected');
-
-            if (mode === 'bilingual') {
-                document.getElementById('bilingualPanel').style.display = 'block';
-                document.getElementById('singlePanel').style.display = 'none';
-                document.getElementById('singleLangSelector').style.display = 'none';
-            } else {
-                document.getElementById('bilingualPanel').style.display = 'none';
-                document.getElementById('singlePanel').style.display = 'block';
-                document.getElementById('singleLangSelector').style.display = 'flex';
-            }
         }
 
         // ==================== ICON SEARCH UI ====================
@@ -1104,23 +1023,11 @@ Educação</textarea>
                 const padding = 20;
 
                 switch (selectedLayout) {
-                    case 'left':
-                        iconX = padding;
-                        iconY = (config.height - config.iconSize) / 2;
-                        textX = config.iconSize + padding * 2;
-                        textY = config.height / 2;
-                        break;
                     case 'top':
                         iconX = (config.width - config.iconSize) / 2;
                         iconY = padding;
                         textX = config.width / 2;
                         textY = config.height / 2 + config.iconSize / 2;
-                        break;
-                    case 'right':
-                        iconX = config.width - config.iconSize - padding;
-                        iconY = (config.height - config.iconSize) / 2;
-                        textX = config.width - config.iconSize - padding * 2;
-                        textY = config.height / 2;
                         break;
                     case 'bottom':
                         iconX = (config.width - config.iconSize) / 2;
@@ -1167,7 +1074,7 @@ Educação</textarea>
                 const iconDataURL = await loadIcon(iconToUse, selectedIconSource, config.iconColor, config.iconSize);
                 const iconImg = new Image();
                 iconImg.src = iconDataURL;
-                
+
                 await new Promise((resolve, reject) => {
                     iconImg.onload = resolve;
                     iconImg.onerror = reject;
@@ -1177,23 +1084,11 @@ Educação</textarea>
                 const padding = 20;
 
                 switch (selectedLayout) {
-                    case 'left':
-                        iconX = padding;
-                        iconY = (config.height - config.iconSize) / 2;
-                        textX = config.iconSize + padding * 2;
-                        textY = config.height / 2;
-                        break;
                     case 'top':
                         iconX = (config.width - config.iconSize) / 2;
                         iconY = padding;
                         textX = config.width / 2;
                         textY = config.height / 2 + config.iconSize / 2;
-                        break;
-                    case 'right':
-                        iconX = config.width - config.iconSize - padding;
-                        iconY = (config.height - config.iconSize) / 2;
-                        textX = config.width - config.iconSize - padding * 2;
-                        textY = config.height / 2;
                         break;
                     case 'bottom':
                         iconX = (config.width - config.iconSize) / 2;
@@ -1208,11 +1103,14 @@ Educação</textarea>
                 ctx.fillStyle = config.textColor;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                
+
                 // Draw SINGLE word
                 ctx.fillText(word, textX, textY);
 
-                return canvas.toDataURL('image/jpeg', 0.95);
+                return {
+                    dataURL: canvas.toDataURL('image/jpeg', 0.95),
+                    icon: iconToUse
+                };
             } catch (error) {
                 console.error(`Error generating image for "${word}":`, error);
                 ctx.font = `bold ${config.fontSize}px Arial`;
@@ -1224,38 +1122,40 @@ Educação</textarea>
             }
         }
 
+        function getFlagForLanguage(lang) {
+            const flagMap = {
+                'pt-pt': '🇵🇹',
+                'pt-br': '🇧🇷',
+                'pl-pl': '🇵🇱',
+                'de-de': '🇩🇪',
+                'en-us': '🇺🇸',
+                'en-gb': '🇬🇧',
+                'es-es': '🇪🇸',
+                'fr-fr': '🇫🇷',
+                'it-it': '🇮🇹'
+            };
+            return flagMap[lang] || '🌍';
+        }
+
         async function generateAllImages() {
-            let enWords = [];
-            let targetWords = [];
+            const enWordsText = document.getElementById('enWordsInput').value;
+            const targetWordsText = document.getElementById('targetWordsInput').value;
 
-            if (currentMode === 'bilingual') {
-                const enWordsText = document.getElementById('enWordsInput').value;
-                const targetWordsText = document.getElementById('targetWordsInput').value;
-                
-                enWords = enWordsText.split('\n').filter(w => w.trim() !== '');
-                targetWords = targetWordsText.split('\n').filter(w => w.trim() !== '');
+            const enWords = enWordsText.split('\n').filter(w => w.trim() !== '');
+            const targetWords = targetWordsText.split('\n').filter(w => w.trim() !== '');
 
-                if (enWords.length === 0 || targetWords.length === 0) {
-                    alert('Enter at least one word in both lists!');
-                    return;
-                }
+            if (enWords.length === 0 || targetWords.length === 0) {
+                alert('Enter at least one word in both lists!');
+                return;
+            }
 
-                if (enWords.length !== targetWords.length) {
-                    alert(`Word count mismatch! English: ${enWords.length}, Target: ${targetWords.length}. Please make them equal.`);
-                    return;
-                }
-            } else {
-                const wordsText = document.getElementById('wordsInput').value;
-                enWords = wordsText.split('\n').filter(w => w.trim() !== '');
-                targetWords = enWords; // Same word for both
-
-                if (enWords.length === 0) {
-                    alert('Enter at least one word!');
-                    return;
-                }
+            if (enWords.length !== targetWords.length) {
+                alert(`Word count mismatch! English: ${enWords.length}, Target: ${targetWords.length}. Please make them equal.`);
+                return;
             }
 
             generatedImages = [];
+            cardsArray = []; // Reset cards array
             const wordList = document.getElementById('wordList');
             const progress = document.getElementById('imageProgress');
             const progressBar = document.getElementById('imageProgressBar');
@@ -1274,11 +1174,13 @@ Educação</textarea>
 
                 try {
                     // Search icon based on English word
-                    const dataURL = await generateImageForWord(enWord, enWord);
+                    const result = await generateImageForWord(enWord, enWord);
+                    const dataURL = result.dataURL;
+                    const iconUsed = result.icon;
                     const fileName = `en_${enWord.replace(/\s+/g, '_')}.jpg`;
-                    generatedImages.push({ 
-                        name: fileName, 
-                        data: dataURL, 
+                    generatedImages.push({
+                        name: fileName,
+                        data: dataURL,
                         word: enWord,
                         lang: 'en'
                     });
@@ -1294,10 +1196,20 @@ Educação</textarea>
                             <div class="word-card-buttons">
                                 <button class="btn btn-info btn-small" onclick="downloadSingleImage('${fileName}', '${dataURL}')">📥</button>
                                 <button class="btn btn-small" onclick="playWord('${enWord}', 'en-us')" ${!document.getElementById('apiKeyInput').value.trim() ? 'disabled' : ''}>🔊</button>
+                                <button class="btn btn-small edit-icon-btn" onclick="selectCardForEdit(${cardsArray.length}, 'en')">✏️ Edit Icon</button>
                             </div>
                         </div>
                     `;
                     wordList.appendChild(wordCard);
+
+                    // Store card data
+                    cardsArray.push({
+                        index: cardsArray.length,
+                        word: enWord,
+                        lang: 'en',
+                        icon: iconUsed,
+                        element: wordCard
+                    });
                 } catch (error) {
                     console.error(`Error for "${enWord}":`, error);
                 }
@@ -1314,11 +1226,13 @@ Educação</textarea>
 
                 try {
                     // Search icon based on ENGLISH word, but display TARGET word
-                    const dataURL = await generateImageForWord(targetWord, enWordForIcon);
+                    const result = await generateImageForWord(targetWord, enWordForIcon);
+                    const dataURL = result.dataURL;
+                    const iconUsed = result.icon;
                     const fileName = `${document.getElementById('targetLanguageSelect').value}_${targetWord.replace(/\s+/g, '_')}.jpg`;
-                    generatedImages.push({ 
-                        name: fileName, 
-                        data: dataURL, 
+                    generatedImages.push({
+                        name: fileName,
+                        data: dataURL,
                         word: targetWord,
                         lang: document.getElementById('targetLanguageSelect').value
                     });
@@ -1327,17 +1241,28 @@ Educação</textarea>
                     // Add card to list
                     const wordCard = document.createElement('div');
                     wordCard.className = 'word-card';
+                    const targetLang = document.getElementById('targetLanguageSelect').value;
                     wordCard.innerHTML = `
                         <img src="${dataURL}" alt="${targetWord}">
                         <div class="word-card-content">
-                            <div class="word-card-text">🌍 ${targetWord}</div>
+                            <div class="word-card-text">${getFlagForLanguage(targetLang)} ${targetWord}</div>
                             <div class="word-card-buttons">
                                 <button class="btn btn-info btn-small" onclick="downloadSingleImage('${fileName}', '${dataURL}')">📥</button>
-                                <button class="btn btn-small" onclick="playWord('${targetWord}', '${document.getElementById('targetLanguageSelect').value}')" ${!document.getElementById('apiKeyInput').value.trim() ? 'disabled' : ''}>🔊</button>
+                                <button class="btn btn-small" onclick="playWord('${targetWord}', '${targetLang}')" ${!document.getElementById('apiKeyInput').value.trim() ? 'disabled' : ''}>🔊</button>
+                                <button class="btn btn-small edit-icon-btn" onclick="selectCardForEdit(${cardsArray.length}, '${targetLang}')">✏️ Edit Icon</button>
                             </div>
                         </div>
                     `;
                     wordList.appendChild(wordCard);
+
+                    // Store card data
+                    cardsArray.push({
+                        index: cardsArray.length,
+                        word: targetWord,
+                        lang: document.getElementById('targetLanguageSelect').value,
+                        icon: iconUsed,
+                        element: wordCard
+                    });
                 } catch (error) {
                     console.error(`Error for "${targetWord}":`, error);
                 }
@@ -1375,11 +1300,133 @@ Educação</textarea>
             saveAs(content, "ar-cards-images.zip");
         }
 
-        // ==================== AUDIO GENERATION ====================
+        // ==================== CARD EDITING ====================
 
-        function getSelectedLanguage() {
-            return document.getElementById('languageSelect').value;
+        function selectCardForEdit(index, lang) {
+            const card = cardsArray[index];
+            if (!card) return;
+
+            // Remove selection from all cards
+            cardsArray.forEach(c => {
+                if (c.element) c.element.classList.remove('selected');
+            });
+
+            // Select this card
+            selectedCardIndex = index;
+            card.element.classList.add('selected');
+
+            // Set preview word to card's word
+            document.getElementById('previewWord').value = card.word;
+
+            // Select the icon that was used for this card
+            selectedIcon = card.icon;
+
+            // Update icon grid to show current selection
+            searchIcons();
+
+            // Generate preview with current settings
+            generatePreview();
+
+            // Show save button and label
+            document.getElementById('saveCardIconBtn').style.display = 'inline-block';
+            document.getElementById('editingCardLabel').style.display = 'inline';
+            document.getElementById('editingCardLabel').textContent = `✏️ Редагування: ${lang === 'en' ? '🇬🇧' : getFlagForLanguage(card.lang)} ${card.word}`;
         }
+
+        async function saveCardIcon() {
+            if (selectedCardIndex === null) {
+                alert('Будь ласка, спочатку оберіть картку для редагування');
+                return;
+            }
+
+            const card = cardsArray[selectedCardIndex];
+            const newIcon = selectedIcon;
+
+            // Regenerate image with new icon
+            const progress = document.getElementById('imageProgress');
+            progress.textContent = `🔄 Оновлення іконки для "${card.word}"...`;
+
+            try {
+                const config = getImageConfig();
+                const canvas = document.createElement('canvas');
+                canvas.width = config.width;
+                canvas.height = config.height;
+                const ctx = canvas.getContext('2d');
+
+                ctx.fillStyle = config.backgroundColor;
+                ctx.fillRect(0, 0, config.width, config.height);
+
+                const iconDataURL = await loadIcon(newIcon, selectedIconSource, config.iconColor, config.iconSize);
+                const iconImg = new Image();
+                iconImg.src = iconDataURL;
+
+                await new Promise((resolve, reject) => {
+                    iconImg.onload = resolve;
+                    iconImg.onerror = reject;
+                });
+
+                let iconX, iconY, textX, textY;
+                const padding = 20;
+
+                switch (selectedLayout) {
+                    case 'top':
+                        iconX = (config.width - config.iconSize) / 2;
+                        iconY = padding;
+                        textX = config.width / 2;
+                        textY = config.height / 2 + config.iconSize / 2;
+                        break;
+                    case 'bottom':
+                        iconX = (config.width - config.iconSize) / 2;
+                        iconY = config.height - config.iconSize - padding;
+                        textX = config.width / 2;
+                        textY = config.height / 2 - config.iconSize / 2;
+                        break;
+                }
+
+                ctx.drawImage(iconImg, iconX, iconY, config.iconSize, config.iconSize);
+                ctx.font = `bold ${config.fontSize}px Arial`;
+                ctx.fillStyle = config.textColor;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(card.word, textX, textY);
+
+                const newDataURL = canvas.toDataURL('image/jpeg', 0.95);
+
+                // Update card data
+                card.icon = newIcon;
+
+                // Update image in generatedImages
+                const imgIndex = generatedImages.findIndex(img => img.word === card.word && img.lang === card.lang);
+                if (imgIndex !== -1) {
+                    generatedImages[imgIndex].data = newDataURL;
+                }
+
+                // Update card element
+                const imgElement = card.element.querySelector('img');
+                imgElement.src = newDataURL;
+
+                // Update download button
+                const downloadBtn = card.element.querySelector('button[onclick^="downloadSingleImage"]');
+                const newFileName = imgIndex !== -1 ? generatedImages[imgIndex].name : card.word.replace(/\s+/g, '_') + '.jpg';
+                downloadBtn.setAttribute('onclick', `downloadSingleImage('${newFileName}', '${newDataURL}')`);
+
+                // Remove selection
+                card.element.classList.remove('selected');
+                selectedCardIndex = null;
+
+                // Hide save button and label
+                document.getElementById('saveCardIconBtn').style.display = 'none';
+                document.getElementById('editingCardLabel').style.display = 'none';
+
+                progress.textContent = `✅ Іконку оновлено для "${card.word}"`;
+
+            } catch (error) {
+                console.error('Error updating icon:', error);
+                progress.textContent = `❌ Помилка оновлення іконки`;
+            }
+        }
+
+        // ==================== AUDIO GENERATION ====================
 
         function playWord(word, language) {
             const apiKey = document.getElementById('apiKeyInput').value.trim();
@@ -1397,32 +1444,16 @@ Educação</textarea>
         }
 
         async function generateAllAudio() {
-            let enWords = [];
-            let targetWords = [];
-            let targetLanguage = 'pt-br';
+            const enWordsText = document.getElementById('enWordsInput').value;
+            const targetWordsText = document.getElementById('targetWordsInput').value;
 
-            if (currentMode === 'bilingual') {
-                const enWordsText = document.getElementById('enWordsInput').value;
-                const targetWordsText = document.getElementById('targetWordsInput').value;
-                
-                enWords = enWordsText.split('\n').filter(w => w.trim() !== '');
-                targetWords = targetWordsText.split('\n').filter(w => w.trim() !== '');
-                targetLanguage = document.getElementById('targetLanguageSelect').value;
+            const enWords = enWordsText.split('\n').filter(w => w.trim() !== '');
+            const targetWords = targetWordsText.split('\n').filter(w => w.trim() !== '');
+            const targetLanguage = document.getElementById('targetLanguageSelect').value;
 
-                if (enWords.length === 0 || targetWords.length === 0) {
-                    alert('Enter at least one word in both lists!');
-                    return;
-                }
-            } else {
-                const wordsText = document.getElementById('wordsInput').value;
-                enWords = wordsText.split('\n').filter(w => w.trim() !== '');
-                targetWords = enWords;
-                targetLanguage = getSelectedLanguage();
-
-                if (enWords.length === 0) {
-                    alert('Enter at least one word!');
-                    return;
-                }
+            if (enWords.length === 0 || targetWords.length === 0) {
+                alert('Enter at least one word in both lists!');
+                return;
             }
 
             const apiKey = document.getElementById('apiKeyInput').value.trim();
@@ -1527,106 +1558,30 @@ Educação</textarea>
             saveAs(content, "ar-cards-audio.zip");
         }
 
-        function playAllWords() {
-            let enWords = [];
-            let targetWords = [];
-            let targetLanguage = 'pt-br';
-
-            if (currentMode === 'bilingual') {
-                const enWordsText = document.getElementById('enWordsInput').value;
-                const targetWordsText = document.getElementById('targetWordsInput').value;
-                
-                enWords = enWordsText.split('\n').filter(w => w.trim() !== '');
-                targetWords = targetWordsText.split('\n').filter(w => w.trim() !== '');
-                targetLanguage = document.getElementById('targetLanguageSelect').value;
-
-                if (enWords.length === 0 || targetWords.length === 0) {
-                    alert('Enter at least one word in both lists!');
-                    return;
-                }
-            } else {
-                const wordsText = document.getElementById('wordsInput').value;
-                enWords = wordsText.split('\n').filter(w => w.trim() !== '');
-                targetWords = enWords;
-                targetLanguage = getSelectedLanguage();
-
-                if (enWords.length === 0) {
-                    alert('Enter at least one word!');
-                    return;
-                }
-            }
-
-            const apiKey = document.getElementById('apiKeyInput').value.trim();
-            if (!apiKey) {
-                alert('Please enter your VoiceRSS API key first!');
-                return;
-            }
-
-            let enIndex = 0;
-            let targetIndex = 0;
-            const progress = document.getElementById('audioProgress');
-            const totalPlays = enWords.length + targetWords.length;
-            let playCount = 0;
-
-            function playNext() {
-                // First play all English words
-                if (enIndex < enWords.length) {
-                    const enWord = enWords[enIndex];
-                    playCount++;
-                    progress.textContent = `Playing: ${playCount}/${totalPlays} - "${enWord}" (en-us)`;
-
-                    const enVoiceRSSUrl = `https://api.voicerss.org/?key=${apiKey}&hl=en-us&src=${encodeURIComponent(enWord)}&f=22khz_16bit_stereo&c=mp3`;
-                    const enAudio = new Audio(enVoiceRSSUrl);
-
-                    enAudio.onended = () => {
-                        enIndex++;
-                        setTimeout(playNext, 500);
-                    };
-
-                    enAudio.onerror = (error) => {
-                        console.error(`Error playing "${enWord}":`, error);
-                        enIndex++;
-                        setTimeout(playNext, 500);
-                    };
-
-                    enAudio.play();
-                }
-                // Then play all target language words
-                else if (targetIndex < targetWords.length) {
-                    const targetWord = targetWords[targetIndex];
-                    playCount++;
-                    progress.textContent = `Playing: ${playCount}/${totalPlays} - "${targetWord}" (${targetLanguage})`;
-
-                    const targetVoiceRSSUrl = `https://api.voicerss.org/?key=${apiKey}&hl=${targetLanguage}&src=${encodeURIComponent(targetWord)}&f=22khz_16bit_stereo&c=mp3`;
-                    const targetAudio = new Audio(targetVoiceRSSUrl);
-
-                    targetAudio.onended = () => {
-                        targetIndex++;
-                        setTimeout(playNext, 500);
-                    };
-
-                    targetAudio.onerror = (error) => {
-                        console.error(`Error playing "${targetWord}":`, error);
-                        targetIndex++;
-                        setTimeout(playNext, 500);
-                    };
-
-                    targetAudio.play();
-                }
-                else {
-                    progress.textContent = '✅ Playback completed!';
-                }
-            }
-
-            playNext();
-        }
-
         // ==================== INITIALIZATION ====================
 
+        function updateTargetFlag() {
+            const language = document.getElementById('targetLanguageSelect').value;
+            const flagEmoji = document.getElementById('targetFlagEmoji');
+            
+            const flagMap = {
+                'pt-pt': '🇵🇹',
+                'pt-br': '🇧🇷',
+                'pl-pl': '🇵🇱',
+                'de-de': '🇩🇪',
+                'en-us': '🇺🇸',
+                'en-gb': '🇬🇧',
+                'es-es': '🇪🇸',
+                'fr-fr': '🇫🇷',
+                'it-it': '🇮🇹'
+            };
+            
+            flagEmoji.textContent = flagMap[language] || '🌍';
+        }
+
         window.onload = () => {
-            // Set initial mode
-            currentMode = 'bilingual';
-            document.getElementById('singleLangSelector').style.display = 'none';
+            // Initialize target flag
+            updateTargetFlag();
             
             // Preview word input listener
             let searchTimeout;
