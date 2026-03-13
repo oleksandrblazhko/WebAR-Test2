@@ -274,8 +274,9 @@
         .word-lists-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: start;
         }
 
         @media (max-width: 900px) {
@@ -286,8 +287,10 @@
 
         .word-list-panel {
             background: #f8f9fa;
-            padding: 15px;
+            padding: 12px;
             border-radius: 10px;
+            display: flex;
+            flex-direction: column;
         }
 
         .word-list-panel h3 {
@@ -295,15 +298,18 @@
             color: #333;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            min-height: 32px;
+            flex-wrap: wrap;
+            font-size: 16px;
         }
 
         .word-list-panel textarea {
             width: 100%;
-            height: 200px;
+            height: 180px;
             resize: vertical;
             font-family: inherit;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .word-list {
@@ -380,8 +386,9 @@
         .word-card-buttons {
             display: flex;
             justify-content: center;
-            gap: 5px;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: nowrap;
         }
 
         .edit-icon-btn {
@@ -441,7 +448,6 @@
                             <rect x="28" y="0" width="4" height="40" fill="#C8102E"/>
                         </svg>
                         English Words
-                        <span class="badge">Auto TTS: en-us</span>
                     </h3>
                     <textarea id="enWordsInput" placeholder="Enter English words, each on a new line..." spellcheck="false">
 Man
@@ -450,7 +456,7 @@ Child
 Dog
 Cat
 </textarea>
-                    <p style="font-size: 12px; color: #666; margin-top: 8px;">
+                    <p style="font-size: 11px; color: #666; margin-top: 6px;">
                         💡 Icons will be searched based on these English words
                     </p>
                 </div>
@@ -464,7 +470,7 @@ Cat
                             <path d="M30,30 L30,24 L42,30 L30,36 Z" fill="#006600"/>
                         </svg>
                         Target Language Words
-                        <select id="targetLanguageSelect" style="margin-left: 10px; font-size: 13px;" onchange="updateTargetFlag()">
+                        <select id="targetLanguageSelect" style="margin-left: 10px; font-size: 12px; padding: 6px 10px; height: 32px;" onchange="updateTargetFlag()">
                             <option value="pt-pt" selected>Portuguese (Portugal) - pt-pt</option>
                             <option value="pt-br">Portuguese (Brazil) - pt-br</option>
                             <option value="pl-pl">Polish (Poland) - pl-pl</option>
@@ -475,6 +481,7 @@ Cat
                             <option value="fr-fr">French (France) - fr-fr</option>
                             <option value="it-it">Italian (Italy) - it-it</option>
                         </select>
+                        <button class="btn btn-primary btn-small" onclick="autoTranslate()" style="margin-left: 10px; padding: 6px 12px; font-size: 11px;">🌐 Translate</button>
                     </h3>
                     <textarea id="targetWordsInput" placeholder="Enter target language words, each on a new line..." spellcheck="false">
 Homem
@@ -483,9 +490,18 @@ Criança
 Cachorro
 Gato
 </textarea>
-                    <p style="font-size: 12px; color: #666; margin-top: 8px;">
+                    <p style="font-size: 11px; color: #666; margin-top: 6px;">
                         💡 Must have same number of words as English list
                     </p>
+                    <div id="translateProgress" style="display: none; margin-top: 10px; padding: 10px; background: #f0f4ff; border-radius: 6px;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                            <div style="flex: 1; background: #e0e0e0; border-radius: 10px; height: 16px; overflow: hidden;">
+                                <div id="translateProgressFill" style="width: 0%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); transition: width 0.3s;"></div>
+                            </div>
+                            <span id="translateProgressText" style="font-size: 11px; color: #555; min-width: 60px;">0/0</span>
+                        </div>
+                        <div id="translateStatus" style="font-size: 11px; color: #667eea;"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1260,9 +1276,9 @@ Gato
                         <div class="word-card-content">
                             <div class="word-card-text">${getFlagForLanguage('en-gb')} ${enWord}</div>
                             <div class="word-card-buttons">
-                                <button class="btn btn-info btn-small" onclick="downloadSingleImage('${fileName}', '${dataURL}')">📥</button>
-                                <button class="btn btn-small" onclick="playWord('${enWord}', 'en-us')" ${!document.getElementById('apiKeyInput').value.trim() ? 'disabled' : ''}>🔊</button>
-                                <button class="btn btn-small edit-icon-btn" onclick="selectCardForEdit(${cardsArray.length}, 'en')">✏️ Edit Icon</button>
+                                <button class="btn btn-info btn-small" onclick="downloadSingleImage('${fileName}', '${dataURL}')" style="padding: 6px 10px; font-size: 11px;">📥</button>
+                                <button class="btn btn-small" onclick="playWord('${enWord}', 'en-us')" ${!document.getElementById('apiKeyInput').value.trim() ? 'disabled' : ''} style="padding: 6px 10px; font-size: 11px;">🔊</button>
+                                <button class="btn btn-small edit-icon-btn" onclick="selectCardForEdit(${cardsArray.length}, 'en')" style="padding: 6px 10px; font-size: 11px;">✏️</button>
                             </div>
                         </div>
                     `;
@@ -1310,9 +1326,9 @@ Gato
                         <div class="word-card-content">
                             <div class="word-card-text">${getFlagForLanguage(targetLang)} ${targetWord}</div>
                             <div class="word-card-buttons">
-                                <button class="btn btn-info btn-small" onclick="downloadSingleImage('${fileName}', '${dataURL}')">📥</button>
-                                <button class="btn btn-small" onclick="playWord('${targetWord}', '${targetLang}')" ${!document.getElementById('apiKeyInput').value.trim() ? 'disabled' : ''}>🔊</button>
-                                <button class="btn btn-small edit-icon-btn" onclick="selectCardForEdit(${cardsArray.length}, '${targetLang}')">✏️ Edit Icon</button>
+                                <button class="btn btn-info btn-small" onclick="downloadSingleImage('${fileName}', '${dataURL}')" style="padding: 6px 10px; font-size: 11px;">📥</button>
+                                <button class="btn btn-small" onclick="playWord('${targetWord}', '${targetLang}')" ${!document.getElementById('apiKeyInput').value.trim() ? 'disabled' : ''} style="padding: 6px 10px; font-size: 11px;">🔊</button>
+                                <button class="btn btn-small edit-icon-btn" onclick="selectCardForEdit(${cardsArray.length}, '${targetLang}')" style="padding: 6px 10px; font-size: 11px;">✏️</button>
                             </div>
                         </div>
                     `;
@@ -1617,6 +1633,114 @@ Gato
             };
 
             flagSvg.innerHTML = flagMap[language] || '<circle cx="12" cy="12" r="10" fill="#667eea"/>';
+        }
+
+        // ==================== AUTO TRANSLATE ====================
+
+        async function autoTranslate() {
+            const enWordsText = document.getElementById('enWordsInput').value.trim();
+            const targetLang = document.getElementById('targetLanguageSelect').value;
+            
+            if (!enWordsText) {
+                alert('Please enter English words first!');
+                return;
+            }
+
+            const enWords = enWordsText.split('\n').filter(w => w.trim() !== '');
+            if (enWords.length === 0) {
+                alert('No valid English words found!');
+                return;
+            }
+
+            // Show progress
+            const progressContainer = document.getElementById('translateProgress');
+            const progressFill = document.getElementById('translateProgressFill');
+            const progressText = document.getElementById('translateProgressText');
+            const statusText = document.getElementById('translateStatus');
+            
+            progressContainer.style.display = 'block';
+            const translatedWords = [];
+            let errors = 0;
+
+            // Translate each word
+            for (let i = 0; i < enWords.length; i++) {
+                const word = enWords[i].trim();
+                
+                // Update progress
+                const percent = ((i + 1) / enWords.length) * 100;
+                progressFill.style.width = `${percent}%`;
+                progressText.textContent = `${i + 1}/${enWords.length}`;
+                statusText.textContent = `Translating "${word}"...`;
+
+                // Translate using MyMemory API (en-GB for better compatibility)
+                try {
+                    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=en-GB|${targetLang}`;
+                    const response = await fetch(url);
+                    const data = await response.json();
+
+                    if (data.responseStatus === 200 && data.responseData) {
+                        let translation = data.responseData.translatedText;
+
+                        // Clean translation: remove trailing numbers (match scores)
+                        translation = translation.replace(/\s+\d+\.?\d*$/, '').trim();
+
+                        // Remove gender markers like "(a)", "(o)", "(a) *", etc.
+                        translation = translation.replace(/\s*\([ao]\)\s*\*?\s*$/i, '').trim();
+                        translation = translation.replace(/\s*\*\s*$/g, '').trim();
+
+                        // Remove other common artifacts
+                        translation = translation.replace(/\s*\(.*?\)\s*$/g, '').trim();
+
+                        // Validate: if result is just numbers, it's invalid
+                        if (/^\d+\.?\d*$/.test(translation)) {
+                            // Try alternative translations if available
+                            if (data.responseData.alternativeTranslations) {
+                                const alternatives = data.responseData.alternativeTranslations.split('|');
+                                for (const alt of alternatives) {
+                                    let cleanAlt = alt.trim().replace(/\s+\d+\.?\d*$/, '').trim();
+                                    cleanAlt = cleanAlt.replace(/\s*\([ao]\)\s*\*?\s*$/i, '').trim();
+                                    if (!/^\d+\.?\d*$/.test(cleanAlt) && cleanAlt.length > 0) {
+                                        translation = cleanAlt;
+                                        break;
+                                    }
+                                }
+                            }
+                            
+                            // If still invalid, keep original
+                            if (/^\d+\.?\d*$/.test(translation)) {
+                                translation = word;
+                            }
+                        }
+
+                        translatedWords.push(translation);
+                    } else {
+                        translatedWords.push(word); // Keep original on error
+                        errors++;
+                    }
+                } catch (error) {
+                    translatedWords.push(word);
+                    errors++;
+                }
+
+                // Delay between requests (avoid rate limiting)
+                if (i < enWords.length - 1) {
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                }
+            }
+
+            // Set translated words
+            document.getElementById('targetWordsInput').value = translatedWords.join('\n');
+            
+            // Update progress
+            statusText.textContent = errors > 0 
+                ? `✅ Complete with ${errors} error(s)` 
+                : '✅ Translation complete!';
+            statusText.style.color = errors > 0 ? '#f5576c' : '#11998e';
+
+            // Hide progress after 3 seconds
+            setTimeout(() => {
+                progressContainer.style.display = 'none';
+            }, 3000);
         }
 
         window.onload = () => {
