@@ -1141,7 +1141,7 @@ Gato
             }
         }
 
-        async function generateImageForWord(word, iconSearchWord) {
+        async function generateImageForWord(word, iconSearchWord, lang) {
             const config = getImageConfig();
             const canvas = document.createElement('canvas');
             canvas.width = config.width;
@@ -1150,6 +1150,11 @@ Gato
 
             ctx.fillStyle = config.backgroundColor;
             ctx.fillRect(0, 0, config.width, config.height);
+
+            // Draw flag in top-left corner
+            if (lang) {
+                drawFlagOnCanvas(ctx, lang, 30, 20);
+            }
 
             // Search for icon based on search word
             let iconToUse = selectedIcon;
@@ -1178,9 +1183,9 @@ Gato
                 switch (selectedLayout) {
                     case 'top':
                         iconX = (config.width - config.iconSize) / 2;
-                        iconY = padding;
+                        iconY = padding + 25; // Add space for flag
                         textX = config.width / 2;
-                        textY = config.height / 2 + config.iconSize / 2;
+                        textY = config.height / 2 + config.iconSize / 2 + 10;
                         break;
                     case 'bottom':
                         iconX = (config.width - config.iconSize) / 2;
@@ -1211,6 +1216,86 @@ Gato
                 ctx.textBaseline = 'middle';
                 ctx.fillText(word, config.width / 2, config.height / 2);
                 return canvas.toDataURL('image/jpeg', 0.95);
+            }
+        }
+
+        function drawFlagOnCanvas(ctx, lang, x, y) {
+            const flagWidth = 40;
+            const flagHeight = 27;
+            
+            const flagColors = {
+                'pt-pt': { bg: '#006600', rect: '#ff0000', circle: '#ffcc00' },
+                'pt-br': { bg: '#009c3b', diamond: '#ffdf00', circle: '#002776' },
+                'pl-pl': { top: '#ffffff', bottom: '#dc143c' },
+                'de-de': { top: '#000000', middle: '#dd0000', bottom: '#ffce00' },
+                'en-us': { bg: '#b22234', stripe: '#ffffff', union: '#3c3b6e' },
+                'en-gb': { bg: '#012169', white: '#ffffff', red: '#C8102E' },
+                'es-es': { top: '#aa151b', middle: '#f1bf00' },
+                'fr-fr': { left: '#0055a4', middle: '#ffffff', right: '#ef4135' },
+                'it-it': { left: '#008c45', middle: '#ffffff', right: '#cd212a' }
+            };
+
+            const colors = flagColors[lang];
+            if (!colors) return;
+
+            // Draw flag based on language
+            if (lang === 'pt-pt') {
+                ctx.fillStyle = colors.bg;
+                ctx.fillRect(x - flagWidth/2, y - flagHeight/2, flagWidth, flagHeight);
+                ctx.fillStyle = colors.rect;
+                ctx.fillRect(x + 2, y - flagHeight/2, flagWidth * 0.4, flagHeight);
+                ctx.fillStyle = colors.circle;
+                ctx.beginPath();
+                ctx.arc(x - 5, y, 8, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (lang === 'pt-br') {
+                ctx.fillStyle = colors.bg;
+                ctx.fillRect(x - flagWidth/2, y - flagHeight/2, flagWidth, flagHeight);
+                ctx.fillStyle = colors.diamond;
+                ctx.beginPath();
+                ctx.moveTo(x, y - flagHeight/2 + 3);
+                ctx.lineTo(x + flagWidth/2 - 3, y);
+                ctx.lineTo(x, y + flagHeight/2 - 3);
+                ctx.lineTo(x - flagWidth/2 + 3, y);
+                ctx.closePath();
+                ctx.fill();
+                ctx.fillStyle = colors.circle;
+                ctx.beginPath();
+                ctx.arc(x, y, 6, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (lang === 'pl-pl' || lang === 'de-de' || lang === 'es-es') {
+                const h = flagHeight / 2;
+                ctx.fillStyle = colors.top;
+                ctx.fillRect(x - flagWidth/2, y - flagHeight/2, flagWidth, h);
+                ctx.fillStyle = lang === 'pl-pl' ? colors.bottom : (lang === 'de-de' ? colors.middle : colors.middle);
+                ctx.fillRect(x - flagWidth/2, y, flagWidth, h);
+            } else if (lang === 'fr-fr' || lang === 'it-it') {
+                const w = flagWidth / 3;
+                ctx.fillStyle = colors.left;
+                ctx.fillRect(x - flagWidth/2, y - flagHeight/2, w, flagHeight);
+                ctx.fillStyle = colors.middle;
+                ctx.fillRect(x - flagWidth/2 + w, y - flagHeight/2, w, flagHeight);
+                ctx.fillStyle = colors.right;
+                ctx.fillRect(x - flagWidth/2 + w*2, y - flagHeight/2, w, flagHeight);
+            } else if (lang === 'en-us') {
+                ctx.fillStyle = colors.bg;
+                ctx.fillRect(x - flagWidth/2, y - flagHeight/2, flagWidth, flagHeight);
+                ctx.fillStyle = colors.stripe;
+                for (let i = 0; i < 7; i++) {
+                    ctx.fillRect(x - flagWidth/2, y - flagHeight/2 + i * (flagHeight/13), flagWidth, flagHeight/26);
+                }
+                ctx.fillStyle = colors.union;
+                ctx.fillRect(x - flagWidth/2, y - flagHeight/2, flagWidth * 0.4, flagHeight * 0.53);
+            } else if (lang === 'en-gb') {
+                ctx.fillStyle = colors.bg;
+                ctx.fillRect(x - flagWidth/2, y - flagHeight/2, flagWidth, flagHeight);
+                // Simplified Union Jack
+                ctx.fillStyle = colors.white;
+                ctx.fillRect(x - flagWidth/2, y - 3, flagWidth, 6);
+                ctx.fillRect(x - 3, y - flagHeight/2, 6, flagHeight);
+                ctx.fillStyle = colors.red;
+                ctx.fillRect(x - flagWidth/2, y - 2, flagWidth, 4);
+                ctx.fillRect(x - 2, y - flagHeight/2, 4, flagHeight);
             }
         }
 
@@ -1257,7 +1342,7 @@ Gato
 
                 try {
                     // Search icon based on English word
-                    const result = await generateImageForWord(enWord, enWord);
+                    const result = await generateImageForWord(enWord, enWord, 'en-gb');
                     const dataURL = result.dataURL;
                     const iconUsed = result.icon;
                     const fileName = `en_${enWord.replace(/\s+/g, '_')}.jpg`;
@@ -1300,13 +1385,15 @@ Gato
             }
 
             // Generate cards for TARGET language words (using English word for icon search)
+            const targetLang = document.getElementById('targetLanguageSelect').value;
+            
             for (let i = 0; i < targetWords.length; i++) {
                 const targetWord = targetWords[i].trim();
                 const enWordForIcon = enWords[i];
 
                 try {
                     // Search icon based on ENGLISH word, but display TARGET word
-                    const result = await generateImageForWord(targetWord, enWordForIcon);
+                    const result = await generateImageForWord(targetWord, enWordForIcon, targetLang);
                     const dataURL = result.dataURL;
                     const iconUsed = result.icon;
                     const fileName = `${document.getElementById('targetLanguageSelect').value}_${targetWord.replace(/\s+/g, '_')}.jpg`;
@@ -1320,7 +1407,6 @@ Gato
                     // Add card to list
                     const wordCard = document.createElement('div');
                     wordCard.className = 'word-card';
-                    const targetLang = document.getElementById('targetLanguageSelect').value;
                     wordCard.innerHTML = `
                         <img src="${dataURL}" alt="${targetWord}">
                         <div class="word-card-content">
@@ -1723,11 +1809,16 @@ Gato
                     const response = await fetch(url);
                     const data = await response.json();
 
+                    console.log(`Translation for "${word}":`, data);
+
                     if (data.responseStatus === 200 && data.responseData) {
                         let translation = data.responseData.translatedText;
+                        
+                        console.log(`Raw translation: "${translation}"`);
 
-                        // Clean translation: remove trailing numbers (match scores)
+                        // Clean translation: remove trailing numbers (match scores) and punctuation
                         translation = translation.replace(/\s+\d+\.?\d*$/, '').trim();
+                        translation = translation.replace(/[.,!?;:]+$/, '').trim();
 
                         // Remove gender markers like "(a)", "(o)", "(a) *", etc.
                         translation = translation.replace(/\s*\([ao]\)\s*\*?\s*$/i, '').trim();
@@ -1735,30 +1826,82 @@ Gato
 
                         // Remove other common artifacts
                         translation = translation.replace(/\s*\(.*?\)\s*$/g, '').trim();
+                        
+                        console.log(`Cleaned translation: "${translation}"`);
 
-                        // Validate: if result is just numbers, it's invalid
-                        if (/^\d+\.?\d*$/.test(translation)) {
+                        // Validate: if result is empty, same as source, or just numbers, it's invalid
+                        if (!translation || translation.toLowerCase() === word.toLowerCase() || /^\d+\.?\d*$/.test(translation)) {
+                            console.warn(`Invalid translation for "${word}": "${translation}"`);
+                            
                             // Try alternative translations if available
                             if (data.responseData.alternativeTranslations) {
                                 const alternatives = data.responseData.alternativeTranslations.split('|');
                                 for (const alt of alternatives) {
                                     let cleanAlt = alt.trim().replace(/\s+\d+\.?\d*$/, '').trim();
                                     cleanAlt = cleanAlt.replace(/\s*\([ao]\)\s*\*?\s*$/i, '').trim();
-                                    if (!/^\d+\.?\d*$/.test(cleanAlt) && cleanAlt.length > 0) {
+                                    if (!/^\d+\.?\d*$/.test(cleanAlt) && cleanAlt.length > 0 && cleanAlt.toLowerCase() !== word.toLowerCase()) {
                                         translation = cleanAlt;
+                                        console.log(`Using alternative: "${translation}"`);
                                         break;
                                     }
                                 }
                             }
+
+                            // If still invalid, try retry with different language variant
+                            if (!translation || translation.toLowerCase() === word.toLowerCase() || /^\d+\.?\d*$/.test(translation)) {
+                                console.log(`targetLang value: "${targetLang}"`);
+                                
+                                // Map language variants for retry (lowercase for comparison)
+                                const langRetryMap = {
+                                    'pt-pt': 'pt-br',
+                                    'pt-br': 'pt-pt',
+                                    'es-es': 'es-mx',
+                                    'es-mx': 'es-es'
+                                };
+
+                                const retryLang = langRetryMap[targetLang.toLowerCase()];
+                                console.log(`retryLang: "${retryLang}"`);
+                                
+                                if (retryLang) {
+                                    console.log(`Retrying with ${retryLang}...`);
+                                    try {
+                                        const retryUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=en-GB|${retryLang}`;
+                                        const retryResponse = await fetch(retryUrl);
+                                        const retryData = await retryResponse.json();
+
+                                        if (retryData.responseStatus === 200 && retryData.responseData) {
+                                            let retryTranslation = retryData.responseData.translatedText;
+                                            retryTranslation = retryTranslation.replace(/\s+\d+\.?\d*$/, '').trim();
+                                            retryTranslation = retryTranslation.replace(/[.,!?;:]+$/, '').trim();
+                                            retryTranslation = retryTranslation.replace(/\s*\([ao]\)\s*\*?\s*$/i, '').trim();
+                                            retryTranslation = retryTranslation.replace(/\s*\*\s*$/g, '').trim();
+                                            retryTranslation = retryTranslation.replace(/\s*\(.*?\)\s*$/g, '').trim();
+
+                                            if (retryTranslation && retryTranslation.toLowerCase() !== word.toLowerCase() && !/^\d+\.?\d*$/.test(retryTranslation)) {
+                                                translation = retryTranslation;
+                                                console.log(`Retry succeeded: "${translation}"`);
+                                            } else {
+                                                console.log(`Retry returned: "${retryTranslation}" (still invalid)`);
+                                            }
+                                        }
+                                    } catch (retryError) {
+                                        console.warn(`Retry failed for "${word}":`, retryError);
+                                    }
+                                } else {
+                                    console.log(`No retry variant for "${targetLang}"`);
+                                }
+                            }
                             
                             // If still invalid, keep original
-                            if (/^\d+\.?\d*$/.test(translation)) {
+                            if (!translation || translation.toLowerCase() === word.toLowerCase() || /^\d+\.?\d*$/.test(translation)) {
+                                console.warn(`Keeping original for "${word}"`);
                                 translation = word;
                             }
                         }
 
                         translatedWords.push(translation);
                     } else {
+                        console.warn(`Translation API error for "${word}": status ${data.responseStatus}`);
                         translatedWords.push(word); // Keep original on error
                         errors++;
                     }

@@ -32,7 +32,7 @@
       "primitive": {
         "type": "BoxGeometry",
         "size": [35, 5, 35],
-        "textureFile": "Realidade.jpg",
+        "textureFile": "en_Man.jpg",
         "position": [0, 20, 10],
         "rotation": [45, 0, 0]
       },
@@ -41,12 +41,12 @@
         "primitive": {
           "type": "BoxGeometry",
           "size": [35, 5, 35],
-          "textureFile": "Realidade.jpg",
+          "textureFile": "en_Man.jpg",
           "position": [0, 20, 10],
           "rotation": [45, 0, 0]
         }
       },
-      "audioFile": "Realidade.mp3",
+      "audioFile": "en_Man.mp3",
       "playOnControllerIntersect": true
     },
     {
@@ -67,12 +67,12 @@
         "primitive": {
           "type": "BoxGeometry",
           "size": [35, 5, 35],
-          "textureFile": "Reality.jpg",
+          "textureFile": "pt-pt_Homem.jpg",
           "position": [0, 20, 10],
           "rotation": [45, 0, 0]
         }
       },
-      "audioFile": "Reality.mp3",
+      "audioFile": "pt-pt_Homem.mp3",
       "playOnControllerIntersect": true
     } 
   ]
