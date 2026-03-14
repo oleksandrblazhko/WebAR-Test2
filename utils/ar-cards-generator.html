@@ -481,7 +481,7 @@ Cat
                             <option value="fr-fr">French (France) - fr-fr</option>
                             <option value="it-it">Italian (Italy) - it-it</option>
                         </select>
-                        <button class="btn btn-primary btn-small" onclick="autoTranslate()" style="margin-left: 10px; padding: 6px 12px; font-size: 11px;">🌐 Translate</button>
+                        <button class="btn btn-primary btn-small" onclick="autoTranslate()" style="margin-left: 10px; padding: 3px 12px; font-size: 15px;">🌐 Translate</button>
                     </h3>
                     <textarea id="targetWordsInput" placeholder="Enter target language words, each on a new line..." spellcheck="false">
 Homem
@@ -1328,7 +1328,6 @@ Gato
                             <div class="word-card-buttons">
                                 <button class="btn btn-info btn-small" onclick="downloadSingleImage('${fileName}', '${dataURL}')" style="padding: 6px 10px; font-size: 11px;">📥</button>
                                 <button class="btn btn-small" onclick="playWord('${targetWord}', '${targetLang}')" ${!document.getElementById('apiKeyInput').value.trim() ? 'disabled' : ''} style="padding: 6px 10px; font-size: 11px;">🔊</button>
-                                <button class="btn btn-small edit-icon-btn" onclick="selectCardForEdit(${cardsArray.length}, '${targetLang}')" style="padding: 6px 10px; font-size: 11px;">✏️</button>
                             </div>
                         </div>
                     `;
@@ -1389,9 +1388,27 @@ Gato
                 if (c.element) c.element.classList.remove('selected');
             });
 
-            // Select this card
+            // Select this card and its pair
             selectedCardIndex = index;
             card.element.classList.add('selected');
+            
+            // Find and select paired card
+            const enCount = cardsArray.filter(c => c.lang === 'en').length;
+            let pairCard = null;
+            
+            if (lang === 'en') {
+                // Current is English, find Target Language pair
+                const wordIndex = cardsArray.filter((c, i) => i < enCount && c.lang === 'en').indexOf(card);
+                pairCard = cardsArray[enCount + wordIndex];
+            } else {
+                // Current is Target Language, find English pair
+                const targetIndex = index - enCount;
+                pairCard = cardsArray[targetIndex];
+            }
+            
+            if (pairCard) {
+                pairCard.element.classList.add('selected');
+            }
 
             // Set preview word to card's word
             document.getElementById('previewWord').value = card.word;
@@ -1413,79 +1430,43 @@ Gato
 
         async function saveCardIcon() {
             if (selectedCardIndex === null) {
-                alert('Будь ласка, спочатку оберіть картку для редагування');
+                alert('Please select a card to edit first');
                 return;
             }
 
             const card = cardsArray[selectedCardIndex];
             const newIcon = selectedIcon;
 
+            // Find paired card by matching word index
+            // Cards are created: [EN0, EN1, EN2...] + [Target0, Target1, Target2...]
+            const enCount = cardsArray.filter(c => c.lang === 'en').length;
+            let pairCard = null;
+            
+            if (card.lang === 'en') {
+                // Current is English, find Target Language pair
+                const wordIndex = cardsArray.filter((c, i) => i < enCount && c.lang === 'en').indexOf(card);
+                pairCard = cardsArray[enCount + wordIndex];
+            } else {
+                // Current is Target Language, find English pair
+                const targetIndex = cardsArray.findIndex((c, i) => i >= enCount && c.lang !== 'en' && c.word === card.word);
+                const wordIndex = targetIndex - enCount;
+                pairCard = cardsArray[wordIndex];
+            }
+
             try {
                 const config = getImageConfig();
-                const canvas = document.createElement('canvas');
-                canvas.width = config.width;
-                canvas.height = config.height;
-                const ctx = canvas.getContext('2d');
-
-                ctx.fillStyle = config.backgroundColor;
-                ctx.fillRect(0, 0, config.width, config.height);
-
-                const iconDataURL = await loadIcon(newIcon, selectedIconSource, config.iconColor, config.iconSize);
-                const iconImg = new Image();
-                iconImg.src = iconDataURL;
-
-                await new Promise((resolve, reject) => {
-                    iconImg.onload = resolve;
-                    iconImg.onerror = reject;
-                });
-
-                let iconX, iconY, textX, textY;
-                const padding = 20;
-
-                switch (selectedLayout) {
-                    case 'top':
-                        iconX = (config.width - config.iconSize) / 2;
-                        iconY = padding;
-                        textX = config.width / 2;
-                        textY = config.height / 2 + config.iconSize / 2;
-                        break;
-                    case 'bottom':
-                        iconX = (config.width - config.iconSize) / 2;
-                        iconY = config.height - config.iconSize - padding;
-                        textX = config.width / 2;
-                        textY = config.height / 2 - config.iconSize / 2;
-                        break;
+                
+                // Update current card
+                await updateCardIcon(card, newIcon, config);
+                
+                // Update paired card if exists
+                if (pairCard) {
+                    await updateCardIcon(pairCard, newIcon, config);
                 }
-
-                ctx.drawImage(iconImg, iconX, iconY, config.iconSize, config.iconSize);
-                ctx.font = `bold ${config.fontSize}px Arial`;
-                ctx.fillStyle = config.textColor;
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(card.word, textX, textY);
-
-                const newDataURL = canvas.toDataURL('image/jpeg', 0.95);
-
-                // Update card data
-                card.icon = newIcon;
-
-                // Update image in generatedImages
-                const imgIndex = generatedImages.findIndex(img => img.word === card.word && img.lang === card.lang);
-                if (imgIndex !== -1) {
-                    generatedImages[imgIndex].data = newDataURL;
-                }
-
-                // Update card element
-                const imgElement = card.element.querySelector('img');
-                imgElement.src = newDataURL;
-
-                // Update download button
-                const downloadBtn = card.element.querySelector('button[onclick^="downloadSingleImage"]');
-                const newFileName = imgIndex !== -1 ? generatedImages[imgIndex].name : card.word.replace(/\s+/g, '_') + '.jpg';
-                downloadBtn.setAttribute('onclick', `downloadSingleImage('${newFileName}', '${newDataURL}')`);
 
                 // Remove selection
                 card.element.classList.remove('selected');
+                if (pairCard) pairCard.element.classList.remove('selected');
                 selectedCardIndex = null;
 
                 // Hide save button and label
@@ -1495,6 +1476,70 @@ Gato
             } catch (error) {
                 console.error('Error updating icon:', error);
             }
+        }
+
+        async function updateCardIcon(card, icon, config) {
+            const canvas = document.createElement('canvas');
+            canvas.width = config.width;
+            canvas.height = config.height;
+            const ctx = canvas.getContext('2d');
+
+            ctx.fillStyle = config.backgroundColor;
+            ctx.fillRect(0, 0, config.width, config.height);
+
+            const iconDataURL = await loadIcon(icon, selectedIconSource, config.iconColor, config.iconSize);
+            const iconImg = new Image();
+            iconImg.src = iconDataURL;
+
+            await new Promise((resolve, reject) => {
+                iconImg.onload = resolve;
+                iconImg.onerror = reject;
+            });
+
+            let iconX, iconY, textX, textY;
+            const padding = 20;
+
+            switch (selectedLayout) {
+                case 'top':
+                    iconX = (config.width - config.iconSize) / 2;
+                    iconY = padding;
+                    textX = config.width / 2;
+                    textY = config.height / 2 + config.iconSize / 2;
+                    break;
+                case 'bottom':
+                    iconX = (config.width - config.iconSize) / 2;
+                    iconY = config.height - config.iconSize - padding;
+                    textX = config.width / 2;
+                    textY = config.height / 2 - config.iconSize / 2;
+                    break;
+            }
+
+            ctx.drawImage(iconImg, iconX, iconY, config.iconSize, config.iconSize);
+            ctx.font = `bold ${config.fontSize}px Arial`;
+            ctx.fillStyle = config.textColor;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(card.word, textX, textY);
+
+            const newDataURL = canvas.toDataURL('image/jpeg', 0.95);
+
+            // Update card data
+            card.icon = icon;
+
+            // Update image in generatedImages
+            const imgIndex = generatedImages.findIndex(img => img.word === card.word && img.lang === card.lang);
+            if (imgIndex !== -1) {
+                generatedImages[imgIndex].data = newDataURL;
+            }
+
+            // Update card element
+            const imgElement = card.element.querySelector('img');
+            imgElement.src = newDataURL;
+
+            // Update download button
+            const downloadBtn = card.element.querySelector('button[onclick^="downloadSingleImage"]');
+            const newFileName = imgIndex !== -1 ? generatedImages[imgIndex].name : card.word.replace(/\s+/g, '_') + '.jpg';
+            downloadBtn.setAttribute('onclick', `downloadSingleImage('${newFileName}', '${newDataURL}')`);
         }
 
         // ==================== AUDIO GENERATION ====================
