@@ -1776,7 +1776,7 @@
                             // Load controller timing configuration (defaults: 500ms delay, 500ms sound duration)
                             controllerIntersectionDelay = controllerConfig.intersectionDelay || 500;
                             controllerTouchSoundDuration = controllerConfig.touchSoundDuration || 500;
-                            
+
                             // Load collision mode configuration (default: '3d')
                             controllerCollisionMode = controllerConfig.collisionMode || '3d';
                             break;
@@ -1835,8 +1835,31 @@
             }
 
             function checkController() {
-                // Виконуємо перевірку тільки якщо контролер активний (видно камері)
-                if (controller && controller.parent && controller.parent.visible) {
+                // Виконуємо перевірку тільки якщо контролер існує в сцені
+                if (controller && controller.parent) {
+                    // Перевіряємо, чи контролер видно камері
+                    // Якщо батьківський контейнер невидимий (маркер за межами камери) - ігноруємо колізії
+                    if (controller.parent.visible === false) {
+                        // Контролер не видно - скидаємо всі колізії
+                        if (currentIntersectedMarker !== null) {
+                            currentIntersectedMarker = null;
+                            // Reset all markers to first content
+                            for (let i = 0; i < markerRoots.length; i++) {
+                                if (markerContentState.get(i)) {
+                                    switchMarkerContent(i, false);
+                                }
+                                if (markerSoundPlayed.has(i)) {
+                                    markerSoundPlayed.delete(i);
+                                }
+                                if (markerAudioTimeouts.has(i)) {
+                                    clearTimeout(markerAudioTimeouts.get(i));
+                                    markerAudioTimeouts.delete(i);
+                                }
+                            }
+                        }
+                        return;
+                    }
+                    
                     let intersectedMarkerIndex = null;
 
                     mainContainer.traverse((object) => {
@@ -1875,10 +1898,10 @@
                                 if (navigator.vibrate) {
                                     navigator.vibrate(15); // Коротка вібрація 15 мс
                                 }
-                                
+
                                 // Аудіо клік (короткий сигнал)
                                 playTouchSound();
-                                
+
                                 lastHapticTime = currentTime;
 
                                 // Позначаємо, що звук вже відтворено для цього маркера
@@ -1886,7 +1909,7 @@
                             }
                         }
                         // -------------------------------------------------------------
-                        
+
                         // --- ЗАТРИМКА ЗМІНИ КОНТЕНТУ: чекаємо завершення аудіо ---
                         // Альтернативний контент з'явиться після завершення звукового сигналу
                         setTimeout(function() {

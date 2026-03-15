@@ -58,7 +58,7 @@
       "primitive": {
         "type": "BoxGeometry",
         "size": [35, 5, 35],
-        "textureFile": "In_English.jpg",
+        "textureFile": "pt-pt-question.jpg",
         "position": [0, 20, 10],
         "rotation": [45, 0, 0]
       },
@@ -74,6 +74,110 @@
       },
       "audioFile": "pt-pt_Homem.mp3",
       "playOnControllerIntersect": true
-    } 
+    },
+    {
+      "id": 4,
+      "type": "barcode",
+      "target": 18,
+      "matrixSize": 33,      
+      "contentType": "primitive",
+      "primitive": {
+        "type": "BoxGeometry",
+        "size": [35, 5, 35],
+        "textureFile": "en_Woman.jpg",
+        "position": [0, 20, 10],
+        "rotation": [45, 0, 0]
+      },
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [35, 5, 35],
+          "textureFile": "en_Woman.jpg",
+          "position": [0, 20, 10],
+          "rotation": [45, 0, 0]
+        }
+      },
+      "audioFile": "en_Woman.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 5,
+      "type": "barcode",
+      "target": 19,
+      "matrixSize": 33,      
+      "contentType": "primitive",
+      "primitive": {
+        "type": "BoxGeometry",
+        "size": [35, 5, 35],
+        "textureFile": "pt-pt-question.jpg",
+        "position": [0, 20, 10],
+        "rotation": [45, 0, 0]
+      },
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [35, 5, 35],
+          "textureFile": "pt-pt_Mulher.jpg",
+          "position": [0, 20, 10],
+          "rotation": [45, 0, 0]
+        }
+      },
+      "audioFile": "pt-pt_Mulher.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 6,
+      "type": "barcode",
+      "target": 21,
+      "matrixSize": 33,      
+      "contentType": "primitive",
+      "primitive": {
+        "type": "BoxGeometry",
+        "size": [35, 5, 35],
+        "textureFile": "en_Dog.jpg",
+        "position": [0, 20, 10],
+        "rotation": [45, 0, 0]
+      },
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [35, 5, 35],
+          "textureFile": "en_Dog.jpg",
+          "position": [0, 20, 10],
+          "rotation": [45, 0, 0]
+        }
+      },
+      "audioFile": "en_Dog.mp3",
+      "playOnControllerIntersect": true
+    },
+    {
+      "id": 7,
+      "type": "barcode",
+      "target": 22,
+      "matrixSize": 33,      
+      "contentType": "primitive",
+      "primitive": {
+        "type": "BoxGeometry",
+        "size": [35, 5, 35],
+        "textureFile": "pt-pt-question.jpg",
+        "position": [0, 20, 10],
+        "rotation": [45, 0, 0]
+      },
+      "alternativeContent": {
+        "contentType": "primitive",
+        "primitive": {
+          "type": "BoxGeometry",
+          "size": [35, 5, 35],
+          "textureFile": "pt-pt_Cão.jpg",
+          "position": [0, 20, 10],
+          "rotation": [45, 0, 0]
+        }
+      },
+      "audioFile": "pt-pt_Cão.mp3",
+      "playOnControllerIntersect": true
+    }
   ]
 }
