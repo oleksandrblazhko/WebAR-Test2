@@ -124,7 +124,7 @@
             // Створюємо контролер для ArUco-маркерів
             let markerControls = new THREEx.ArUcoMarkerControls(arToolkitContext, markerRoot, {
                 dictionaryName: 'ARUCO_7X7_1000', // Використовуємо 7x7 словник
-                markerId: 5, // ID маркера
+                markerId: 1, // ID маркера
                 size: 1, // Розмір маркера в метрах
                 maxHammingDistance: 3 // Допустима відстань для розпізнавання
             });
@@ -191,16 +191,16 @@
             document.getElementById('switchDictionary').addEventListener('click', function() {
                 if (currentDictionary === 'ARUCO_7X7_1000') {
                     currentDictionary = 'ARUCO_4X4_1000';
-                    document.querySelector('p').textContent = 'Покажіть 4x4 ArUco маркер (ID: 5) перед камеру';
+                    document.querySelector('p').textContent = 'Покажіть 4x4 ArUco маркер (ID: 1) перед камеру';
                 } else {
                     currentDictionary = 'ARUCO_7X7_1000';
-                    document.querySelector('p').textContent = 'Покажіть 7x7 ArUco маркер (ID: 5) перед камеру';
+                    document.querySelector('p').textContent = 'Покажіть 7x7 ArUco маркер (ID: 1) перед камеру';
                 }
                 
                 // Оновлюємо параметри контролера
                 markerControls.setParameters({
                     dictionaryName: currentDictionary,
-                    markerId: 5
+                    markerId: 1
                 });
                 
                 // Оновлюємо текст на маркері
